@@ -3,6 +3,7 @@
 
 //TODO:
 //-> mode inFight (low fps) inSearch (high fps)
+//-> display new found name before trying to check the steam id (because of the read mem error)
 
 HANDLE tekkenHandle;
 HWND tekkenWindowHandle;
