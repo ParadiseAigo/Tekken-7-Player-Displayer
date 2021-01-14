@@ -2,8 +2,7 @@
 #include "pointers.h"
 
 //TODO:
-//-> mode inFight (low fps) inSearch (high fps)
-//-> display new found name before trying to check the steam id (because of the read mem error)
+//-> /
 
 HANDLE tekkenHandle;
 HWND tekkenWindowHandle;
@@ -40,17 +39,17 @@ void initTekkenHandle() {
         Sleep(secondsDelay * 1000); // milliseconds
         pid = getProcessId(TEXT(TEKKEN_EXE_NAME));
     }
-    tekkenPid = pid;
+    tekkenPid = pid; // global variable
     std::cout << "Tekken found! pid = (" << pid << ")" << std::endl;
     std::cout << "Opening Tekken process..." << std::endl;
-    tekkenHandle = getProcessHandle(pid);
+    tekkenHandle = getProcessHandle(pid);  // global variable
     std::cout << "Opening Tekken process success!" << std::endl;
 }
 
 void initTekkenWindowHandle() {
     DWORD secondsDelay;
 	secondsDelay = 2;
-    while ( (tekkenWindowHandle = getWindowHandle(TEXT(TEKKEN_WINDOW_NAME))) == NULL ) {
+    while ( (tekkenWindowHandle = getWindowHandle(TEXT(TEKKEN_WINDOW_NAME))) == NULL ) { // global variable
         std::cout << "Searching for Tekken window. Trying again in " << secondsDelay << " seconds..." << std::endl;
         Sleep(secondsDelay * 1000); // milliseconds
     }
@@ -80,24 +79,48 @@ void initPointers() {
 }
 
 void mainLoop() {
-	char* playerName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	char* currentOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	char* currentLoadedOpponentName = (char*) malloc(10 * sizeof(char)); // dummy value
+    char* playerName;
+    char* currentOpponentName;
+    char* currentLoadedOpponentName;
+    enum tekkenState currentState;
+    int delayInSearch = 1000/60; // "60fps"
+    int delayInFight = 2000; // 2 seconds
+	playerName = readStringFromMemory(tekkenHandle, opponentNamePointer);
+	currentOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
+	currentLoadedOpponentName = (char*) malloc(10 * sizeof(char)); // dummy value
     currentLoadedOpponentName[0] = '\0'; // empty string
+    currentState = IN_SEARCH;
     while (true) {
-        Sleep(1000/20); // ("20fps")
+        if (currentState == IN_SEARCH) {
+			Sleep(delayInSearch);
+        }
+        else if (currentState == IN_FIGHT) {
+            Sleep(delayInFight);
+        }
         handleInput();
 		if (isTimeToCleanMessages(playerName, currentOpponentName)) {
 			cleanAllProcessMessages();
             currentOpponentName[0] = '\0';
+            currentState = IN_SEARCH;
 			printf("Ready to find the next opponent.\n");
 		}
-        currentOpponentName = updateOpponentFoundMessage(playerName, currentOpponentName);
-        currentLoadedOpponentName = saveNewOpponentInPlayerlist(playerName, currentOpponentName, currentLoadedOpponentName);
+        if (isNewOpponentReceived(playerName, currentOpponentName)) {
+            updateOpponentFoundMessage(); // display opponents name in-game
+                                          // this has to happen asap (before any other
+                                          // checks) or it might not update in-game
+            if (isOpponentSteamIdValid()) {
+                currentOpponentName = handleNewOpponent(playerName, currentOpponentName);
+            }
+        }
+        if (isNewFightAccepted(playerName, currentOpponentName, currentLoadedOpponentName)) {
+			currentLoadedOpponentName = saveNewOpponentInPlayerlist(playerName, currentOpponentName, currentLoadedOpponentName);
+            currentState = IN_FIGHT;
+        }
     }
     // program never reaches this comment
 }
 
+// this function is never called... (fix it!)
 void closeProgram() {
 	CloseHandle(tekkenHandle);
     CloseHandle(tekkenWindowHandle);

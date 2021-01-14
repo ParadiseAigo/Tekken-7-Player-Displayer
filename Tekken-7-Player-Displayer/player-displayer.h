@@ -13,6 +13,8 @@
 
 typedef __int64 QWORD;
 
+enum tekkenState {IN_FIGHT, IN_SEARCH};
+
 extern HANDLE tekkenHandle;
 extern HWND tekkenWindowHandle;
 extern int tekkenPid;
@@ -35,11 +37,13 @@ void closeProgram();
 
 //tekken.cpp
 bool isGameLoaded();
-char* updateOpponentFoundMessage(char* playerName, char* currentOpponentName);
 bool isNewOpponentReceived(char* playerName, char* currentOpponentName);
-bool isSteamIdValid();
-void updateFightThisPlayerMessage();
+bool isOpponentSteamIdValid();
+char* handleNewOpponent(char* playerName, char* currentOpponentName);
+void updateOpponentFoundMessage();
+void updateFightThisPlayerMessage(char* message);
 void updateSecondsRemainingMessage(char* message);
+bool isNewFightAccepted(char* playerName, char* currentOpponentName, char* currentLoadedOpponentName);
 bool isNewOpponentLoaded(char* playerName, char* currentOpponentName, char* currentLoadedOpponentName);
 bool isTimeToCleanMessages(char* playerName, char* currentOpponentName);
 void cleanAllProcessMessages();

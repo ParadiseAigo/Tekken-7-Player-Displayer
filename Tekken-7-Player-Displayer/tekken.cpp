@@ -2,7 +2,7 @@
 #include "pointers.h"
 
 bool isGameLoaded() {
-    // will assume game is loaded if the opponent name address contains a string
+    // will assume game is loaded if the opponent name address contains a (non-empty) string
 	opponentNamePointer = (void*)getDynamicPointer(tekkenHandle, (void*)OPPONENT_NAME_STATIC_POINTER, OPPONENT_NAME_POINTER_OFFSETS);
 	char * playerName = readStringFromMemory(tekkenHandle, opponentNamePointer);
     if (playerName[0] == '\0') {
@@ -15,20 +15,6 @@ bool isGameLoaded() {
     }
 }
 
-char* updateOpponentFoundMessage(char* playerName, char* currentOpponentName) {
-    char* newOpponentName;
-    if (isNewOpponentReceived(playerName, currentOpponentName)) {
-		newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-        printf("New opponent found:  %s\n", newOpponentName);
-		//system("pause");
-		writeStringUnlimitedToMemory(tekkenHandle, opponentFoundMessagePointer, newOpponentName);
-        updateFightThisPlayerMessage();
-		free(currentOpponentName);
-        return newOpponentName; // calling function should set currentOpponentName equal to newOpponentName
-    }
-    return currentOpponentName; // currentOpponentName remains unchanged
-}
-
 bool isNewOpponentReceived(char* playerName, char* currentOpponentName) {
     char* newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
     if (strcmp(newOpponentName, currentOpponentName) == 0) { // if equal; still same opponent
@@ -39,19 +25,15 @@ bool isNewOpponentReceived(char* playerName, char* currentOpponentName) {
 		free(newOpponentName);
         return false;
     }
-    if (!isSteamIdValid()) {
-		free(newOpponentName);
-        return false;
-    }
     free(newOpponentName);
     return true;
 }
 
-bool isSteamIdValid() {
+bool isOpponentSteamIdValid() {
     QWORD steamId;
 	steamIdPointer = (void*)getDynamicPointer(tekkenHandle, (void*)STEAM_ID_STATIC_POINTER, STEAM_ID_POINTER_OFFSETS);
     if (! isMemoryReadable(tekkenHandle, steamIdPointer)) {
-        printf("Steam Id (memory) not readable, trying again...\n");
+        printf("Steam Id (memory) not readable (probably late).\n");
         return false;
     }
     steamId = readQwordFromMemory(tekkenHandle, steamIdPointer);
@@ -65,11 +47,12 @@ bool isSteamIdValid() {
         // so a full steam id in hex looks like this (with X variable)  0x 01 10 00 01 XX XX XX XX
         return false;
     }
-    lastFoundSteamId = steamId;
+    lastFoundSteamId = steamId;  // global variable
     return true;
 }
 
-void updateFightThisPlayerMessage() {
+char* handleNewOpponent(char* playerName, char* currentOpponentName) {
+    char* newOpponentName;
     QWORD steamId;
     size_t steamIdBufferSize;
     char* steamIdBuffer;
@@ -78,6 +61,8 @@ void updateFightThisPlayerMessage() {
     char* playerlistComment;
     char* characterNameMessage;
     char* characterName;
+	newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
+	printf("New opponent found:  %s\n", newOpponentName);
     steamIdBufferSize = 100;
     steamIdBuffer = (char*)malloc(steamIdBufferSize * sizeof(char));
     steamId = lastFoundSteamId;
@@ -94,7 +79,7 @@ void updateFightThisPlayerMessage() {
         characterName = NULL;
         characterNameMessage = copyString((char*) "| Unknown character.");
     }
-	writeStringUnlimitedToMemory(tekkenHandle, fightThisPlayerMessagePointer, playerlistComment);
+    updateFightThisPlayerMessage(playerlistComment);
     updateSecondsRemainingMessage(characterNameMessage);
     if (characterName == NULL) {
         printf("Last used character: /\n");
@@ -116,10 +101,26 @@ void updateFightThisPlayerMessage() {
 		free(line);
     }
     free(steamIdBuffer);
+	free(currentOpponentName);
+	return newOpponentName; // calling function should set currentOpponentName equal to newOpponentName
+}
+
+void updateOpponentFoundMessage() {
+    char* newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
+	writeStringUnlimitedToMemory(tekkenHandle, opponentFoundMessagePointer, newOpponentName);
+    free(newOpponentName);
+}
+
+void updateFightThisPlayerMessage(char* message) {
+	writeStringUnlimitedToMemory(tekkenHandle, fightThisPlayerMessagePointer, message);
 }
 
 void updateSecondsRemainingMessage(char* message) {
 	writeStringUnlimitedToMemory(tekkenHandle, secondsRemainingMessagePointer, message);
+}
+
+bool isNewFightAccepted(char* playerName, char* currentOpponentName, char* currentLoadedOpponentName) {
+    return isNewOpponentLoaded(playerName, currentOpponentName, currentLoadedOpponentName);
 }
 
 bool isNewOpponentLoaded(char* playerName, char* currentOpponentName, char* currentLoadedOpponentName) {
