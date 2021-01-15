@@ -2,7 +2,7 @@
 #include "pointers.h"
 
 //TODO:
-//-> / 
+//-> write searchByName() ctrl+f it >_>
 
 HANDLE tekkenHandle;
 HWND tekkenWindowHandle;
@@ -110,6 +110,10 @@ void mainLoop() {
                                           // checks) or it might not update in-game
             if (isOpponentSteamIdValid()) {
                 currentOpponentName = handleNewOpponent(playerName, currentOpponentName);
+            }
+            else {
+                // if opponentSteamId is "late" do
+                // searchByName() instead of by steam id // in the playerlist
             }
         }
         if (isNewFightAccepted(playerName, currentOpponentName, currentLoadedOpponentName)) {
