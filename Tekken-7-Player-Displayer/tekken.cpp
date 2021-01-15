@@ -66,7 +66,7 @@ char* handleNewOpponent(char* playerName, char* currentOpponentName) {
     steamIdBufferSize = 100;
     steamIdBuffer = (char*)malloc(steamIdBufferSize * sizeof(char));
     steamId = lastFoundSteamId;
-    sprintf_s(steamIdBuffer, steamIdBufferSize + 1, "(%I64u)", steamId);
+    sprintf_s(steamIdBuffer, steamIdBufferSize, "(%I64u)", steamId);
     fileString = fileToString((char*)PLAYERLIST_PATH);
     line = findLineInStringVector(stringToLines((char*) fileString.c_str()), steamIdBuffer);
     if (line != NULL) {

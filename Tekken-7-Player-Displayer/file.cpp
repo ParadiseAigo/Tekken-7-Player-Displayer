@@ -135,9 +135,9 @@ void saveNewPlayerlistEntry(char* currentLoadedOpponentName) {
 char* makePlayerlistEntry(char* playerName, char* characterName, QWORD steamId) {
     // aigo this entire function needs testing
     std::string result = "";
-    int steamIdBufferSize = 40;
+    int steamIdBufferSize = 100;
     char* steamIdBuffer = (char*) malloc(steamIdBufferSize * sizeof(char));
-    sprintf_s(steamIdBuffer, steamIdBufferSize + 1, "(%I64u)", steamId);
+    sprintf_s(steamIdBuffer, steamIdBufferSize, "(%I64u)", steamId);
     result.append(playerName);
     result.append("\t\t\t");
     result.append(characterName);
