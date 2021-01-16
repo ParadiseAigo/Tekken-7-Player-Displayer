@@ -2,7 +2,7 @@
 #include "pointers.h"
 
 //TODO:
-//-> write searchByName() ctrl+f it >_>
+//-> /
 
 HANDLE tekkenHandle;
 HWND tekkenWindowHandle;
@@ -105,15 +105,14 @@ void mainLoop() {
 			printf("Ready to find the next opponent.\n");
 		}
         if (isNewOpponentReceived(playerName, currentOpponentName)) {
-            updateOpponentFoundMessage(); // display opponents name in-game
-                                          // this has to happen asap (before any other
-                                          // checks) or it might not update in-game
             if (isOpponentSteamIdValid()) {
-                currentOpponentName = handleNewOpponent(playerName, currentOpponentName);
+                currentOpponentName = handleNewOpponent(currentOpponentName);
             }
-            else {
-                // if opponentSteamId is "late" do
-                // searchByName() instead of by steam id // in the playerlist
+            else {  // if opponent steam id is "late",
+                    // update in-game messages anyway
+                    // (using opponents name instead of steam id)
+				    // or it might not ever update in-game
+                updateMessagesWithoutSteamId();
             }
         }
         if (isNewFightAccepted(playerName, currentOpponentName, currentLoadedOpponentName)) {

@@ -51,7 +51,7 @@ bool isOpponentSteamIdValid() {
     return true;
 }
 
-char* handleNewOpponent(char* playerName, char* currentOpponentName) {
+char* handleNewOpponent(char* currentOpponentName) {
     char* newOpponentName;
     QWORD steamId;
     size_t steamIdBufferSize;
@@ -79,6 +79,7 @@ char* handleNewOpponent(char* playerName, char* currentOpponentName) {
         characterName = NULL;
         characterNameMessage = copyString((char*) "| Unknown character.");
     }
+	updateOpponentFoundMessage(newOpponentName);
     updateFightThisPlayerMessage(playerlistComment);
     updateSecondsRemainingMessage(characterNameMessage);
     if (characterName == NULL) {
@@ -105,10 +106,8 @@ char* handleNewOpponent(char* playerName, char* currentOpponentName) {
 	return newOpponentName; // calling function should set currentOpponentName equal to newOpponentName
 }
 
-void updateOpponentFoundMessage() {
-    char* newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	writeStringUnlimitedToMemory(tekkenHandle, opponentFoundMessagePointer, newOpponentName);
-    free(newOpponentName);
+void updateOpponentFoundMessage(char* message) {
+	writeStringUnlimitedToMemory(tekkenHandle, opponentFoundMessagePointer, message);
 }
 
 void updateFightThisPlayerMessage(char* message) {
@@ -117,6 +116,44 @@ void updateFightThisPlayerMessage(char* message) {
 
 void updateSecondsRemainingMessage(char* message) {
 	writeStringUnlimitedToMemory(tekkenHandle, secondsRemainingMessagePointer, message);
+}
+
+void updateMessagesWithoutSteamId() {
+    char* newOpponentName;
+    std::string fileString;
+    char* line;
+    char* playerlistComment;
+    char* characterNameMessage;
+    char* characterName;
+	newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
+    fileString = fileToString((char*)PLAYERLIST_PATH);
+	// without the steam id: search the playerlist by name instead of by steam id
+    line = findLineInStringVector(stringToLines((char*) fileString.c_str()), newOpponentName);
+    if (line != NULL) {
+        playerlistComment = extractCommentFromPlayerlistLine(line);
+        characterName = extractCharacterFromPlayerlistLine(line);
+        characterNameMessage = myStringCat((char*)"| Last used: ", characterName);
+    }
+    else {
+        playerlistComment = copyString((char*) "Brand new opponent!");
+        characterName = NULL;
+        characterNameMessage = copyString((char*) "| Unknown character.");
+    }
+	updateOpponentFoundMessage(newOpponentName);
+    updateFightThisPlayerMessage(playerlistComment);
+    updateSecondsRemainingMessage(characterNameMessage);
+    if (characterName != NULL) {
+		free(characterName);
+    }
+    if (characterNameMessage != NULL) {
+		free(characterNameMessage);
+    }
+    if (playerlistComment != NULL) {
+		free(playerlistComment);
+    }
+    if (line != NULL) {
+		free(line);
+    }
 }
 
 bool isNewFightAccepted(char* playerName, char* currentOpponentName, char* currentLoadedOpponentName) {
