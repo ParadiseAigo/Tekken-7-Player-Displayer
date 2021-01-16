@@ -19,6 +19,7 @@ extern HANDLE tekkenHandle;
 extern HWND tekkenWindowHandle;
 extern int tekkenPid;
 extern QWORD lastFoundSteamId;
+extern char* lastFoughtOpponentName;
 
 extern void* fightThisPlayerMessagePointer;
 extern void* secondsRemainingMessagePointer;
