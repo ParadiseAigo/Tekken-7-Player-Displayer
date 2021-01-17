@@ -115,6 +115,11 @@ void mainLoop() {
             currentLoadedOpponentName = saveNewOpponentInPlayerlist(playerName, currentOpponentName, currentLoadedOpponentName);
             lastFoughtOpponentName = currentLoadedOpponentName;
             currentState = IN_FIGHT;
+        } 
+        if (!isWindow(tekkenWindowHandle)) {
+            Sleep(3000); // wait to make sure the tekken process has closed after the window was closed
+            init();
         }
+
     }
 }
