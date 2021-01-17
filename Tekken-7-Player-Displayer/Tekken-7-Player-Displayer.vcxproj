@@ -143,12 +143,21 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="memory.cpp" />
+    <ClCompile Include="update.cpp" />
     <ClCompile Include="tekken.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="player-displayer.h" />
     <ClInclude Include="pointers.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Tekken-7-Player-Displayer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\application.ico" />
+    <Image Include="images\background.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

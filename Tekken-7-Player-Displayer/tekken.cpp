@@ -33,12 +33,12 @@ bool isOpponentSteamIdValid() {
     QWORD steamId;
 	steamIdPointer = (void*)getDynamicPointer(tekkenHandle, (void*)STEAM_ID_STATIC_POINTER, STEAM_ID_POINTER_OFFSETS);
     if (! isMemoryReadable(tekkenHandle, steamIdPointer)) {
-        printf("Steam Id (memory) not readable (probably late).\n");
+        print(std::string("Steam Id (memory) not readable (probably late).\r\n"));
         return false;
     }
     steamId = readQwordFromMemory(tekkenHandle, steamIdPointer);
     if (steamId < 0x0110000100000000 || steamId > 0x0110000200000000) {
-        printf("Steam Id is bad!\n");
+        print(std::string("Steam Id is bad!\r\n"));
         // steam id is 64 bits (8 bytes) long: 0x FF FF FF FF FF FF FF FF
         // first 8 bits represent the "universe" and its always equal to 1 for normal accounts
         // next 4 bits represent the "type" and its also always equal to 1 for normal accounts
@@ -62,11 +62,11 @@ char* handleNewOpponent(char* playerName, char* currentOpponentName) {
     char* characterNameMessage;
     char* characterName;
 	newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	printf("New opponent found:  %s\n", newOpponentName);
+    print(std::string("New opponent found:  ").append(std::string(newOpponentName)).append(std::string("\r\n")));
     steamIdBufferSize = 100;
     steamIdBuffer = (char*)malloc(steamIdBufferSize * sizeof(char));
     steamId = lastFoundSteamId;
-    sprintf_s(steamIdBuffer, steamIdBufferSize + 1, "(%I64u)", steamId);
+    sprintf_s(steamIdBuffer, steamIdBufferSize, "(%I64u)", steamId);
     fileString = fileToString((char*)PLAYERLIST_PATH);
     line = findLineInStringVector(stringToLines((char*) fileString.c_str()), steamIdBuffer);
     if (line != NULL) {
@@ -82,12 +82,12 @@ char* handleNewOpponent(char* playerName, char* currentOpponentName) {
     updateFightThisPlayerMessage(playerlistComment);
     updateSecondsRemainingMessage(characterNameMessage);
     if (characterName == NULL) {
-        printf("Last used character: /\n");
+        print(std::string("Last used character: /\r\n"));
     }
     else {
-		printf("Last used character: %s\n", characterName);
+        print(std::string("Last used character: ").append(std::string(characterName)).append(std::string("\r\n")));
     }
-    printf("Comment:             %s\n", playerlistComment);
+    print(std::string("Comment:             ").append(std::string(playerlistComment)).append(std::string("\r\n")));
     if (characterName != NULL) {
 		free(characterName);
     }

@@ -70,13 +70,13 @@ char* copyString(char* s) {
 }
 
 void openPlayerlist() {
-    std::cout << "Opening playerlist..." << std::endl;
+    print(std::string("Opening playerlist...\r\n"));
     if (doesFileExist((char*) PLAYERLIST_PATH)) {
 		setScreenMode(SCREEN_MODE_WINDOWED);
 		ShellExecute(0, 0, TEXT(PLAYERLIST_PATH), 0, 0 , SW_SHOW ); //(const wchar_t*)
     }
     else {
-        std::cout << "Playerlist is not found, creating a new one..." << std::endl;
+        print(std::string("Playerlist is not found, creating a new one...\r\n"));
         createFile((char*) PLAYERLIST_PATH);
     }
 }
@@ -97,10 +97,10 @@ void createFile(char* filePath) {
 	FILE* file;
 	errno_t errorCode;
     if (0 != (errorCode = fopen_s(&file, filePath, "a"))) {
-        printf("Error in createFile: Error creating the file %s\n", filePath);
+        print(std::string("Error in createFile: Error creating the file ").append(std::string(filePath)).append(std::string("\r\n")));
     }
     else {
-        printf("File \"%s\" created.\n", filePath);
+        print(std::string("File \"").append(std::string(filePath)).append(std::string("\" created.\r\n")));
         fclose(file);
     }
 }
@@ -120,13 +120,13 @@ void saveNewPlayerlistEntry(char* currentLoadedOpponentName) {
 	opponentStructCharacterPointer = (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_CHARACTER_STATIC_POINTER, OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS);
 	newOpponentStructCharacter = readDwordFromMemory(tekkenHandle, opponentStructCharacterPointer);
     steamId = lastFoundSteamId;
-	std::cout << "New opponent    : " << currentLoadedOpponentName << std::endl;
-    std::cout << "Character id    : " << newOpponentStructCharacter << std::endl;
-    std::cout << "Steam id        : " << steamId << std::endl;
+    print(std::string("New opponent    : ").append(std::string(currentLoadedOpponentName)).append(std::string("\r\n")));
+    print(std::string("Character id    : ").append(std::to_string(newOpponentStructCharacter)).append(std::string("\r\n")));
+    print(std::string("Steam id        : ").append(std::to_string(steamId)).append(std::string("\r\n")));
     if (newOpponentStructCharacter != 255) {
-        std::cout << "Character name:   " << allCharacters[newOpponentStructCharacter].c_str() << std::endl;
+        print(std::string("Character name:   ").append(allCharacters[newOpponentStructCharacter]).append(std::string("\r\n")));
         newPlayerlistLine = makePlayerlistEntry(currentLoadedOpponentName, (char*) allCharacters[newOpponentStructCharacter].c_str(), steamId);
-        std::cout << "Playerlist entry: " << newPlayerlistLine << std::endl;
+        print(std::string("Playerlist entry: ").append(std::string(newPlayerlistLine)).append(std::string("\r\n")));
         writeLineToFile((char*)PLAYERLIST_PATH, newPlayerlistLine);
 		free(newPlayerlistLine);
     }
@@ -135,15 +135,15 @@ void saveNewPlayerlistEntry(char* currentLoadedOpponentName) {
 char* makePlayerlistEntry(char* playerName, char* characterName, QWORD steamId) {
     // aigo this entire function needs testing
     std::string result = "";
-    int steamIdBufferSize = 40;
+    int steamIdBufferSize = 100;
     char* steamIdBuffer = (char*) malloc(steamIdBufferSize * sizeof(char));
-    sprintf_s(steamIdBuffer, steamIdBufferSize + 1, "(%I64u)", steamId);
+    sprintf_s(steamIdBuffer, steamIdBufferSize, "(%I64u)", steamId);
     result.append(playerName);
-    result.append("\t\t\t");
+    result.append(PLAYERLIST_COLUMN_DELIMITER);
     result.append(characterName);
-    result.append("\t\t\t");
+    result.append(PLAYERLIST_COLUMN_DELIMITER);
     result.append(steamIdBuffer);
-    result.append("\t\t\t");
+    result.append(PLAYERLIST_COLUMN_DELIMITER);
     result.append("no comment yet");
     free(steamIdBuffer);
     return copyString((char*) result.c_str());
@@ -154,10 +154,10 @@ char* makePlayerlistEntry(char* playerName, char* characterName, QWORD steamId) 
     int steamIdBufferSize = 40;
     char* steamIdBuffer = (char*) malloc(steamIdBufferSize * sizeof(char));
     sprintf_s(steamIdBuffer, steamIdBufferSize + 1, "(%I64u)", steamId);
-    temp1 = myStringCat(playerName, (char*)"\t\t\t");
+    temp1 = myStringCat(playerName, (char*)PLAYERLIST_COLUMN_DELIMITER);
     temp2 = myStringCat(temp1, characterName);
     free(temp1);
-    temp1 = myStringCat(temp2, (char*)"\t\t\t");
+    temp1 = myStringCat(temp2, (char*)PLAYERLIST_COLUMN_DELIMITER);
     free(temp2);
     temp2 = myStringCat(temp1, steamIdBuffer);
     free(temp1);
@@ -171,9 +171,8 @@ char* makePlayerlistEntry(char* playerName, char* characterName, QWORD steamId) 
 void writeLineToFile(char* path, char* line) {
     FILE* file;
     errno_t errorCode;
-    if (0 != (errorCode = fopen_s(&file, path, "r+"))) {
-        printf("Error opening a file in writeLineToFile, error code = %d\n", errorCode);
-        //system("PAUSE");
+    if (0 != (errorCode = fopen_s(&file, path, "a+"))) {
+        print(std::string("Error opening a file in writeLineToFile, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
         return;
     }
 	fseek(file, 0L, SEEK_END);
@@ -210,7 +209,7 @@ std::string fileToString(char* filePath) {
     std::string result = "";
     char c;
     if (0 != fopen_s(&file, filePath, "r")) {
-        printf("Error opening the file %s in fileToString\n", filePath);
+        print(std::string("Error opening the file ").append(std::string(filePath)).append(std::string(" in fileToString\r\n")));
         return "";
     }
     while ((c = getc(file)) != EOF) {
