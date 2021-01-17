@@ -2,7 +2,7 @@
 #include "pointers.h"
 
 //TODO:
-//-> / 
+//-> /
 
 HANDLE tekkenHandle;
 HWND tekkenWindowHandle;

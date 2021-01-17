@@ -101,11 +101,14 @@ void mainLoop() {
             print(std::string("Ready to find the next opponent.\r\n"));
         }
         if (isNewOpponentReceived(playerName, currentOpponentName)) {
-            updateOpponentFoundMessage(); // display opponents name in-game
-                                          // this has to happen asap (before any other
-                                          // checks) or it might not update in-game
             if (isOpponentSteamIdValid()) {
-                currentOpponentName = handleNewOpponent(playerName, currentOpponentName);
+                currentOpponentName = handleNewOpponent(currentOpponentName);
+            }
+            else {  // if opponent steam id is "late",
+                    // update in-game messages anyway
+                    // (using opponents name instead of steam id)
+                    // or it might not ever update in-game
+                updateMessagesWithoutSteamId();
             }
         }
         if (isNewFightAccepted(playerName, currentOpponentName, currentLoadedOpponentName)) {
