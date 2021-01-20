@@ -144,7 +144,7 @@ char* makePlayerlistEntry(char* playerName, char* characterName, QWORD steamId) 
     result.append(PLAYERLIST_COLUMN_DELIMITER);
     result.append(steamIdBuffer);
     result.append(PLAYERLIST_COLUMN_DELIMITER);
-    result.append("no comment yet");
+    result.append(DEFAULT_COMMENT);
     free(steamIdBuffer);
     return copyString((char*) result.c_str());
 
@@ -178,6 +178,41 @@ void writeLineToFile(char* path, char* line) {
 	fseek(file, 0L, SEEK_END);
     fprintf(file, "%s\n", line);
     fclose(file);
+}
+
+void replaceCommentInLastLineInFile(char* path, char* comment) {
+    FILE* file;
+    errno_t errorCode;
+    if (0 != (errorCode = fopen_s(&file, path, "r+"))) {
+        print(std::string("Error opening a file in replaceCommentInLastLineInFile, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
+        return;
+    }
+    char c;
+    fseek(file, 0, SEEK_END);
+    long i = ftell(file);
+    while (c = getc(file) != '\t') {
+        i--;
+        fseek(file, i, SEEK_SET);
+    }
+    i++;
+    fseek(file, i, SEEK_SET);
+    fprintf(file, "%s\n", comment);
+    fclose(file);
+
+    long indexEndOfComment = i + strlen(comment) + strlen("\n\r");
+    setEndOfFileAtIndex(path, indexEndOfComment);
+}
+
+void setEndOfFileAtIndex(char* path, long index) {
+    HANDLE fileHandle = CreateFile((LPCTSTR)TEXT(PLAYERLIST_PATH), GENERIC_WRITE,
+        FILE_SHARE_READ, NULL, CREATE_NEW | OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    errno_t errorCode = GetLastError();
+    if (errorCode > 0) {
+        print(std::string("Error opening a file in setEndOfFileAtIndex, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
+    }
+    SetFilePointer(fileHandle, index, 0, FILE_BEGIN);
+    SetEndOfFile(fileHandle);
+    CloseHandle(fileHandle);
 }
 
 char* findLineInStringVector(std::vector<std::string> v, char* pattern) {

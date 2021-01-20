@@ -120,6 +120,5 @@ void mainLoop() {
             Sleep(3000); // wait to make sure the tekken process has closed after the window was closed
             init();
         }
-
     }
 }

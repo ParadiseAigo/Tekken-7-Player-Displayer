@@ -34,7 +34,9 @@
 
 #define FONT_SIZE 16
 #define EDITBOX_TEXT_MAX_LENGTH 256
+
 #define PLAYERLIST_COLUMN_DELIMITER "\t\t\t"
+#define DEFAULT_COMMENT "no comment yet"
 
 #define COLOR_BLACK RGB(0, 0, 0)
 #define COLOR_WHITE RGB(255, 255, 255)
@@ -91,7 +93,6 @@ extern HWND tekkenWindowHandle;
 extern int tekkenPid;
 extern QWORD lastFoundSteamId;
 extern char* lastFoughtOpponentName;
-extern char* lastFoughtOpponentLineInFile;
 
 extern void* fightThisPlayerMessagePointer;
 extern void* secondsRemainingMessagePointer;
@@ -165,6 +166,8 @@ char* saveNewOpponentInPlayerlist(char* playerName, char* currentOpponentName, c
 void saveNewPlayerlistEntry(char* currentLoadedOpponentName);
 char* makePlayerlistEntry(char* playerName, char* characterName, QWORD steamId);
 void writeLineToFile(char* path, char* line);
+void replaceCommentInLastLineInFile(char* path, char* comment);
+void setEndOfFileAtIndex(char* path, long position);
 char* findLineInStringVector(std::vector<std::string> v, char* pattern);
 std::vector<std::string> stringToLines(char* s);
 std::string fileToString(char* filePath);
@@ -208,10 +211,10 @@ LRESULT CALLBACK commentWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lp
 LRESULT CALLBACK subEditProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
 void openCommentWindow();
 bool isWindow(HWND windowHandle);
-boolean isLastFoughtOpponentFound();
 void setOpponentNameInCommentWindowTitle();
 void disableCommentWindowEditbox();
 void saveCommentAndCloseCommentWindow();
+void saveComment();
 char* getTextFromCommentEditbox();
 void writeCommentToFile(void* text);
 std::string setCommentInLine(char* line, char* comment);

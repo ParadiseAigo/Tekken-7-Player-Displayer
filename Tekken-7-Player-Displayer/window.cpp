@@ -92,19 +92,19 @@ void createMainWindow() {
 
     HWND welcomeTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_WELCOME),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        50, 120 - 16, WIDTH_MAINWINDOW - 130, FONT_SIZE * 3 + 10, windows.mainWindowHandle);
+        50, 104, WIDTH_MAINWINDOW - 130, FONT_SIZE * 3 + 10, windows.mainWindowHandle);
 
     windows.outputTextHandle = createWindow(WS_EX_PALETTEWINDOW, TEXT("Edit"), NULL,
         WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL,
-        50, 185 - 16, WIDTH_MAINWINDOW - 130, FONT_SIZE * 6 + 10, windows.mainWindowHandle);
+        50, 169, WIDTH_MAINWINDOW - 130, FONT_SIZE * 6 + 10, windows.mainWindowHandle);
 
     HWND informationTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_INFORMATION),
         WS_CHILD | WS_VISIBLE | WS_BORDER,
-        50, 235 + 47, WIDTH_MAINWINDOW - 130, FONT_SIZE * 5 + 10, windows.mainWindowHandle);
+        50, 282, WIDTH_MAINWINDOW - 130, FONT_SIZE * 5 + 10, windows.mainWindowHandle);
 
     HWND creditsTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_CREDITS),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_LEFT,
-        540 - 55 - 20, 377, 80 + 48 + 25, 16, windows.mainWindowHandle);
+        465, 377, 153, 16, windows.mainWindowHandle);
 
     SetLayeredWindowAttributes(windows.mainWindowHandle, 0, (255 * WINDOW_OPACITY) / 100, LWA_ALPHA);
     HBITMAP backgroundBitmapHandle = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(BACKGROUND));
@@ -144,7 +144,7 @@ void createCommentWindow() {
     sendMessage(windows.commentEditboxHandle, WM_KEYDOWN, (WPARAM)VK_LBUTTON, 0);
     sendMessage(windows.commentEditboxHandle, WM_KEYUP, (WPARAM)VK_LBUTTON, 0);
 
-    if (isLastFoughtOpponentFound()) {
+    if (lastFoughtOpponentName != NULL) {
         setOpponentNameInCommentWindowTitle();
         setFocus(windows.commentEditboxHandle);
     } else {
@@ -264,18 +264,6 @@ bool isWindow(HWND windowHandle) {
     return IsWindow(windowHandle);
 }
 
-boolean isLastFoughtOpponentFound() {
-    if (lastFoughtOpponentName != NULL) {
-        std::string name = std::string(lastFoughtOpponentName);
-        std::string fileContent = fileToString((char*)PLAYERLIST_PATH);
-        lastFoughtOpponentLineInFile = findLineInStringVector(stringToLines((char*)fileContent.c_str()), (char*)name.c_str()); // global variable
-        if (lastFoughtOpponentLineInFile != NULL) {
-            return true;
-        }
-    }
-    return false;
-}
-
 void setOpponentNameInCommentWindowTitle() {
     wchar_t* name = stringToWString(lastFoughtOpponentName);
     sendMessage(windows.commentWindowHandle, WM_SETTEXT, 0, (LPARAM)std::wstring(L"Comment").append(L" - Player: ").append(std::wstring(name)).c_str());
@@ -293,13 +281,17 @@ void disableCommentWindowEditbox() {
 }
 
 void saveCommentAndCloseCommentWindow() {
-    if (lastFoughtOpponentLineInFile != NULL) {
+    saveComment();
+    closeCommentWindow();
+}
+
+void saveComment() {
+    if (lastFoughtOpponentName != NULL) {
         char* text = getTextFromCommentEditbox();
         if (text[0] != '\0') {
             _beginthread(writeCommentToFile, 0, (void*)text);
         }
     }
-    closeCommentWindow();
 }
 
 char* getTextFromCommentEditbox() {
@@ -311,10 +303,10 @@ char* getTextFromCommentEditbox() {
 
 void writeCommentToFile(void* text) {
     char* comment = (char*)text;
-    std::string line = setCommentInLine(lastFoughtOpponentLineInFile, comment);
-    writeLineToFile((char*)PLAYERLIST_PATH, (char*)line.c_str());
-    print(std::string("Saved Playerlist entry: \"").append(line).append(std::string("\"\r\n")));
-    lastFoughtOpponentLineInFile = NULL;
+    replaceCommentInLastLineInFile((char*)PLAYERLIST_PATH, comment);
+
+    print(std::string("Saved comment for player \"").append(std::string(lastFoughtOpponentName))
+                .append(std::string("\": ")).append(std::string(comment)).append(std::string("\r\n")));
     free(comment);
 }
 

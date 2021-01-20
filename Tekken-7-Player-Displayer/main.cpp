@@ -9,7 +9,6 @@ HWND tekkenWindowHandle;
 int tekkenPid;
 QWORD lastFoundSteamId;
 char* lastFoughtOpponentName;
-char* lastFoughtOpponentLineInFile;
 
 void* fightThisPlayerMessagePointer;
 void* secondsRemainingMessagePointer;
