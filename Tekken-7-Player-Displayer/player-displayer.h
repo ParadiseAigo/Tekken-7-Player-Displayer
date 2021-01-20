@@ -12,6 +12,14 @@
 #include <process.h> // _beginthread
 #include "resource.h" 
 
+#pragma comment(linker,"/manifestdependency:\"type='win32' "\
+                   "name='Microsoft.Windows.Common-Controls' "\
+                   "version='6.0.0.0' "\
+                   "processorArchitecture='*' "\
+                   "publicKeyToken='6595b64144ccf1df' "\
+                   "language='*' "\
+                   "\"") 
+
 #define PLAYERLIST_PATH "Tekken Player List.txt"
 
 #define TITLE_MAINWINDOW "Tekken 7 - Player Displayer"
@@ -167,6 +175,7 @@ void saveNewPlayerlistEntry(char* currentLoadedOpponentName);
 char* makePlayerlistEntry(char* playerName, char* characterName, QWORD steamId);
 void writeLineToFile(char* path, char* line);
 void replaceCommentInLastLineInFile(char* path, char* comment);
+long writeAfterLastOccurenceOfCharInFile(char* path, char* text, char charToWriteAfter);
 void setEndOfFileAtIndex(char* path, long position);
 char* findLineInStringVector(std::vector<std::string> v, char* pattern);
 std::vector<std::string> stringToLines(char* s);
@@ -202,17 +211,19 @@ void createMainWindow();
 void createCommentWindow();
 HWND createWindow(DWORD extendedStyle, LPCWSTR className, LPCWSTR windowName, DWORD style,
     int x, int y, int width, int height, HWND parentWindowHandle = NULL);
-void showWindow(HWND windowHandle, int showCommand);
-void setFocus(HWND windowHandle);
 void sendMessage(HWND windowHandle, UINT msg, WPARAM wparam, LPARAM lparam);
+void showWindow(HWND windowHandle, int showCommand);
 void handleWindowsMessageQueueLoop();
 LRESULT CALLBACK mainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 LRESULT CALLBACK commentWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 LRESULT CALLBACK subEditProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
 void openCommentWindow();
 bool isWindow(HWND windowHandle);
+void setForegroundWindow(HWND windowHandle);
 void setOpponentNameInCommentWindowTitle();
 void disableCommentWindowEditbox();
+void setFocusCommentWindow();
+void setFocus(HWND windowHandle);
 void saveCommentAndCloseCommentWindow();
 void saveComment();
 char* getTextFromCommentEditbox();
@@ -227,6 +238,8 @@ BOOL isWindowVisible(HWND windowHandle);
 void print(std::string text);
 void printToStandardOutput(std::string text);
 void printToTextboxOutput(std::string text);
+void waitForWindowToBeCreated(HWND& windowHandle);
+void printTextToEditControl(std::string text, HWND& editControlHandle);
 wchar_t* stringToWString(std::string text);
 void closeAllWindows();
 void closeCommentWindow();

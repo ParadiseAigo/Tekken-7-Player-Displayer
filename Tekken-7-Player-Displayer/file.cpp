@@ -181,26 +181,33 @@ void writeLineToFile(char* path, char* line) {
 }
 
 void replaceCommentInLastLineInFile(char* path, char* comment) {
+    long indexCommentBegin = writeAfterLastOccurenceOfCharInFile(path, comment, '\t');
+    if (indexCommentBegin == -1) {
+        return;
+    }
+    long indexCommentEnd = indexCommentBegin + strlen(comment) + strlen("\n\r");
+    setEndOfFileAtIndex(path, indexCommentEnd);
+}
+
+long writeAfterLastOccurenceOfCharInFile(char* path, char* text, char charToWriteAfter) {
     FILE* file;
     errno_t errorCode;
     if (0 != (errorCode = fopen_s(&file, path, "r+"))) {
-        print(std::string("Error opening a file in replaceCommentInLastLineInFile, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
-        return;
+        print(std::string("Error opening a file in writeAfterLastOccurenceOfCharInFile, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
+        return -1;
     }
     char c;
     fseek(file, 0, SEEK_END);
     long i = ftell(file);
-    while (c = getc(file) != '\t') {
+    while (c = getc(file) != charToWriteAfter && i > 0) {
         i--;
         fseek(file, i, SEEK_SET);
     }
     i++;
     fseek(file, i, SEEK_SET);
-    fprintf(file, "%s\n", comment);
+    fprintf(file, "%s\n", text);
     fclose(file);
-
-    long indexEndOfComment = i + strlen(comment) + strlen("\n\r");
-    setEndOfFileAtIndex(path, indexEndOfComment);
+    return i;
 }
 
 void setEndOfFileAtIndex(char* path, long index) {

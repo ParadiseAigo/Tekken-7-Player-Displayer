@@ -80,6 +80,8 @@ void initFontsAndBrushes() {
 void createMainWindow() {
     int X_MAINWINDOW = SCREEN_WIDTH / 2 - WIDTH_MAINWINDOW / 2;
     int Y_MAINWINDOW = SCREEN_HEIGHT / 2 - HEIGHT_MAINWINDOW / 2;
+    int WIDTH_TEXTBOX = WIDTH_MAINWINDOW - 130;
+    int X_TEXTBOX = WIDTH_MAINWINDOW / 2 - WIDTH_TEXTBOX / 2 - 10;
 
     windows.mainWindowHandle = createWindow(WS_EX_DLGMODALFRAME | WS_EX_LAYERED,
         TEXT(CLASSNAME_MAINWINDOW), TEXT(TITLE_MAINWINDOW),
@@ -92,15 +94,15 @@ void createMainWindow() {
 
     HWND welcomeTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_WELCOME),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        50, 104, WIDTH_MAINWINDOW - 130, FONT_SIZE * 3 + 10, windows.mainWindowHandle);
+        X_TEXTBOX, 104, WIDTH_TEXTBOX, FONT_SIZE * 3 + 10, windows.mainWindowHandle);
 
     windows.outputTextHandle = createWindow(WS_EX_PALETTEWINDOW, TEXT("Edit"), NULL,
         WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL,
-        50, 169, WIDTH_MAINWINDOW - 130, FONT_SIZE * 6 + 10, windows.mainWindowHandle);
+        X_TEXTBOX, 169, WIDTH_TEXTBOX, FONT_SIZE * 6 + 10, windows.mainWindowHandle);
 
     HWND informationTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_INFORMATION),
         WS_CHILD | WS_VISIBLE | WS_BORDER,
-        50, 282, WIDTH_MAINWINDOW - 130, FONT_SIZE * 5 + 10, windows.mainWindowHandle);
+        X_TEXTBOX, 282, WIDTH_TEXTBOX, FONT_SIZE * 5 + 10, windows.mainWindowHandle);
 
     HWND creditsTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_CREDITS),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_LEFT,
@@ -141,16 +143,14 @@ void createCommentWindow() {
     sendMessage(windows.commentEditboxHandle, WM_SETFONT, (WPARAM)fonts.editboxTextFont, TRUE);
     sendMessage(windows.commentEditboxHandle, EM_SETLIMITTEXT, EDITBOX_TEXT_MAX_LENGTH, 0);
     sendMessage(windows.commentButtonHandle, WM_SETFONT, (LPARAM)GetStockObject(DEFAULT_GUI_FONT), true);
-    sendMessage(windows.commentEditboxHandle, WM_KEYDOWN, (WPARAM)VK_LBUTTON, 0);
-    sendMessage(windows.commentEditboxHandle, WM_KEYUP, (WPARAM)VK_LBUTTON, 0);
 
     if (lastFoughtOpponentName != NULL) {
         setOpponentNameInCommentWindowTitle();
-        setFocus(windows.commentEditboxHandle);
     } else {
         disableCommentWindowEditbox();
     }
 
+    setFocusCommentWindow();
     showWindow(windows.commentWindowHandle, SW_SHOW);
 }
 
@@ -161,16 +161,12 @@ HWND createWindow(DWORD extendedStyle, LPCWSTR className, LPCWSTR windowName, DW
         parentWindowHandle, NULL, NULL, NULL);
 }
 
-void showWindow(HWND windowHandle, int showCommand) {
-    ShowWindow(windowHandle, showCommand);
-}
-
-void setFocus(HWND windowHandle) {
-    SetFocus(windowHandle);
-}
-
 void sendMessage(HWND windowHandle, UINT msg, WPARAM wparam, LPARAM lparam) {
     SendMessage(windowHandle, msg, wparam, lparam);
+}
+
+void showWindow(HWND windowHandle, int showCommand) {
+    ShowWindow(windowHandle, showCommand);
 }
 
 void handleWindowsMessageQueueLoop() { // loop to pull messages from queue for all windows in current thread
@@ -257,11 +253,18 @@ LRESULT CALLBACK subEditProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 void openCommentWindow() {
     if (!isWindow(windows.commentWindowHandle)) {
         createCommentWindow();
+    } else {
+        setForegroundWindow(windows.commentWindowHandle);
+        setFocusCommentWindow();
     }
 }
 
 bool isWindow(HWND windowHandle) {
     return IsWindow(windowHandle);
+}
+
+void setForegroundWindow(HWND windowHandle) {
+    SetForegroundWindow(windowHandle);
 }
 
 void setOpponentNameInCommentWindowTitle() {
@@ -278,6 +281,18 @@ void disableCommentWindowEditbox() {
     sendMessage(windows.commentEditboxHandle, WM_SETFONT, (WPARAM)fonts.editboxReadOnlyTextFont, TRUE);
     sendMessage(windows.commentEditboxHandle, EM_SETREADONLY, (WPARAM)TRUE, 0);
     sendMessage(windows.commentButtonHandle, WM_SETTEXT, 0, (LPARAM)L"Close");
+}
+
+void setFocusCommentWindow() {
+    if (lastFoughtOpponentName != NULL) {
+        setFocus(windows.commentEditboxHandle);
+    }
+    sendMessage(windows.commentEditboxHandle, WM_KEYDOWN, (WPARAM)VK_LBUTTON, 0);
+    sendMessage(windows.commentEditboxHandle, WM_KEYUP, (WPARAM)VK_LBUTTON, 0);
+}
+
+void setFocus(HWND windowHandle) {
+    SetFocus(windowHandle);
 }
 
 void saveCommentAndCloseCommentWindow() {
@@ -380,14 +395,25 @@ void printToStandardOutput(std::string text) {
 }
 
 void printToTextboxOutput(std::string text) {
-    while (continueThreads && !isWindow(windows.outputTextHandle)) {
-        Sleep(100); // wait for window to be created
+    if (!isWindow(windows.outputTextHandle)) {
+        waitForWindowToBeCreated(windows.outputTextHandle);
+    } else {
+        printTextToEditControl(text, windows.outputTextHandle);
     }
+}
+
+void waitForWindowToBeCreated(HWND& windowHandle) {
+    do {
+        Sleep(100); 
+    } while (continueThreads && !isWindow(windowHandle));
+}
+
+void printTextToEditControl(std::string text, HWND& editControlHandle) {
     wchar_t* textBuffer = stringToWString(text);
-    int indexEndOfText = GetWindowTextLength(windows.outputTextHandle);
-    sendMessage(windows.outputTextHandle, EM_SETSEL, (WPARAM)indexEndOfText, (LPARAM)indexEndOfText);
-    sendMessage(windows.outputTextHandle, EM_REPLACESEL, 0, (LPARAM)textBuffer);
-    sendMessage(windows.outputTextHandle, WM_VSCROLL, (WPARAM) SB_LINEUP, NULL); // don't display last newline
+    int indexEndOfText = GetWindowTextLength(editControlHandle);
+    sendMessage(editControlHandle, EM_SETSEL, (WPARAM)indexEndOfText, (LPARAM)indexEndOfText);
+    sendMessage(editControlHandle, EM_REPLACESEL, 0, (LPARAM)textBuffer);
+    sendMessage(editControlHandle, WM_VSCROLL, (WPARAM)SB_LINEUP, NULL); // don't display last newline
     delete[] textBuffer;
 }
 
