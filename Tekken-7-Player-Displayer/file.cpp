@@ -70,13 +70,13 @@ char* copyString(char* s) {
 }
 
 void openPlayerlist() {
-	std::cout << "Opening playerlist..." << std::endl;
+	print(std::string("Opening playerlist...\r\n"));
 	if (doesFileExist((char*) PLAYERLIST_PATH)) {
 		setScreenMode(SCREEN_MODE_WINDOWED);
 		ShellExecute(0, 0, TEXT(PLAYERLIST_PATH), 0, 0 , SW_SHOW ); //(const wchar_t*)
 	}
 	else {
-		std::cout << "Playerlist is not found, creating a new one..." << std::endl;
+		print(std::string("Playerlist is not found, creating a new one...\r\n"));
 		createFile((char*) PLAYERLIST_PATH);
 	}
 }
@@ -97,10 +97,10 @@ void createFile(char* filePath) {
 	FILE* file;
 	errno_t errorCode;
 	if (0 != (errorCode = fopen_s(&file, filePath, "a"))) {
-		printf("Error in createFile: Error creating the file %s\n", filePath);
+		print(std::string("Error in createFile: Error creating the file ").append(std::string(filePath)).append(std::string("\r\n")));
 	}
 	else {
-		printf("File \"%s\" created.\n", filePath);
+		print(std::string("File \"").append(std::string(filePath)).append(std::string("\" created.\r\n")));
 		fclose(file);
 	}
 }
@@ -120,13 +120,13 @@ void saveNewPlayerlistEntry(char* currentLoadedOpponentName) {
 	opponentStructCharacterPointer = (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_CHARACTER_STATIC_POINTER, OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS);
 	newOpponentStructCharacter = readDwordFromMemory(tekkenHandle, opponentStructCharacterPointer);
 	steamId = lastFoundSteamId;
-	std::cout << "New opponent	: " << currentLoadedOpponentName << std::endl;
-	std::cout << "Character id	: " << newOpponentStructCharacter << std::endl;
-	std::cout << "Steam id		: " << steamId << std::endl;
+	print(std::string("New opponent    : ").append(std::string(currentLoadedOpponentName)).append(std::string("\r\n")));
+	print(std::string("Character id    : ").append(std::to_string(newOpponentStructCharacter)).append(std::string("\r\n")));
+	print(std::string("Steam id        : ").append(std::to_string(steamId)).append(std::string("\r\n")));
 	if (newOpponentStructCharacter != 255) {
-		std::cout << "Character name:   " << allCharacters[newOpponentStructCharacter].c_str() << std::endl;
+		print(std::string("Character name:   ").append(allCharacters[newOpponentStructCharacter]).append(std::string("\r\n")));
 		newPlayerlistLine = makePlayerlistEntry(currentLoadedOpponentName, (char*) allCharacters[newOpponentStructCharacter].c_str(), steamId);
-		std::cout << "Playerlist entry: " << newPlayerlistLine << std::endl;
+		print(std::string("Playerlist entry: ").append(std::string(newPlayerlistLine)).append(std::string("\r\n")));
 		writeLineToFile((char*)PLAYERLIST_PATH, newPlayerlistLine);
 		free(newPlayerlistLine);
 	}
@@ -172,7 +172,7 @@ void writeLineToFile(char* path, char* line) {
 	FILE* file;
 	errno_t errorCode;
 	if (0 != (errorCode = fopen_s(&file, path, "r+"))) {
-		printf("Error opening a file in writeLineToFile, error code = %d\n", errorCode);
+		print(std::string("Error opening a file in writeLineToFile, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
 		//system("PAUSE");
 		return;
 	}
@@ -210,7 +210,7 @@ std::string fileToString(char* filePath) {
 	std::string result = "";
 	char c;
 	if (0 != fopen_s(&file, filePath, "r")) {
-		printf("Error opening the file %s in fileToString\n", filePath);
+		print(std::string("Error opening the file ").append(std::string(filePath)).append(std::string(" in fileToString\r\n")));
 		return "";
 	}
 	while ((c = getc(file)) != EOF) {
@@ -240,5 +240,47 @@ bool bruteForceFind(char* text, char* pattern) {
 			i_p = 0;
 		}
 	}
+}
+
+void replaceCommentInLastLineInFile(char* path, char* comment) {
+	long indexCommentBegin = writeAfterLastOccurenceOfCharInFile(path, comment, '\t');
+	if (indexCommentBegin == -1) {
+		return;
+	}
+	long indexCommentEnd = indexCommentBegin + strlen(comment) + strlen("\n\r");
+	setEndOfFileAtIndex(path, indexCommentEnd);
+}
+
+long writeAfterLastOccurenceOfCharInFile(char* path, char* text, char charToWriteAfter) {
+	FILE* file;
+	errno_t errorCode;
+	if (0 != (errorCode = fopen_s(&file, path, "r+"))) {
+		print(std::string("Error opening a file in writeAfterLastOccurenceOfCharInFile, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
+		return -1;
+	}
+	char c;
+	fseek(file, 0, SEEK_END);
+	long i = ftell(file);
+	while (c = getc(file) != charToWriteAfter && i > 0) {
+		i--;
+		fseek(file, i, SEEK_SET);
+	}
+	i++;
+	fseek(file, i, SEEK_SET);
+	fprintf(file, "%s\n", text);
+	fclose(file);
+	return i;
+}
+
+void setEndOfFileAtIndex(char* path, long index) {
+	HANDLE fileHandle = CreateFile((LPCTSTR)TEXT(PLAYERLIST_PATH), GENERIC_WRITE,
+		FILE_SHARE_READ, NULL, CREATE_NEW | OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	errno_t errorCode = GetLastError();
+	if (errorCode > 0) {
+		print(std::string("Error opening a file in setEndOfFileAtIndex, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
+	}
+	SetFilePointer(fileHandle, index, 0, FILE_BEGIN);
+	SetEndOfFile(fileHandle);
+	CloseHandle(fileHandle);
 }
 
