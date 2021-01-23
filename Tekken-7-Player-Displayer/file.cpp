@@ -133,7 +133,6 @@ void saveNewPlayerlistEntry(char* currentLoadedOpponentName) {
 }
 
 char* makePlayerlistEntry(char* playerName, char* characterName, QWORD steamId) {
-	// aigo this entire function needs testing
 	std::string result = "";
 	int steamIdBufferSize = 100;
 	char* steamIdBuffer = (char*) malloc(steamIdBufferSize * sizeof(char));
@@ -147,25 +146,6 @@ char* makePlayerlistEntry(char* playerName, char* characterName, QWORD steamId) 
 	result.append("no comment yet");
 	free(steamIdBuffer);
 	return copyString((char*) result.c_str());
-
-	/* old extremely ugly (but error free) code
-	char* temp1;
-	char* temp2;
-	int steamIdBufferSize = 40;
-	char* steamIdBuffer = (char*) malloc(steamIdBufferSize * sizeof(char));
-	sprintf_s(steamIdBuffer, steamIdBufferSize + 1, "(%I64u)", steamId);
-	temp1 = myStringCat(playerName, (char*)"\t\t\t");
-	temp2 = myStringCat(temp1, characterName);
-	free(temp1);
-	temp1 = myStringCat(temp2, (char*)"\t\t\t");
-	free(temp2);
-	temp2 = myStringCat(temp1, steamIdBuffer);
-	free(temp1);
-	temp1 = myStringCat(temp2, (char*)"\t\t\tno comment yet");
-	free(temp2);
-	free(steamIdBuffer);
-	return temp1;
-	*/
 }
 
 void writeLineToFile(char* path, char* line) {
