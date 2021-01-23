@@ -28,14 +28,14 @@
 #define CLASSNAME_MAINWINDOW "Main Window"
 #define CLASSNAME_COMMENTWINDOW "Comment Window"
 
-#define WIDTH_MAINWINDOW 640
-#define HEIGHT_MAINWINDOW 438
+#define WIDTH_MAINWINDOW 1000
+#define HEIGHT_MAINWINDOW 600
 #define WIDTH_COMMENTWINDOW 300
 #define HEIGHT_COMMENTWINDOW 140
 
 #define WINDOW_OPACITY 90
 
-#define TEXT_WELCOME "Hello! ^^ / This program will display your opponent's name in-game before accepting the match. It also keeps a list of your opponent's name, steamId and character. Have fun! :)"
+#define TEXT_WELCOME "Hello! ^^ / This program displays your opponents name, the character they last used against you and a comment that you can write about them in-game before accepting a match. Have fun! :)"
 #define TEXT_INFORMATION " Extra Shortcuts : \n         ALT + F : Set Tekken in Fullscreen Mode\n         ALT + W : Set Tekken in Windowed Mode\n         ALT + C : Add a Comment in the Player List\n         ALT + O : Open the Player List"//\n         ALT + T : Show Program Console"
 #define TEXT_CREDITS " github.com/ParadiseAigo"
 #define TEXT_COMMENTWINDOW "(Last fought player not found, maybe you didn't fight a player yet)"
