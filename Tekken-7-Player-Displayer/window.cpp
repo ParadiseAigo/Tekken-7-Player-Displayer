@@ -80,35 +80,34 @@ void initFontsAndBrushes() {
 void createMainWindow() {
     int X_MAINWINDOW = SCREEN_WIDTH / 2 - WIDTH_MAINWINDOW / 2;
     int Y_MAINWINDOW = SCREEN_HEIGHT / 2 - HEIGHT_MAINWINDOW / 2;
-    int WIDTH_TEXTBOX = 600;
-    int X_TEXTBOX = 50;
+    int WIDTH_TEXTBOX = 580;
+    int X_TEXTBOX = WIDTH_MAINWINDOW / 2 - WIDTH_TEXTBOX / 2 - 7;
 
-    windows.mainWindowHandle = createWindow(WS_EX_DLGMODALFRAME | WS_EX_LAYERED,
+    windows.mainWindowHandle = createWindow(WS_EX_DLGMODALFRAME,
         TEXT(CLASSNAME_MAINWINDOW), TEXT(TITLE_MAINWINDOW),
         WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX,
         X_MAINWINDOW, Y_MAINWINDOW, WIDTH_MAINWINDOW, HEIGHT_MAINWINDOW);
 
     HWND backgroundImageHandle = createWindow(0, TEXT("STATIC"), NULL,
         WS_CHILD | WS_VISIBLE | SS_BITMAP,
-        0, 0, 100, 100, windows.mainWindowHandle);
+        0, 0, 0, 0, windows.mainWindowHandle);
 
     HWND welcomeTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_WELCOME),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        X_TEXTBOX, 45, WIDTH_TEXTBOX, FONT_SIZE * 3 + 10, windows.mainWindowHandle);
+        X_TEXTBOX, 70, WIDTH_TEXTBOX, FONT_SIZE * 3 + 10, windows.mainWindowHandle);
 
     windows.outputTextHandle = createWindow(WS_EX_PALETTEWINDOW, TEXT("Edit"), NULL,
         WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL,
-        X_TEXTBOX, 120, WIDTH_TEXTBOX, FONT_SIZE * 6 + 10 + 180, windows.mainWindowHandle);
+        X_TEXTBOX, 135, WIDTH_TEXTBOX, FONT_SIZE * 12 + 10, windows.mainWindowHandle);
 
     HWND informationTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_INFORMATION),
         WS_CHILD | WS_VISIBLE | WS_BORDER,
-        X_TEXTBOX, 420, WIDTH_TEXTBOX, FONT_SIZE * 5 + 10, windows.mainWindowHandle);
+        X_TEXTBOX, 345, WIDTH_TEXTBOX, FONT_SIZE * 5 + 10, windows.mainWindowHandle);
 
     HWND creditsTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_CREDITS),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_LEFT,
-        828, 540, 153, 16, windows.mainWindowHandle);
+        WIDTH_MAINWINDOW - 175, HEIGHT_MAINWINDOW - 60, 153, 16, windows.mainWindowHandle);
 
-    SetLayeredWindowAttributes(windows.mainWindowHandle, 0, (255 * WINDOW_OPACITY) / 100, LWA_ALPHA);
     HBITMAP backgroundBitmapHandle = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(BACKGROUND));
     sendMessage(backgroundImageHandle, STM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)backgroundBitmapHandle);
     sendMessage(welcomeTextHandle, WM_SETFONT, (LPARAM)fonts.welcomeTextFont, true);
