@@ -2,7 +2,7 @@
 > See your opponents name before accepting the match and more...
 
 Displays your opponents name, the character they last used against you and a comment that you can write about them.
-It will display them both in-game and in this program.
+It will display them both in-game and in the console.
 
 ![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/1git.png)
 
@@ -19,7 +19,7 @@ Simply download the ready-made [Tekken-7-Player-Displayer.exe](https://github.co
 
 ## Usage
 Run the executable before or after opening Tekken 7, but not during a match and sometimes not while you are in the waiting room.
-To be sure the program is loaded correctly your name should be displayed in the program like in the picture:
+To be sure the program is loaded correctly your name should be displayed in the terminal like in the picture:
 
 ![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/3git.png)
 
