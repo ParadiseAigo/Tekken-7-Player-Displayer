@@ -88,7 +88,7 @@ char* handleNewOpponent(char* currentOpponentName) {
 	else {
 		print(std::string("Last used character: ").append(std::string(characterName)).append(std::string("\r\n")));
 	}
-	print(std::string("Comment:			 ").append(std::string(playerlistComment)).append(std::string("\r\n")));
+	print(std::string("Comment:             ").append(std::string(playerlistComment)).append(std::string("\r\n")));
 	if (characterName != NULL) {
 		free(characterName);
 	}
