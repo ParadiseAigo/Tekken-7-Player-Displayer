@@ -116,13 +116,13 @@ void createMainWindow() {
         40, 550, 100, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
 
     guiWindows.playerNameValueTextHandle = createWindow(0, TEXT("STATIC"), TEXT(""),
-        WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
+        WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER | SS_EDITCONTROL,
         X_TEXTBOX, 200, 380, FONT_SIZE * 1 + 10 + 30, guiWindows.mainWindowHandle);
     guiWindows.opponentNameValueTextHandle = createWindow(0, TEXT("STATIC"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER | SS_EDITCONTROL,
         X_TEXTBOX, 330, 380, FONT_SIZE * 1 + 10 + 30, guiWindows.mainWindowHandle);
     guiWindows.opponentCharacterValueTextHandle = createWindow(0, TEXT("STATIC"), TEXT(""),
-        WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
+        WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER | SS_EDITCONTROL,
         X_TEXTBOX, 460, 380, FONT_SIZE * 1 + 10 + 30, guiWindows.mainWindowHandle);
     guiWindows.commentValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL | ES_READONLY,
