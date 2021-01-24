@@ -28,15 +28,15 @@
 #define CLASSNAME_MAINWINDOW "Main Window"
 #define CLASSNAME_COMMENTWINDOW "Comment Window"
 
-#define WIDTH_MAINWINDOW 700
-#define HEIGHT_MAINWINDOW 500
+#define WIDTH_MAINWINDOW 1080
+#define HEIGHT_MAINWINDOW 720
 #define WIDTH_COMMENTWINDOW 300
 #define HEIGHT_COMMENTWINDOW 140
 
 #define WINDOW_OPACITY 90
 
 #define TEXT_WELCOME "Hello! ^^ / This program displays your opponents name, the character they last used against you and a comment that you can write about them both in-game and in this window before accepting a match. Have fun! :)"
-#define TEXT_INFORMATION " Extra Shortcuts : \n         ALT + F : Set Tekken in Fullscreen Mode\n         ALT + W : Set Tekken in Windowed Mode\n         ALT + C : Add a Comment in the Player List\n         ALT + O : Open the Player List"//\n         ALT + T : Show Program Console"
+#define TEXT_INFORMATION " ALT + F : Set Tekken in Fullscreen Mode\n ALT + W : Set Tekken in Windowed Mode\n ALT + C : Add a Comment in the Player List\n ALT + O : Open the Player List"//\n ALT + T : Show Program Console"
 #define TEXT_CREDITS " github.com/ParadiseAigo"
 #define TEXT_COMMENTWINDOW "(Last fought player not found, maybe you didn't fight a player yet)"
 
@@ -45,7 +45,7 @@
 
 #define COLOR_BLACK RGB(0, 0, 0)
 #define COLOR_WHITE RGB(255, 255, 255)
-#define COLOR_PINK RGB(255, 228, 225)
+#define COLOR_GRAY RGB(200, 200, 200)
 
 #define ALT_W 1
 #define ALT_F 2
@@ -64,20 +64,25 @@
 
 typedef __int64 QWORD;
 
-typedef struct Windows {
+typedef struct GuiWindows {
     HWND mainWindowHandle;
     HWND outputTextHandle;
+    HWND playerNameValueTextHandle;
+    HWND opponentNameValueTextHandle;
+    HWND opponentCharacterValueTextHandle;
+    HWND commentValueTextHandle;
     HWND commentWindowHandle;
     HWND commentEditboxHandle;
     HWND commentButtonHandle;
     HWND consoleWindowHandle;
-} Windows;
+} GuiWindows;
 
 typedef struct Fonts {
-    HFONT welcomeTextFont;
+    HFONT informationNameTextFont;
+    HFONT informationValueTextFont;
     HFONT outputTextFont;
-    HFONT informationTextFont;
-    HFONT creditsTextFont;
+    HFONT shortcutsTextFont;
+    HFONT commentTextFont;
     HFONT editboxTextFont;
     HFONT editboxReadOnlyTextFont;
 } Fonts;
@@ -109,7 +114,7 @@ extern void* steamIdPointer;
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 
-extern Windows windows;
+extern GuiWindows guiWindows;
 extern Fonts fonts;
 
 extern HBRUSH solidBrush;

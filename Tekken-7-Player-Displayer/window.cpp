@@ -52,7 +52,7 @@ void registerWindowClass(WNDCLASS windowClass) {
 }
 
 void getConsoleWindowHandle() {
-    windows.consoleWindowHandle = GetConsoleWindow();
+    guiWindows.consoleWindowHandle = GetConsoleWindow();
 }
 
 void getScreenResolution() {
@@ -61,87 +61,112 @@ void getScreenResolution() {
 }
 
 void initFontsAndBrushes() {
-    fonts.welcomeTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_NORMAL, TRUE, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    fonts.informationNameTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_NORMAL, TRUE, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
+    fonts.informationValueTextFont = CreateFont(50, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+        CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
     fonts.outputTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
-    fonts.informationTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    fonts.shortcutsTextFont = CreateFont(18, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
-    fonts.creditsTextFont = CreateFont(13, 0, 0, 0, FW_NORMAL, TRUE, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
-        CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Courier New"));
+    fonts.commentTextFont = CreateFont(20, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+        CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
     fonts.editboxTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_BOLD, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Arial"));
     fonts.editboxReadOnlyTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_BOLD, TRUE, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Arial"));
 
-    solidBrush = CreateSolidBrush(COLOR_PINK);
+    solidBrush = CreateSolidBrush(COLOR_GRAY);
 }
 
 void createMainWindow() {
     int X_MAINWINDOW = SCREEN_WIDTH / 2 - WIDTH_MAINWINDOW / 2;
     int Y_MAINWINDOW = SCREEN_HEIGHT / 2 - HEIGHT_MAINWINDOW / 2;
     int WIDTH_TEXTBOX = 580;
-    int X_TEXTBOX = WIDTH_MAINWINDOW / 2 - WIDTH_TEXTBOX / 2 - 7;
+    int X_TEXTBOX = 650;
 
-    windows.mainWindowHandle = createWindow(WS_EX_DLGMODALFRAME,
+    guiWindows.mainWindowHandle = createWindow(WS_EX_DLGMODALFRAME,
         TEXT(CLASSNAME_MAINWINDOW), TEXT(TITLE_MAINWINDOW),
         WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX,
         X_MAINWINDOW, Y_MAINWINDOW, WIDTH_MAINWINDOW, HEIGHT_MAINWINDOW);
 
     HWND backgroundImageHandle = createWindow(0, TEXT("STATIC"), NULL,
         WS_CHILD | WS_VISIBLE | SS_BITMAP,
-        0, 0, 0, 0, windows.mainWindowHandle);
+        0, 0, 0, 0, guiWindows.mainWindowHandle);
 
-    HWND welcomeTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_WELCOME),
-        WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        X_TEXTBOX, 70, WIDTH_TEXTBOX, FONT_SIZE * 3 + 10, windows.mainWindowHandle);
+    guiWindows.outputTextHandle = createWindow(WS_EX_PALETTEWINDOW, TEXT("Edit"), NULL,
+        WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL | ES_READONLY,
+        40, 40, WIDTH_TEXTBOX, FONT_SIZE * 30 + 10, guiWindows.mainWindowHandle);
 
-    windows.outputTextHandle = createWindow(WS_EX_PALETTEWINDOW, TEXT("Edit"), NULL,
-        WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL,
-        X_TEXTBOX, 135, WIDTH_TEXTBOX, FONT_SIZE * 12 + 10, windows.mainWindowHandle);
-
-    HWND informationTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_INFORMATION),
+    HWND shortcutsTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_INFORMATION),
         WS_CHILD | WS_VISIBLE | WS_BORDER,
-        X_TEXTBOX, 345, WIDTH_TEXTBOX, FONT_SIZE * 5 + 10, windows.mainWindowHandle);
+        X_TEXTBOX, 50, 380, 18 * 4 + 5, guiWindows.mainWindowHandle);
 
-    HWND creditsTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_CREDITS),
-        WS_CHILD | WS_VISIBLE | WS_BORDER | SS_LEFT,
-        WIDTH_MAINWINDOW - 175, HEIGHT_MAINWINDOW - 60, 153, 16, windows.mainWindowHandle);
+    HWND playerNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Player Name"),
+        WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
+        X_TEXTBOX, 170, 130, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+    HWND opponentNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent Name"),
+        WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
+        X_TEXTBOX, 300, 130, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+    HWND opponentCharacterTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Last Character"),
+        WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
+        X_TEXTBOX, 430, 130, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+    HWND commentNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Comment"),
+        WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
+        40, 550, 100, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+
+    guiWindows.playerNameValueTextHandle = createWindow(0, TEXT("STATIC"), TEXT(""),
+        WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
+        X_TEXTBOX, 200, 380, FONT_SIZE * 1 + 10 + 30, guiWindows.mainWindowHandle);
+    guiWindows.opponentNameValueTextHandle = createWindow(0, TEXT("STATIC"), TEXT(""),
+        WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER | SS_EDITCONTROL,
+        X_TEXTBOX, 330, 380, FONT_SIZE * 1 + 10 + 30, guiWindows.mainWindowHandle);
+    guiWindows.opponentCharacterValueTextHandle = createWindow(0, TEXT("STATIC"), TEXT(""),
+        WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
+        X_TEXTBOX, 460, 380, FONT_SIZE * 1 + 10 + 30, guiWindows.mainWindowHandle);
+    guiWindows.commentValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
+        WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL | ES_READONLY,
+        40, 580, 990, 20 * 2 + 10, guiWindows.mainWindowHandle);
 
     HBITMAP backgroundBitmapHandle = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(BACKGROUND));
     sendMessage(backgroundImageHandle, STM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)backgroundBitmapHandle);
-    sendMessage(welcomeTextHandle, WM_SETFONT, (LPARAM)fonts.welcomeTextFont, true);
-    sendMessage(windows.outputTextHandle, WM_SETFONT, (LPARAM)fonts.outputTextFont, true);
-    sendMessage(windows.outputTextHandle, EM_SETREADONLY, (WPARAM)TRUE, 0);
-    sendMessage(informationTextHandle, WM_SETFONT, (LPARAM)fonts.informationTextFont, true);
-    sendMessage(creditsTextHandle, WM_SETFONT, (LPARAM)fonts.creditsTextFont, true);
+    sendMessage(guiWindows.outputTextHandle, WM_SETFONT, (LPARAM)fonts.outputTextFont, true);
+    sendMessage(shortcutsTextHandle, WM_SETFONT, (LPARAM)fonts.shortcutsTextFont, true);
+    sendMessage(playerNameTextHandle, WM_SETFONT, (LPARAM)fonts.informationNameTextFont, true);
+    sendMessage(opponentNameTextHandle, WM_SETFONT, (LPARAM)fonts.informationNameTextFont, true);
+    sendMessage(opponentCharacterTextHandle, WM_SETFONT, (LPARAM)fonts.informationNameTextFont, true);
+    sendMessage(commentNameTextHandle, WM_SETFONT, (LPARAM)fonts.informationNameTextFont, true);
+    sendMessage(guiWindows.playerNameValueTextHandle, WM_SETFONT, (LPARAM)fonts.informationValueTextFont, true);
+    sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETFONT, (LPARAM)fonts.informationValueTextFont, true);
+    sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETFONT, (LPARAM)fonts.informationValueTextFont, true);
+    sendMessage(guiWindows.commentValueTextHandle, WM_SETFONT, (LPARAM)fonts.commentTextFont, true);
 
-    showWindow(windows.consoleWindowHandle, SW_HIDE);
-    showWindow(windows.mainWindowHandle, SW_SHOW);
+    showWindow(guiWindows.consoleWindowHandle, SW_HIDE);
+    showWindow(guiWindows.mainWindowHandle, SW_SHOW);
 }
 
 void createCommentWindow() {
     int X_COMMENTWINDOW = SCREEN_WIDTH - WIDTH_COMMENTWINDOW;
     int Y_COMMENTWINDOW = SCREEN_HEIGHT - HEIGHT_COMMENTWINDOW - 40;
 
-    windows.commentWindowHandle = createWindow(WS_EX_DLGMODALFRAME | WS_EX_LAYERED,
+    guiWindows.commentWindowHandle = createWindow(WS_EX_DLGMODALFRAME | WS_EX_LAYERED,
         TEXT(CLASSNAME_COMMENTWINDOW), TEXT(TITLE_COMMENTWINDOW),
         WS_SYSMENU,
         X_COMMENTWINDOW, Y_COMMENTWINDOW, WIDTH_COMMENTWINDOW, HEIGHT_COMMENTWINDOW);
 
-    windows.commentEditboxHandle = createWindow(WS_EX_PALETTEWINDOW, TEXT("Edit"), NULL,
+    guiWindows.commentEditboxHandle = createWindow(WS_EX_PALETTEWINDOW, TEXT("Edit"), NULL,
         WS_CHILD | WS_VISIBLE | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL,
-        10, 10, WIDTH_COMMENTWINDOW - 40, HEIGHT_COMMENTWINDOW - 100, windows.commentWindowHandle);
+        10, 10, WIDTH_COMMENTWINDOW - 40, HEIGHT_COMMENTWINDOW - 100, guiWindows.commentWindowHandle);
 
-    windows.commentButtonHandle = createWindow(WS_EX_PALETTEWINDOW, TEXT("BUTTON"), TEXT("Save"),
+    guiWindows.commentButtonHandle = createWindow(WS_EX_PALETTEWINDOW, TEXT("BUTTON"), TEXT("Save"),
         WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_PUSHLIKE,
-        WIDTH_COMMENTWINDOW / 2 - 20, HEIGHT_COMMENTWINDOW - 75, 40, 20, windows.commentWindowHandle);
+        WIDTH_COMMENTWINDOW / 2 - 20, HEIGHT_COMMENTWINDOW - 75, 40, 20, guiWindows.commentWindowHandle);
 
-    SetLayeredWindowAttributes(windows.commentWindowHandle, 0, (255 * WINDOW_OPACITY) / 100, LWA_ALPHA);
-    defaultEditProc = (WNDPROC)SetWindowLongPtr(windows.commentEditboxHandle, GWLP_WNDPROC, (LONG_PTR)subEditProc);
-    sendMessage(windows.commentEditboxHandle, WM_SETFONT, (WPARAM)fonts.editboxTextFont, TRUE);
-    sendMessage(windows.commentEditboxHandle, EM_SETLIMITTEXT, EDITBOX_TEXT_MAX_LENGTH, 0);
-    sendMessage(windows.commentButtonHandle, WM_SETFONT, (LPARAM)GetStockObject(DEFAULT_GUI_FONT), true);
+    SetLayeredWindowAttributes(guiWindows.commentWindowHandle, 0, (255 * WINDOW_OPACITY) / 100, LWA_ALPHA);
+    defaultEditProc = (WNDPROC)SetWindowLongPtr(guiWindows.commentEditboxHandle, GWLP_WNDPROC, (LONG_PTR)subEditProc);
+    sendMessage(guiWindows.commentEditboxHandle, WM_SETFONT, (WPARAM)fonts.editboxTextFont, TRUE);
+    sendMessage(guiWindows.commentEditboxHandle, EM_SETLIMITTEXT, EDITBOX_TEXT_MAX_LENGTH, 0);
+    sendMessage(guiWindows.commentButtonHandle, WM_SETFONT, (LPARAM)GetStockObject(DEFAULT_GUI_FONT), true);
 
     if (lastFoughtOpponentName != NULL) {
         setOpponentNameInCommentWindowTitle();
@@ -151,7 +176,7 @@ void createCommentWindow() {
     }
 
     setFocusCommentWindow();
-    showWindow(windows.commentWindowHandle, SW_SHOW);
+    showWindow(guiWindows.commentWindowHandle, SW_SHOW);
 }
 
 HWND createWindow(DWORD extendedStyle, LPCWSTR className, LPCWSTR windowName, DWORD style,
@@ -169,7 +194,7 @@ void showWindow(HWND windowHandle, int showCommand) {
     ShowWindow(windowHandle, showCommand);
 }
 
-void handleWindowsMessageQueueLoop() { // loop to pull messages from queue for all windows in current thread
+void handleWindowsMessageQueueLoop() { // loop to pull messages from queue for all guiWindows in current thread
     MSG msg = { };
     while (GetMessage(&msg, NULL, 0, 0)) {
         TranslateMessage(&msg);
@@ -180,13 +205,13 @@ void handleWindowsMessageQueueLoop() { // loop to pull messages from queue for a
 LRESULT CALLBACK mainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
     switch (msg) {
     case WM_CTLCOLORSTATIC:
-        if (lparam == (LPARAM)windows.outputTextHandle) {
+        if (lparam == (LPARAM)guiWindows.outputTextHandle) {
             SetTextColor((HDC)wparam, COLOR_WHITE);
             SetBkColor((HDC)wparam, COLOR_BLACK);
             return (LRESULT)(HBRUSH)GetStockObject(BLACK_BRUSH);
         }
         else {
-            SetBkColor((HDC)wparam, COLOR_PINK);
+            SetBkColor((HDC)wparam, COLOR_GRAY);
             return (LRESULT)solidBrush;
         }
         break;
@@ -224,7 +249,7 @@ LRESULT CALLBACK commentWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lp
         }
         break;
     case WM_COMMAND:
-        if (lparam == (LPARAM)windows.commentButtonHandle) {
+        if (lparam == (LPARAM)guiWindows.commentButtonHandle) {
             saveCommentAndCloseCommentWindow();
         }
         break;
@@ -242,7 +267,7 @@ LRESULT CALLBACK subEditProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             break;
         }
         else if (wparam == VK_ESCAPE) {
-            destroyWindow(windows.commentWindowHandle);
+            destroyWindow(guiWindows.commentWindowHandle);
             break;
         }
     default:
@@ -252,11 +277,11 @@ LRESULT CALLBACK subEditProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 }
 
 void openCommentWindow() {
-    if (!isWindow(windows.commentWindowHandle)) {
+    if (!isWindow(guiWindows.commentWindowHandle)) {
         createCommentWindow();
     }
     else {
-        setForegroundWindow(windows.commentWindowHandle);
+        setForegroundWindow(guiWindows.commentWindowHandle);
         setFocusCommentWindow();
     }
 }
@@ -271,26 +296,26 @@ void setForegroundWindow(HWND windowHandle) {
 
 void setOpponentNameInCommentWindowTitle() {
     wchar_t* name = stringToWString(lastFoughtOpponentName);
-    sendMessage(windows.commentWindowHandle, WM_SETTEXT, 0, (LPARAM)std::wstring(L"Comment").append(L" - Player: ").append(std::wstring(name)).c_str());
+    sendMessage(guiWindows.commentWindowHandle, WM_SETTEXT, 0, (LPARAM)std::wstring(L"Comment").append(L" - Player: ").append(std::wstring(name)).c_str());
     delete[] name;
 }
 
 void disableCommentWindowEditbox() {
-    SetClassLongPtr(windows.commentWindowHandle, GCLP_HBRBACKGROUND, (LONG)HOLLOW_BRUSH);
-    LONG_PTR style = GetWindowLongPtr(windows.commentEditboxHandle, GWL_STYLE);
-    SetWindowLongPtr(windows.commentEditboxHandle, GWL_STYLE, style | ES_CENTER);
-    sendMessage(windows.commentEditboxHandle, WM_SETTEXT, 0, (LPARAM)TEXT(TEXT_COMMENTWINDOW));
-    sendMessage(windows.commentEditboxHandle, WM_SETFONT, (WPARAM)fonts.editboxReadOnlyTextFont, TRUE);
-    sendMessage(windows.commentEditboxHandle, EM_SETREADONLY, (WPARAM)TRUE, 0);
-    sendMessage(windows.commentButtonHandle, WM_SETTEXT, 0, (LPARAM)L"Close");
+    SetClassLongPtr(guiWindows.commentWindowHandle, GCLP_HBRBACKGROUND, (LONG)HOLLOW_BRUSH);
+    LONG_PTR style = GetWindowLongPtr(guiWindows.commentEditboxHandle, GWL_STYLE);
+    SetWindowLongPtr(guiWindows.commentEditboxHandle, GWL_STYLE, style | ES_CENTER);
+    sendMessage(guiWindows.commentEditboxHandle, WM_SETTEXT, 0, (LPARAM)TEXT(TEXT_COMMENTWINDOW));
+    sendMessage(guiWindows.commentEditboxHandle, WM_SETFONT, (WPARAM)fonts.editboxReadOnlyTextFont, TRUE);
+    sendMessage(guiWindows.commentEditboxHandle, EM_SETREADONLY, (WPARAM)TRUE, 0);
+    sendMessage(guiWindows.commentButtonHandle, WM_SETTEXT, 0, (LPARAM)L"Close");
 }
 
 void setFocusCommentWindow() {
     if (lastFoughtOpponentName != NULL) {
-        setFocus(windows.commentEditboxHandle);
+        setFocus(guiWindows.commentEditboxHandle);
     }
-    sendMessage(windows.commentEditboxHandle, WM_KEYDOWN, (WPARAM)VK_LBUTTON, 0);
-    sendMessage(windows.commentEditboxHandle, WM_KEYUP, (WPARAM)VK_LBUTTON, 0);
+    sendMessage(guiWindows.commentEditboxHandle, WM_KEYDOWN, (WPARAM)VK_LBUTTON, 0);
+    sendMessage(guiWindows.commentEditboxHandle, WM_KEYUP, (WPARAM)VK_LBUTTON, 0);
 }
 
 void setFocus(HWND windowHandle) {
@@ -312,9 +337,9 @@ void saveComment() {
 }
 
 char* getTextFromCommentEditbox() {
-    int editboxTextLength = GetWindowTextLengthA(windows.commentEditboxHandle);
+    int editboxTextLength = GetWindowTextLengthA(guiWindows.commentEditboxHandle);
     char* text = (char*)malloc((EDITBOX_TEXT_MAX_LENGTH + 1) * sizeof(CHAR));
-    int copiedTextLength = GetWindowTextA(windows.commentEditboxHandle, (LPSTR)text, editboxTextLength + 1);
+    int copiedTextLength = GetWindowTextA(guiWindows.commentEditboxHandle, (LPSTR)text, editboxTextLength + 1);
     return text;
 }
 
@@ -357,11 +382,11 @@ void minimizeAndRestoreTekkenWindow() {
 }
 
 void showOrHideConsoleWindow() {
-    if (isWindowVisible(windows.consoleWindowHandle)) {
-        showWindow(windows.consoleWindowHandle, SW_HIDE);
+    if (isWindowVisible(guiWindows.consoleWindowHandle)) {
+        showWindow(guiWindows.consoleWindowHandle, SW_HIDE);
     }
     else {
-        showWindow(windows.consoleWindowHandle, SW_SHOW);
+        showWindow(guiWindows.consoleWindowHandle, SW_SHOW);
     }
 }
 
@@ -390,11 +415,11 @@ void printToStandardOutput(std::string text) {
 }
 
 void printToTextboxOutput(std::string text) {
-    if (!isWindow(windows.outputTextHandle)) {
-        waitForWindowToBeCreated(windows.outputTextHandle);
+    if (!isWindow(guiWindows.outputTextHandle)) {
+        waitForWindowToBeCreated(guiWindows.outputTextHandle);
     }
     else {
-        printTextToEditControl(text, windows.outputTextHandle);
+        printTextToEditControl(text, guiWindows.outputTextHandle);
     }
 }
 
@@ -421,14 +446,14 @@ wchar_t* stringToWString(std::string text) { // caller of this function has to d
 }
 
 void closeAllWindows() {
-    destroyWindow(windows.mainWindowHandle);
-    if (isWindow(windows.commentWindowHandle)) {
-        destroyWindow(windows.commentWindowHandle);
+    destroyWindow(guiWindows.mainWindowHandle);
+    if (isWindow(guiWindows.commentWindowHandle)) {
+        destroyWindow(guiWindows.commentWindowHandle);
     }
 }
 
 void closeCommentWindow() {
-    destroyWindow(windows.commentWindowHandle);
+    destroyWindow(guiWindows.commentWindowHandle);
 }
 
 void destroyWindow(HWND windowHandle) {
@@ -436,10 +461,11 @@ void destroyWindow(HWND windowHandle) {
 }
 
 void deleteFontObjects() {
-    DeleteObject(fonts.welcomeTextFont);
+    DeleteObject(fonts.informationNameTextFont);
+    DeleteObject(fonts.informationValueTextFont);
     DeleteObject(fonts.outputTextFont);
-    DeleteObject(fonts.informationTextFont);
-    DeleteObject(fonts.creditsTextFont);
+    DeleteObject(fonts.shortcutsTextFont);
+    DeleteObject(fonts.commentTextFont);
     DeleteObject(fonts.editboxTextFont);
     DeleteObject(fonts.editboxReadOnlyTextFont);
 }

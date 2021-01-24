@@ -1,5 +1,6 @@
 #include "player-displayer.h"
 #include "pointers.h"
+#include "gui.h"
 
 bool isGameLoaded() {
 	// will assume game is loaded if the opponent name address contains a (non-empty) string
@@ -82,6 +83,7 @@ char* handleNewOpponent(char* currentOpponentName) {
 	updateOpponentFoundMessage(newOpponentName);
 	updateFightThisPlayerMessage(playerlistComment);
 	updateSecondsRemainingMessage(characterNameMessage);
+	updateAllGuiMessages(newOpponentName, characterName, playerlistComment);
 	if (characterName == NULL) {
 		print(std::string("Last used character: /\r\n"));
 	}
@@ -142,6 +144,7 @@ void updateMessagesWithoutSteamId() {
 	updateOpponentFoundMessage(newOpponentName);
 	updateFightThisPlayerMessage(playerlistComment);
 	updateSecondsRemainingMessage(characterNameMessage);
+	updateAllGuiMessages(newOpponentName, characterName, playerlistComment);
 	if (characterName != NULL) {
 		free(characterName);
 	}

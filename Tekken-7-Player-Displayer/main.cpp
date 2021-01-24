@@ -1,5 +1,6 @@
 #include "player-displayer.h"
 #include "pointers.h"
+#include "gui.h"
 
 //TODO:
 //-> /
@@ -20,7 +21,7 @@ void* steamIdPointer;
 int SCREEN_WIDTH;
 int SCREEN_HEIGHT;
 
-Windows windows;
+GuiWindows guiWindows;
 Fonts fonts;
 
 HBRUSH solidBrush;
@@ -131,6 +132,7 @@ void initPointers() {
 		.append(std::string("in a match or you havent just declined an opponent "))
 		.append(std::string("or are in the process of accepting a match.\r\n"))
 	);
+	setPlayerNameInGui(playerName);
 	free(playerName);
 }
 
@@ -155,6 +157,7 @@ void mainLoop() {
 		}
 		if (isTimeToCleanMessages(playerName, currentOpponentName)) {
 			cleanAllProcessMessages();
+			cleanAllGuiMessages();
 			currentOpponentName[0] = '\0';
 			currentState = IN_SEARCH;
 			print(std::string("Ready to find the next opponent.\r\n"));

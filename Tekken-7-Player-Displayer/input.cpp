@@ -33,7 +33,7 @@ void initHotkeys() {
 
 void registerHotKeys() {
     for (int i = 0; i < NR_OF_HOTKEYS; i++) {
-        registerHotKey(windows.mainWindowHandle, hotkeys[i]->id, hotkeys[i]->key1, hotkeys[i]->key2);
+        registerHotKey(guiWindows.mainWindowHandle, hotkeys[i]->id, hotkeys[i]->key1, hotkeys[i]->key2);
     }
 }
 
@@ -43,7 +43,7 @@ void registerHotKey(HWND windowHandle, int hotkeyId, UINT key1, UINT key2) {
 
 void unRegisterHotKeys() {
     for (int i = 0; i < NR_OF_HOTKEYS; i++) {
-        unRegisterHotKey(windows.mainWindowHandle, hotkeys[i]->id);
+        unRegisterHotKey(guiWindows.mainWindowHandle, hotkeys[i]->id);
     }
 }
 
