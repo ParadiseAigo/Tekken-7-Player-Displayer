@@ -22,7 +22,7 @@ Run the executable before or after opening Tekken 7, but not during a match and 
 To be sure the program is loaded correctly your name should be displayed in the program like in the picture:
 
 <p align="center">
-  <img src="https://github.com/n-o-u/Tekken-7-Player-Displayer/blob/master/3git.png" width="530" />
+  <img src="https://github.com/n-o-u/Tekken-7-Player-Displayer/blob/master/3git.png" width="500" />
 </p>
 
 ## Issues
