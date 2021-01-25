@@ -112,29 +112,28 @@ extern void* steamIdPointer;
 
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
-
 extern GuiWindows guiWindows;
 extern Fonts fonts;
-
 extern HBRUSH solidBrush;
 extern WNDPROC defaultEditProc;
 
 extern Hotkey* hotkeys[NR_OF_HOTKEYS];
+
 extern HANDLE threadHandles[NR_OF_THREADS];
 extern bool continueThreads;
 
-//main.cpp
+//mainThreads.cpp
 void createThreads();
 HANDLE beginThread(_beginthreadex_proc_type proc);
 void endThread();
 void waitForThreadsToTerminate();
 void closeThreads();
-unsigned __stdcall readAndUpdateTekkenMemory(void* arguments);
-void init();
+unsigned __stdcall mainThread(void* arguments);
+void loadTargetProcess();
 void initTekkenHandle();
 void initTekkenWindowHandle();
 void initPointers();
-void mainLoop();
+void editTargetProcessLoop();
 void closeProgram();
 
 //tekken.cpp
@@ -152,7 +151,7 @@ bool isTimeToCleanMessages(char* playerName, char* currentOpponentName);
 void cleanAllProcessMessages();
 char* getNewCurrentLoadedOpponent(char* currentLoadedOpponentName);
 
-//input.cpp
+//guiInput.cpp
 void handleHotkeyInput(WPARAM hotkey);
 void initHotkeys();
 void registerHotKeys();
@@ -180,7 +179,7 @@ void replaceCommentInLastLineInFile(char* path, char* comment);
 long writeAfterLastOccurenceOfCharInFile(char* path, char* text, char charToWriteAfter);
 void setEndOfFileAtIndex(char* path, long position);
 
-//memory.cpp
+//targetMemory.cpp
 HANDLE getProcessHandle(DWORD pid);
 DWORD getProcessId(const std::wstring& nameProgramExe);
 QWORD getDynamicPointer(HANDLE processHandle, void* basePointer, std::vector<DWORD> offsets);
@@ -195,10 +194,51 @@ char* readStringFromMemory(HANDLE processHandle, void* address);
 int getSizeStringInMemory(HANDLE processHandle, void* address);
 int getMaxSizeStringInMemory(HANDLE processHandle, void* address);
 
-//window.cpp
+//targetWindow.cpp
 HWND getWindowHandle(const wchar_t* programWindowName);
 void setScreenMode(DWORD screenMode);
 void minimizeAndRestoreTekkenWindow();
+
+//gui.cpp
+unsigned __stdcall guiThread(void* arguments);
+void initWindowsAndHotkeys();
+void initWindows();
+void registerMainWindowClass();
+void registerCommentWindowClass();
+void getConsoleWindowHandle();
+void getScreenResolution();
+void initFontsAndBrushes();
+void createMainWindow();
+void createCommentWindow();
+void handleWindowsMessageQueueLoop();
+LRESULT CALLBACK mainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+LRESULT CALLBACK commentWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+LRESULT CALLBACK subEditProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
+void openCommentWindow();
+void setOpponentNameInCommentWindowTitle();
+void disableCommentWindowEditbox();
+void setFocusCommentWindow();
+void saveCommentAndCloseCommentWindow();
+void saveComment();
+char* getTextFromCommentEditbox();
+void writeCommentToFile(void* text);
+void setTekkenWindowed();
+void setTekkenFullscreen();
+void showOrHideConsoleWindow();
+void myGuiTerminalPrint(std::string text);
+void printToStandardOutput(std::string text);
+void printToTextboxOutput(std::string text);
+void waitForWindowToBeCreated(HWND& windowHandle);
+void printTextToEditControl(std::string text, HWND& editControlHandle);
+wchar_t* stringToWString(std::string text);
+void closeAllWindows();
+void closeCommentWindow();
+void deleteFontObjects();
+void setPlayerNameInGui(char* playerName);
+void updateAllGuiMessages(char* newOpponentName, char* characterName, char* playerlistComment);
+void cleanAllGuiMessages();
+
+//guiWindow.cpp
 HWND createWindow(DWORD extendedStyle, LPCWSTR className, LPCWSTR windowName, DWORD style,
     int x, int y, int width, int height, HWND parentWindowHandle = NULL);
 void registerWindowClass(WNDCLASS windowClass);

@@ -1,5 +1,4 @@
 #include "player-displayer.h"
-#include "gui.h"
 
 HANDLE getProcessHandle(DWORD pid) {
 	HANDLE processHandle;
@@ -7,7 +6,7 @@ HANDLE getProcessHandle(DWORD pid) {
 	processHandle = OpenProcess(PROCESS_VM_READ | PROCESS_VM_OPERATION | PROCESS_VM_WRITE, FALSE, pid);
 	if (processHandle == NULL) {
 		errorCode = GetLastError();
-		print(std::string("Error! OpenProcess failed! Code: ").append(std::to_string(errorCode)).append(std::string(". Closing program.\r\n")));
+		myGuiTerminalPrint(std::string("Error! OpenProcess failed! Code: ").append(std::to_string(errorCode)).append(std::string(". Closing program.\r\n")));
 		_endthreadex(0);
 	}
 	return processHandle;
@@ -22,7 +21,7 @@ DWORD getProcessId(const std::wstring& programNameExe) {
 	processesSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL); // get snapshot of all processes
 	if (processesSnapshot == INVALID_HANDLE_VALUE) {
 		errorCode = GetLastError();
-		print(std::string("Error! CreateToolhelp32Snapshot failed! Code: ").append(std::to_string(errorCode)).append(std::string(". Closing program.\r\n")));
+		myGuiTerminalPrint(std::string("Error! CreateToolhelp32Snapshot failed! Code: ").append(std::to_string(errorCode)).append(std::string(". Closing program.\r\n")));
 		_endthreadex(0);
 	}
 	Process32First(processesSnapshot, &processInfo);
@@ -65,7 +64,7 @@ void writeDwordToMemory(HANDLE processHandle, void* address, DWORD newValue) {
 	errorCode = WriteProcessMemory(processHandle, address, &newValue, sizeof(newValue), NULL);
 	if (errorCode == 0) {
 		errorCode = GetLastError();
-		print(std::string("Error! WriteProcessMemory failed in WriteDwordToMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
+		myGuiTerminalPrint(std::string("Error! WriteProcessMemory failed in WriteDwordToMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
 	}
 }
 
@@ -80,7 +79,7 @@ void writeStringLimitedToMemory(HANDLE processHandle, void* address, char* newVa
 	errorCode = WriteProcessMemory(processHandle, address, newValuePadded, sizeNewValuePadded, NULL);
 	if (errorCode == 0) {
 		errorCode = GetLastError();
-		print(std::string("Error! WriteProcessMemory failed in writeStringLimitedToMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
+		myGuiTerminalPrint(std::string("Error! WriteProcessMemory failed in writeStringLimitedToMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
 	}
 	free(newValuePadded);
 }
@@ -91,7 +90,7 @@ void writeStringUnlimitedToMemory(HANDLE processHandle, void* address, char* new
 	errorCode = WriteProcessMemory(processHandle, address, newValue, sizeNewValue + 1, NULL);
 	if (errorCode == 0) {
 		errorCode = GetLastError();
-		print(std::string("Error! WriteProcessMemory failed in writeStringUnlimitedToMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
+		myGuiTerminalPrint(std::string("Error! WriteProcessMemory failed in writeStringUnlimitedToMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
 	}
 }
 
@@ -106,7 +105,7 @@ void writeStringSafeToMemory(HANDLE processHandle, void* address, char* newValue
 	errorCode = WriteProcessMemory(processHandle, address, newValuePadded, sizeNewValuePadded, NULL);
 	if (errorCode == 0) {
 		errorCode = GetLastError();
-		print(std::string("Error! WriteProcessMemory failed in writeStringSafeToMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
+		myGuiTerminalPrint(std::string("Error! WriteProcessMemory failed in writeStringSafeToMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
 	}
 	free(newValuePadded);
 }
@@ -128,7 +127,7 @@ DWORD readDwordFromMemory(HANDLE processHandle, void* address) {
 	if (errorCode == 0) {
 		errorCode = GetLastError();
 		// make sure this is compiled into 64bit or you'll get the 299 error: trying to read x64 with x86 exe
-		print(std::string("Error! ReadProcessMemory failed in readDwordFromMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
+		myGuiTerminalPrint(std::string("Error! ReadProcessMemory failed in readDwordFromMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
 	}
 	return result;
 }
@@ -140,7 +139,7 @@ QWORD readQwordFromMemory(HANDLE processHandle, void* address) {
 	if (errorCode == 0) {
 		errorCode = GetLastError();
 		// make sure this is compiled into 64bit or you'll get the 299 error: trying to read x64 with x86 exe
-		print(std::string("Error! ReadProcessMemory failed in readQwordFromMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
+		myGuiTerminalPrint(std::string("Error! ReadProcessMemory failed in readQwordFromMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
 	}
 	return result;
 }
@@ -154,7 +153,7 @@ char* readStringFromMemory(HANDLE processHandle, void* address) {
 	errorCode = ReadProcessMemory(processHandle, address, result, sizeResult, NULL);
 	if (errorCode == 0) {
 		errorCode = GetLastError();
-		print(std::string("Error! ReadProcessMemory failed in readStringFromMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
+		myGuiTerminalPrint(std::string("Error! ReadProcessMemory failed in readStringFromMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
 	}
 	return result;
 }
@@ -170,7 +169,7 @@ int getSizeStringInMemory(HANDLE processHandle, void* address) {
 		errorCode = ReadProcessMemory(processHandle, (void*)addressPlusOffset, &byteBuffer, sizeof(BYTE), NULL);
 		if (errorCode == 0) {
 			errorCode = GetLastError();
-			print(std::string("Error! ReadProcessMemory failed in getSizeStringInMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
+			myGuiTerminalPrint(std::string("Error! ReadProcessMemory failed in getSizeStringInMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
 		}
 		count++;
 
@@ -190,7 +189,7 @@ int getMaxSizeStringInMemory(HANDLE processHandle, void* address) {
 		errorCode = ReadProcessMemory(processHandle, (void*)addressPlusOffset, &byteBuffer, sizeof(BYTE), NULL);
 		if (errorCode == 0) {
 			errorCode = GetLastError();
-			print(std::string("Error! ReadProcessMemory failed in getMaxSizeStringInMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
+			myGuiTerminalPrint(std::string("Error! ReadProcessMemory failed in getMaxSizeStringInMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
 		}
 		count++;
 		if (byteBuffer == '\0') {

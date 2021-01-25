@@ -1,13 +1,19 @@
 #include "player-displayer.h"
-#include "gui.h"
 #include "pointers.h"
 
+int SCREEN_WIDTH;
+int SCREEN_HEIGHT;
 
-unsigned __stdcall createWindowAndHandleInput(void* arguments) {
+GuiWindows guiWindows;
+Fonts fonts;
+
+HBRUSH solidBrush;
+WNDPROC defaultEditProc;
+
+unsigned __stdcall guiThread(void* arguments) {
     initWindowsAndHotkeys();
     handleWindowsMessageQueueLoop();
     closeProgram();
-
     endThread();
     return ERROR_SUCCESS;
 }
@@ -179,7 +185,7 @@ void handleWindowsMessageQueueLoop() { // loop to pull messages from queue for a
     MSG msg = { };
     while (GetMessage(&msg, NULL, 0, 0)) {
         TranslateMessage(&msg);
-        DispatchMessage(&msg); // calls the windowProc callback function
+        DispatchMessage(&msg); // calls the mainWindowProc callback function
     }
 }
 
@@ -204,7 +210,7 @@ LRESULT CALLBACK mainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpara
             closeAllWindows();
         }
         break;
-    case WM_CLOSE:
+    case WM_CLOSE:  // when the [X] is pressed of the gui window
         closeAllWindows();
         break;
     case WM_DESTROY:
@@ -316,7 +322,7 @@ void writeCommentToFile(void* text) {
     char* comment = (char*)text;
     replaceCommentInLastLineInFile((char*)PLAYERLIST_PATH, comment);
 
-    print(std::string("Saved comment for player \"").append(std::string(lastFoughtOpponentName))
+    myGuiTerminalPrint(std::string("Saved comment for player \"").append(std::string(lastFoughtOpponentName))
         .append(std::string("\": ")).append(std::string(comment)).append(std::string("\r\n")));
     free(comment);
 }
@@ -329,7 +335,7 @@ void setTekkenFullscreen() {
     setScreenMode(SCREEN_MODE_FULLSCREEN);
 }
 
-void print(std::string text) {
+void myGuiTerminalPrint(std::string text) {
     printToStandardOutput(text);
     printToTextboxOutput(text);
 }

@@ -1,5 +1,6 @@
 #include "player-displayer.h"
-#include "gui.h"
+
+Hotkey* hotkeys[NR_OF_HOTKEYS];
 
 void handleHotkeyInput(WPARAM hotkey) {
     switch (hotkey) {

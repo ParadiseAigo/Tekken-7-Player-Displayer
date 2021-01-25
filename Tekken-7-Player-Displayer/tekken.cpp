@@ -1,6 +1,5 @@
 #include "player-displayer.h"
 #include "pointers.h"
-#include "gui.h"
 
 bool isGameLoaded() {
 	// will assume game is loaded if the opponent name address contains a (non-empty) string
@@ -34,12 +33,12 @@ bool isOpponentSteamIdValid() {
 	QWORD steamId;
 	steamIdPointer = (void*)getDynamicPointer(tekkenHandle, (void*)STEAM_ID_STATIC_POINTER, STEAM_ID_POINTER_OFFSETS);
 	if (! isMemoryReadable(tekkenHandle, steamIdPointer)) {
-		print(std::string("Steam Id (memory) not readable (probably late).\r\n"));
+		myGuiTerminalPrint(std::string("Steam Id (memory) not readable (probably late).\r\n"));
 		return false;
 	}
 	steamId = readQwordFromMemory(tekkenHandle, steamIdPointer);
 	if (steamId < 0x0110000100000000 || steamId > 0x0110000200000000) {
-		print(std::string("Steam Id is bad!\r\n"));
+		myGuiTerminalPrint(std::string("Steam Id is bad!\r\n"));
 		// steam id is 64 bits (8 bytes) long: 0x FF FF FF FF FF FF FF FF
 		// first 8 bits represent the "universe" and its always equal to 1 for normal accounts
 		// next 4 bits represent the "type" and its also always equal to 1 for normal accounts
@@ -63,7 +62,7 @@ char* handleNewOpponent(char* currentOpponentName) {
 	char* characterNameMessage;
 	char* characterName;
 	newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	print(std::string("New opponent found:  ").append(std::string(newOpponentName)).append(std::string("\r\n")));
+	myGuiTerminalPrint(std::string("New opponent found:  ").append(std::string(newOpponentName)).append(std::string("\r\n")));
 	steamIdBufferSize = 100;
 	steamIdBuffer = (char*)malloc(steamIdBufferSize * sizeof(char));
 	steamId = lastFoundSteamId;
@@ -85,12 +84,12 @@ char* handleNewOpponent(char* currentOpponentName) {
 	updateSecondsRemainingMessage(characterNameMessage);
 	updateAllGuiMessages(newOpponentName, characterName, playerlistComment);
 	if (characterName == NULL) {
-		print(std::string("Last used character: /\r\n"));
+		myGuiTerminalPrint(std::string("Last used character: /\r\n"));
 	}
 	else {
-		print(std::string("Last used character: ").append(std::string(characterName)).append(std::string("\r\n")));
+		myGuiTerminalPrint(std::string("Last used character: ").append(std::string(characterName)).append(std::string("\r\n")));
 	}
-	print(std::string("Comment:             ").append(std::string(playerlistComment)).append(std::string("\r\n")));
+	myGuiTerminalPrint(std::string("Comment:             ").append(std::string(playerlistComment)).append(std::string("\r\n")));
 	if (characterName != NULL) {
 		free(characterName);
 	}

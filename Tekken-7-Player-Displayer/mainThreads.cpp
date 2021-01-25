@@ -1,6 +1,5 @@
 #include "player-displayer.h"
 #include "pointers.h"
-#include "gui.h"
 
 //TODO:
 //-> /
@@ -18,16 +17,6 @@ void* opponentNamePointer;
 void* screenModePointer;
 void* steamIdPointer;
 
-int SCREEN_WIDTH;
-int SCREEN_HEIGHT;
-
-GuiWindows guiWindows;
-Fonts fonts;
-
-HBRUSH solidBrush;
-WNDPROC defaultEditProc;
-
-Hotkey* hotkeys[NR_OF_HOTKEYS];
 HANDLE threadHandles[NR_OF_THREADS];
 bool continueThreads = true;
 
@@ -38,13 +27,14 @@ int main() {
 }
 
 void createThreads() {
-	threadHandles[0] = beginThread(&readAndUpdateTekkenMemory);
-	threadHandles[1] = beginThread(&createWindowAndHandleInput);
+	threadHandles[0] = beginThread(&mainThread);  //thread renamed from readAndUpdateTekkenMemory()
+	threadHandles[1] = beginThread(&guiThread); //thread renamed from createWindowAndHandleInput()
 }
 
 HANDLE beginThread(_beginthreadex_proc_type proc) {
-	unsigned threadId = 0;
-	return (HANDLE)_beginthreadex(NULL, 0, proc, NULL, 0, &threadId);
+	unsigned* threadId = new unsigned int;
+	*threadId = 0;
+	return (HANDLE)_beginthreadex(NULL, 0, proc, NULL, 0, threadId);
 }
 
 void endThread() {
@@ -61,19 +51,19 @@ void closeThreads() {
 	}
 }
 
-unsigned __stdcall readAndUpdateTekkenMemory(void* arguments) {
-	init();
-	mainLoop();
+unsigned __stdcall mainThread(void* arguments) {
+	loadTargetProcess();
+	editTargetProcessLoop();
 	endThread();
 	return ERROR_SUCCESS;
 }
 
-void init() {
+void loadTargetProcess() {
 	initTekkenHandle();
 	initTekkenWindowHandle();
 	initPointers();
 	cleanAllProcessMessages();
-	print(std::string("Program ready!\r\n"));
+	myGuiTerminalPrint(std::string("Program ready!\r\n"));
 }
 
 void initTekkenHandle() {
@@ -81,7 +71,7 @@ void initTekkenHandle() {
 	pid = getProcessId(TEXT(TEKKEN_EXE_NAME));
 	secondsDelay = 2;
 	while (continueThreads && (pid == 0)) {
-		print(std::string("Tekken not found. Trying again in ")
+		myGuiTerminalPrint(std::string("Tekken not found. Trying again in ")
 			.append(std::to_string(secondsDelay))
 			.append(std::string(" seconds...\r\n"))
 		);
@@ -89,30 +79,30 @@ void initTekkenHandle() {
 		pid = getProcessId(TEXT(TEKKEN_EXE_NAME));
 	}
 	tekkenPid = pid; // global variable
-	print(std::string("Tekken found! pid = (").append(std::to_string(pid)).append(")\r\n"));
-	print(std::string("Opening Tekken process...\r\n"));
+	myGuiTerminalPrint(std::string("Tekken found! pid = (").append(std::to_string(pid)).append(")\r\n"));
+	myGuiTerminalPrint(std::string("Opening Tekken process...\r\n"));
 	tekkenHandle = getProcessHandle(pid);  // global variable
-	print(std::string("Opening Tekken success!\r\n"));
+	myGuiTerminalPrint(std::string("Opening Tekken success!\r\n"));
 }
 
 void initTekkenWindowHandle() {
 	DWORD secondsDelay;
 	secondsDelay = 2;
-	while (continueThreads && ((tekkenWindowHandle = getWindowHandle(TEXT(TEKKEN_WINDOW_NAME))) == NULL)) { // global variable
-		print(std::string("Searching for Tekken window. Trying again in ")
+	while (continueThreads && NULL == ((tekkenWindowHandle = getWindowHandle(TEXT(TEKKEN_WINDOW_NAME))))) { // global variable
+		myGuiTerminalPrint(std::string("Searching for Tekken window. Trying again in ")
 			.append(std::to_string(secondsDelay))
 			.append(std::string(" seconds...\r\n"))
 		);
 		Sleep(secondsDelay * 1000); // milliseconds
 	}
-	print(std::string("Tekken window found!\r\n"));
+	myGuiTerminalPrint(std::string("Tekken window found!\r\n"));
 }
 
 void initPointers() {
 	DWORD secondsDelay;
 	secondsDelay = 2;
 	while (continueThreads && !isGameLoaded()) {
-		print(std::string("Game not loaded yet. Waiting ")
+		myGuiTerminalPrint(std::string("Game not loaded yet. Waiting ")
 			.append(std::to_string(secondsDelay))
 			.append(std::string(" seconds...\r\n"))
 		);
@@ -125,7 +115,7 @@ void initPointers() {
 	screenModePointer = (void*)getDynamicPointer(tekkenHandle, (void*)SCREEN_MODE_STATIC_POINTER, SCREEN_MODE_POINTER_OFFSETS);
 	steamIdPointer = (void*)getDynamicPointer(tekkenHandle, (void*)STEAM_ID_STATIC_POINTER, STEAM_ID_POINTER_OFFSETS);
 	char* playerName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	print(std::string("Pointers loaded.\r\nPlayer name (yours): ")
+	myGuiTerminalPrint(std::string("Pointers loaded.\r\nPlayer name (yours): ")
 		.append(std::string(playerName)).append(std::string("\r\n"))
 		.append(std::string("WARNING! If the above name is not your name, "))
 		.append(std::string("restart the program and when you do, make sure you are not "))
@@ -136,7 +126,7 @@ void initPointers() {
 	free(playerName);
 }
 
-void mainLoop() {
+void editTargetProcessLoop() {
 	char* playerName;
 	char* currentOpponentName;
 	char* currentLoadedOpponentName;
@@ -160,7 +150,7 @@ void mainLoop() {
 			cleanAllGuiMessages();
 			currentOpponentName[0] = '\0';
 			currentState = IN_SEARCH;
-			print(std::string("Ready to find the next opponent.\r\n"));
+			myGuiTerminalPrint(std::string("Ready to find the next opponent.\r\n"));
 		}
 		if (isNewOpponentReceived(playerName, currentOpponentName)) {
 			if (isOpponentSteamIdValid()) {
@@ -180,7 +170,7 @@ void mainLoop() {
 		}
 		if (!isWindow(tekkenWindowHandle)) {
 			Sleep(3000); // wait to make sure the tekken process has closed after the window was closed
-			init();
+			loadTargetProcess();
 		}
 	}
 }

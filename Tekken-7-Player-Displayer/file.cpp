@@ -1,6 +1,5 @@
 #include "player-displayer.h"
 #include "pointers.h"
-#include "gui.h"
 
 char* extractCommentFromPlayerlistLine(char* line) {
 	int lineIndex = 0;
@@ -71,13 +70,13 @@ char* copyString(char* s) {
 }
 
 void openPlayerlist() {
-	print(std::string("Opening playerlist...\r\n"));
+	myGuiTerminalPrint(std::string("Opening playerlist...\r\n"));
 	if (doesFileExist((char*) PLAYERLIST_PATH)) {
 		setScreenMode(SCREEN_MODE_WINDOWED);
 		ShellExecute(0, 0, TEXT(PLAYERLIST_PATH), 0, 0 , SW_SHOW ); //(const wchar_t*)
 	}
 	else {
-		print(std::string("Playerlist is not found, creating a new one...\r\n"));
+		myGuiTerminalPrint(std::string("Playerlist is not found, creating a new one...\r\n"));
 		createFile((char*) PLAYERLIST_PATH);
 	}
 }
@@ -98,10 +97,10 @@ void createFile(char* filePath) {
 	FILE* file;
 	errno_t errorCode;
 	if (0 != (errorCode = fopen_s(&file, filePath, "a"))) {
-		print(std::string("Error in createFile: Error creating the file ").append(std::string(filePath)).append(std::string("\r\n")));
+		myGuiTerminalPrint(std::string("Error in createFile: Error creating the file ").append(std::string(filePath)).append(std::string("\r\n")));
 	}
 	else {
-		print(std::string("File \"").append(std::string(filePath)).append(std::string("\" created.\r\n")));
+		myGuiTerminalPrint(std::string("File \"").append(std::string(filePath)).append(std::string("\" created.\r\n")));
 		fclose(file);
 	}
 }
@@ -121,13 +120,13 @@ void saveNewPlayerlistEntry(char* currentLoadedOpponentName) {
 	opponentStructCharacterPointer = (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_CHARACTER_STATIC_POINTER, OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS);
 	newOpponentStructCharacter = readDwordFromMemory(tekkenHandle, opponentStructCharacterPointer);
 	steamId = lastFoundSteamId;
-	print(std::string("New opponent    : ").append(std::string(currentLoadedOpponentName)).append(std::string("\r\n")));
-	print(std::string("Character id    : ").append(std::to_string(newOpponentStructCharacter)).append(std::string("\r\n")));
-	print(std::string("Steam id        : ").append(std::to_string(steamId)).append(std::string("\r\n")));
+	myGuiTerminalPrint(std::string("New opponent    : ").append(std::string(currentLoadedOpponentName)).append(std::string("\r\n")));
+	myGuiTerminalPrint(std::string("Character id    : ").append(std::to_string(newOpponentStructCharacter)).append(std::string("\r\n")));
+	myGuiTerminalPrint(std::string("Steam id        : ").append(std::to_string(steamId)).append(std::string("\r\n")));
 	if (newOpponentStructCharacter != 255) {
-		print(std::string("Character name:   ").append(allCharacters[newOpponentStructCharacter]).append(std::string("\r\n")));
+		myGuiTerminalPrint(std::string("Character name:   ").append(allCharacters[newOpponentStructCharacter]).append(std::string("\r\n")));
 		newPlayerlistLine = makePlayerlistEntry(currentLoadedOpponentName, (char*) allCharacters[newOpponentStructCharacter].c_str(), steamId);
-		print(std::string("Playerlist entry: ").append(std::string(newPlayerlistLine)).append(std::string("\r\n")));
+		myGuiTerminalPrint(std::string("Playerlist entry: ").append(std::string(newPlayerlistLine)).append(std::string("\r\n")));
 		writeLineToFile((char*)PLAYERLIST_PATH, newPlayerlistLine);
 		free(newPlayerlistLine);
 	}
@@ -153,7 +152,7 @@ void writeLineToFile(char* path, char* line) {
 	FILE* file;
 	errno_t errorCode;
 	if (0 != (errorCode = fopen_s(&file, path, "r+"))) {
-		print(std::string("Error opening a file in writeLineToFile, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
+		myGuiTerminalPrint(std::string("Error opening a file in writeLineToFile, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
 		//system("PAUSE");
 		return;
 	}
@@ -191,7 +190,7 @@ std::string fileToString(char* filePath) {
 	std::string result = "";
 	char c;
 	if (0 != fopen_s(&file, filePath, "r")) {
-		print(std::string("Error opening the file ").append(std::string(filePath)).append(std::string(" in fileToString\r\n")));
+		myGuiTerminalPrint(std::string("Error opening the file ").append(std::string(filePath)).append(std::string(" in fileToString\r\n")));
 		return "";
 	}
 	while ((c = getc(file)) != EOF) {
@@ -228,7 +227,7 @@ void replaceCommentInLastLineInFile(char* path, char* comment) {
 	if (indexCommentBegin == -1) {
 		return;
 	}
-	long indexCommentEnd = indexCommentBegin + strlen(comment) + strlen("\n\r");
+	long indexCommentEnd = indexCommentBegin + (long) (strlen(comment) + strlen("\n\r"));
 	setEndOfFileAtIndex(path, indexCommentEnd);
 }
 
@@ -236,7 +235,7 @@ long writeAfterLastOccurenceOfCharInFile(char* path, char* text, char charToWrit
 	FILE* file;
 	errno_t errorCode;
 	if (0 != (errorCode = fopen_s(&file, path, "r+"))) {
-		print(std::string("Error opening a file in writeAfterLastOccurenceOfCharInFile, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
+		myGuiTerminalPrint(std::string("Error opening a file in writeAfterLastOccurenceOfCharInFile, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
 		return -1;
 	}
 	char c;
@@ -258,7 +257,7 @@ void setEndOfFileAtIndex(char* path, long index) {
 		FILE_SHARE_READ, NULL, CREATE_NEW | OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	errno_t errorCode = GetLastError();
 	if (errorCode > 0) {
-		print(std::string("Error opening a file in setEndOfFileAtIndex, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
+		myGuiTerminalPrint(std::string("Error opening a file in setEndOfFileAtIndex, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
 	}
 	SetFilePointer(fileHandle, index, 0, FILE_BEGIN);
 	SetEndOfFile(fileHandle);
