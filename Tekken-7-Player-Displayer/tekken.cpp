@@ -163,20 +163,20 @@ bool isNewFightAccepted(char* playerName, char* currentOpponentName, char* curre
 }
 
 bool isNewOpponentLoaded(char* playerName, char* currentOpponentName, char* currentLoadedOpponentName) {
-	void* opponentStructSignaturePointer =  (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_SIGNATURE_STATIC_POINTER, OPPONENT_STRUCT_SIGNATURE_POINTER_OFFSETS);
+	//void* opponentStructSignaturePointer =  (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_SIGNATURE_STATIC_POINTER, OPPONENT_STRUCT_SIGNATURE_POINTER_OFFSETS);
 	void* opponentStructNamePointer = (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_NAME_STATIC_POINTER, OPPONENT_STRUCT_NAME_POINTER_OFFSETS);
 	char* opponentStructName;
-	QWORD opponentStructSignature;
+	//QWORD opponentStructSignature;
 	if (! isMemoryReadable(tekkenHandle, opponentStructNamePointer)) {
 		return false;
 	}
-	if (! isMemoryReadable(tekkenHandle, opponentStructSignaturePointer)) {
-		return false;
-	}
-	opponentStructSignature = readQwordFromMemory(tekkenHandle, opponentStructSignaturePointer);
-	if (opponentStructSignature != OPPONENT_STRUCT_SIGNATURE) { //struct not loaded yet
-		return false;
-	}
+	//if (! isMemoryReadable(tekkenHandle, opponentStructSignaturePointer)) {
+	//	return false;
+	//}
+	//opponentStructSignature = readQwordFromMemory(tekkenHandle, opponentStructSignaturePointer);
+	//if (opponentStructSignature != OPPONENT_STRUCT_SIGNATURE) { //struct not loaded yet
+	//	return false;
+	//}
 	opponentStructName = readStringFromMemory(tekkenHandle, opponentStructNamePointer);
 	if (opponentStructName[0] == '\0') { // empty name, so no opponent loaded
 		free(opponentStructName);

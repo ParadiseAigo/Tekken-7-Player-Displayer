@@ -5,7 +5,7 @@ int SCREEN_WIDTH;
 int SCREEN_HEIGHT;
 
 GuiWindows guiWindows;
-Fonts fonts;
+GuiFonts guiFonts;
 
 HBRUSH solidBrush;
 WNDPROC defaultEditProc;
@@ -63,19 +63,19 @@ void getScreenResolution() {
 }
 
 void initFontsAndBrushes() {
-    fonts.informationNameTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_NORMAL, TRUE, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    guiFonts.informationNameTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_NORMAL, TRUE, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
-    fonts.informationValueTextFont = CreateFont(50, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    guiFonts.informationValueTextFont = CreateFont(50, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
-    fonts.outputTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    guiFonts.outputTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
-    fonts.shortcutsTextFont = CreateFont(18, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    guiFonts.shortcutsTextFont = CreateFont(18, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
-    fonts.commentTextFont = CreateFont(20, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    guiFonts.commentTextFont = CreateFont(20, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
-    fonts.editboxTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_BOLD, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    guiFonts.commentEditboxTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_BOLD, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Arial"));
-    fonts.editboxReadOnlyTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_BOLD, TRUE, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    guiFonts.commentEditboxReadOnlyTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_BOLD, TRUE, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Arial"));
 
     solidBrush = CreateSolidBrush(COLOR_GRAY);
@@ -84,7 +84,6 @@ void initFontsAndBrushes() {
 void createMainWindow() {
     int X_MAINWINDOW = SCREEN_WIDTH / 2 - WIDTH_MAINWINDOW / 2;
     int Y_MAINWINDOW = SCREEN_HEIGHT / 2 - HEIGHT_MAINWINDOW / 2;
-    int WIDTH_TEXTBOX = 580;
     int X_TEXTBOX = 650;
 
     guiWindows.mainWindowHandle = createWindow(WS_EX_DLGMODALFRAME,
@@ -98,7 +97,7 @@ void createMainWindow() {
 
     guiWindows.outputTextHandle = createWindow(WS_EX_PALETTEWINDOW, TEXT("Edit"), NULL,
         WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL | ES_READONLY,
-        40, 40, WIDTH_TEXTBOX, FONT_SIZE * 30 + 10, guiWindows.mainWindowHandle);
+        40, 40, 580, FONT_SIZE * 30 + 10, guiWindows.mainWindowHandle);
 
     HWND shortcutsTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_INFORMATION),
         WS_CHILD | WS_VISIBLE | WS_BORDER,
@@ -119,29 +118,29 @@ void createMainWindow() {
 
     guiWindows.playerNameValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
-        X_TEXTBOX, 200, 380, FONT_SIZE * 1 + 10 + 30, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 200, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
     guiWindows.opponentNameValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
-        X_TEXTBOX, 330, 380, FONT_SIZE * 1 + 10 + 30, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 330, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
     guiWindows.opponentCharacterValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
-        X_TEXTBOX, 460, 380, FONT_SIZE * 1 + 10 + 30, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 460, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
     guiWindows.commentValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL | ES_READONLY,
         40, 580, 990, 20 * 2 + 10, guiWindows.mainWindowHandle);
 
     HBITMAP backgroundBitmapHandle = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(BACKGROUND));
     sendMessage(backgroundImageHandle, STM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)backgroundBitmapHandle);
-    sendMessage(guiWindows.outputTextHandle, WM_SETFONT, (LPARAM)fonts.outputTextFont, true);
-    sendMessage(shortcutsTextHandle, WM_SETFONT, (LPARAM)fonts.shortcutsTextFont, true);
-    sendMessage(playerNameTextHandle, WM_SETFONT, (LPARAM)fonts.informationNameTextFont, true);
-    sendMessage(opponentNameTextHandle, WM_SETFONT, (LPARAM)fonts.informationNameTextFont, true);
-    sendMessage(opponentCharacterTextHandle, WM_SETFONT, (LPARAM)fonts.informationNameTextFont, true);
-    sendMessage(commentNameTextHandle, WM_SETFONT, (LPARAM)fonts.informationNameTextFont, true);
-    sendMessage(guiWindows.playerNameValueTextHandle, WM_SETFONT, (LPARAM)fonts.informationValueTextFont, true);
-    sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETFONT, (LPARAM)fonts.informationValueTextFont, true);
-    sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETFONT, (LPARAM)fonts.informationValueTextFont, true);
-    sendMessage(guiWindows.commentValueTextHandle, WM_SETFONT, (LPARAM)fonts.commentTextFont, true);
+    sendMessage(guiWindows.outputTextHandle, WM_SETFONT, (LPARAM)guiFonts.outputTextFont, true);
+    sendMessage(shortcutsTextHandle, WM_SETFONT, (LPARAM)guiFonts.shortcutsTextFont, true);
+    sendMessage(playerNameTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
+    sendMessage(opponentNameTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
+    sendMessage(opponentCharacterTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
+    sendMessage(commentNameTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
+    sendMessage(guiWindows.playerNameValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
+    sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
+    sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
+    sendMessage(guiWindows.commentValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.commentTextFont, true);
 
     showWindow(guiWindows.consoleWindowHandle, SW_HIDE);
     showWindow(guiWindows.mainWindowHandle, SW_SHOW);
@@ -166,14 +165,13 @@ void createCommentWindow() {
 
     SetLayeredWindowAttributes(guiWindows.commentWindowHandle, 0, (255 * WINDOW_OPACITY) / 100, LWA_ALPHA);
     defaultEditProc = (WNDPROC)SetWindowLongPtr(guiWindows.commentEditboxHandle, GWLP_WNDPROC, (LONG_PTR)subEditProc);
-    sendMessage(guiWindows.commentEditboxHandle, WM_SETFONT, (WPARAM)fonts.editboxTextFont, TRUE);
+    sendMessage(guiWindows.commentEditboxHandle, WM_SETFONT, (WPARAM)guiFonts.commentEditboxTextFont, TRUE);
     sendMessage(guiWindows.commentEditboxHandle, EM_SETLIMITTEXT, EDITBOX_TEXT_MAX_LENGTH, 0);
     sendMessage(guiWindows.commentButtonHandle, WM_SETFONT, (LPARAM)GetStockObject(DEFAULT_GUI_FONT), true);
 
     if (lastFoughtOpponentName != NULL) {
         setOpponentNameInCommentWindowTitle();
-    }
-    else {
+    } else {
         disableCommentWindowEditbox();
     }
 
@@ -181,7 +179,7 @@ void createCommentWindow() {
     showWindow(guiWindows.commentWindowHandle, SW_SHOW);
 }
 
-void handleWindowsMessageQueueLoop() { // loop to pull messages from queue for all guiWindows in current thread
+void handleWindowsMessageQueueLoop() { // loop to pull messages from queue for all windows in current thread
     MSG msg = { };
     while (GetMessage(&msg, NULL, 0, 0)) {
         TranslateMessage(&msg);
@@ -196,8 +194,7 @@ LRESULT CALLBACK mainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpara
             SetTextColor((HDC)wparam, COLOR_WHITE);
             SetBkColor((HDC)wparam, COLOR_BLACK);
             return (LRESULT)(HBRUSH)GetStockObject(BLACK_BRUSH);
-        }
-        else {
+        } else {
             SetBkColor((HDC)wparam, COLOR_GRAY);
             return (LRESULT)solidBrush;
         }
@@ -252,8 +249,7 @@ LRESULT CALLBACK subEditProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
         if (wparam == VK_RETURN) {
             saveCommentAndCloseCommentWindow();
             break;
-        }
-        else if (wparam == VK_ESCAPE) {
+        } else if (wparam == VK_ESCAPE) {
             destroyWindow(guiWindows.commentWindowHandle);
             break;
         }
@@ -266,8 +262,7 @@ LRESULT CALLBACK subEditProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 void openCommentWindow() {
     if (!isWindow(guiWindows.commentWindowHandle)) {
         createCommentWindow();
-    }
-    else {
+    } else {
         setForegroundWindow(guiWindows.commentWindowHandle);
         setFocusCommentWindow();
     }
@@ -284,7 +279,7 @@ void disableCommentWindowEditbox() {
     LONG_PTR style = GetWindowLongPtr(guiWindows.commentEditboxHandle, GWL_STYLE);
     SetWindowLongPtr(guiWindows.commentEditboxHandle, GWL_STYLE, style | ES_CENTER);
     sendMessage(guiWindows.commentEditboxHandle, WM_SETTEXT, 0, (LPARAM)TEXT(TEXT_COMMENTWINDOW));
-    sendMessage(guiWindows.commentEditboxHandle, WM_SETFONT, (WPARAM)fonts.editboxReadOnlyTextFont, TRUE);
+    sendMessage(guiWindows.commentEditboxHandle, WM_SETFONT, (WPARAM)guiFonts.commentEditboxReadOnlyTextFont, TRUE);
     sendMessage(guiWindows.commentEditboxHandle, EM_SETREADONLY, (WPARAM)TRUE, 0);
     sendMessage(guiWindows.commentButtonHandle, WM_SETTEXT, 0, (LPARAM)L"Close");
 }
@@ -347,8 +342,7 @@ void printToStandardOutput(std::string text) {
 void printToTextboxOutput(std::string text) {
     if (!isWindow(guiWindows.outputTextHandle)) {
         waitForWindowToBeCreated(guiWindows.outputTextHandle);
-    }
-    else {
+    } else {
         printTextToEditControl(text, guiWindows.outputTextHandle);
     }
 }
@@ -364,7 +358,6 @@ void printTextToEditControl(std::string text, HWND& editControlHandle) {
     int indexEndOfText = GetWindowTextLength(editControlHandle);
     sendMessage(editControlHandle, EM_SETSEL, (WPARAM)indexEndOfText, (LPARAM)indexEndOfText);
     sendMessage(editControlHandle, EM_REPLACESEL, 0, (LPARAM)textBuffer);
-    sendMessage(editControlHandle, WM_VSCROLL, (WPARAM)SB_LINEUP, NULL); // don't display last newline
     delete[] textBuffer;
 }
 
@@ -387,20 +380,19 @@ void closeCommentWindow() {
 }
 
 void deleteFontObjects() {
-    DeleteObject(fonts.informationNameTextFont);
-    DeleteObject(fonts.informationValueTextFont);
-    DeleteObject(fonts.outputTextFont);
-    DeleteObject(fonts.shortcutsTextFont);
-    DeleteObject(fonts.commentTextFont);
-    DeleteObject(fonts.editboxTextFont);
-    DeleteObject(fonts.editboxReadOnlyTextFont);
+    DeleteObject(guiFonts.informationNameTextFont);
+    DeleteObject(guiFonts.informationValueTextFont);
+    DeleteObject(guiFonts.outputTextFont);
+    DeleteObject(guiFonts.shortcutsTextFont);
+    DeleteObject(guiFonts.commentTextFont);
+    DeleteObject(guiFonts.commentEditboxTextFont);
+    DeleteObject(guiFonts.commentEditboxReadOnlyTextFont);
 }
 
 void showOrHideConsoleWindow() {
     if (isWindowVisible(guiWindows.consoleWindowHandle)) {
         showWindow(guiWindows.consoleWindowHandle, SW_HIDE);
-    }
-    else {
+    } else {
         showWindow(guiWindows.consoleWindowHandle, SW_SHOW);
     }
 }

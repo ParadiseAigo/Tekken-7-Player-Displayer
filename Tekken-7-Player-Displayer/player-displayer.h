@@ -34,9 +34,7 @@
 
 #define WINDOW_OPACITY 90
 
-#define TEXT_WELCOME "Hello! ^^ / This program displays your opponents name, the character they last used against you and a comment that you can write about them both in-game and in this window before accepting a match. Have fun! :)"
 #define TEXT_INFORMATION " ALT + F : Set Tekken in Fullscreen Mode\n ALT + W : Set Tekken in Windowed Mode\n ALT + C : Add a Comment in the Player List\n ALT + O : Open the Player List"//\n ALT + T : Show Program Console"
-#define TEXT_CREDITS " github.com/ParadiseAigo"
 #define TEXT_COMMENTWINDOW "(Last fought player not found, maybe you didn't fight a player yet)"
 
 #define FONT_SIZE 16
@@ -76,15 +74,15 @@ typedef struct GuiWindows {
     HWND consoleWindowHandle;
 } GuiWindows;
 
-typedef struct Fonts {
+typedef struct GuiFonts {
     HFONT informationNameTextFont;
     HFONT informationValueTextFont;
     HFONT outputTextFont;
     HFONT shortcutsTextFont;
     HFONT commentTextFont;
-    HFONT editboxTextFont;
-    HFONT editboxReadOnlyTextFont;
-} Fonts;
+    HFONT commentEditboxTextFont;
+    HFONT commentEditboxReadOnlyTextFont;
+} GuiFonts;
 
 typedef struct Hotkey {
     int id;
@@ -113,7 +111,7 @@ extern void* steamIdPointer;
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 extern GuiWindows guiWindows;
-extern Fonts fonts;
+extern GuiFonts guiFonts;
 extern HBRUSH solidBrush;
 extern WNDPROC defaultEditProc;
 

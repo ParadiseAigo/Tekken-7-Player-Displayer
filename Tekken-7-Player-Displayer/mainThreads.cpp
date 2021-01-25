@@ -27,8 +27,8 @@ int main() {
 }
 
 void createThreads() {
-	threadHandles[0] = beginThread(&mainThread);  //thread renamed from readAndUpdateTekkenMemory()
-	threadHandles[1] = beginThread(&guiThread); //thread renamed from createWindowAndHandleInput()
+	threadHandles[0] = beginThread(&mainThread);  
+	threadHandles[1] = beginThread(&guiThread);
 }
 
 HANDLE beginThread(_beginthreadex_proc_type proc) {
