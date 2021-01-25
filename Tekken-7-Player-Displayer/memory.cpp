@@ -1,4 +1,5 @@
 #include "player-displayer.h"
+#include "gui.h"
 
 HANDLE getProcessHandle(DWORD pid) {
 	HANDLE processHandle;
@@ -65,7 +66,6 @@ void writeDwordToMemory(HANDLE processHandle, void* address, DWORD newValue) {
 	if (errorCode == 0) {
 		errorCode = GetLastError();
 		print(std::string("Error! WriteProcessMemory failed in WriteDwordToMemory. Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
-		system("PAUSE");
 	}
 }
 

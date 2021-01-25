@@ -8,7 +8,6 @@
 #include <tlhelp32.h>
 #include <fstream>
 #include <vector>
-#include <map>
 #include <process.h> // _beginthread
 #include "resource.h" 
 
@@ -131,7 +130,6 @@ void endThread();
 void waitForThreadsToTerminate();
 void closeThreads();
 unsigned __stdcall readAndUpdateTekkenMemory(void* arguments);
-unsigned __stdcall createWindowAndHandleInput(void* arguments);
 void init();
 void initTekkenHandle();
 void initTekkenWindowHandle();
@@ -198,52 +196,19 @@ int getSizeStringInMemory(HANDLE processHandle, void* address);
 int getMaxSizeStringInMemory(HANDLE processHandle, void* address);
 
 //window.cpp
-void initWindowsAndHotkeys();
-void initWindows();
-void registerMainWindowClass();
-void registerCommentWindowClass();
-void registerWindowClass(WNDCLASS windowClass);
-void getConsoleWindowHandle();
 HWND getWindowHandle(const wchar_t* programWindowName);
-void getScreenResolution();
-void initFontsAndBrushes();
-void createMainWindow();
-void createCommentWindow();
-HWND createWindow(DWORD extendedStyle, LPCWSTR className, LPCWSTR windowName, DWORD style,
-    int x, int y, int width, int height, HWND parentWindowHandle = NULL);
-void sendMessage(HWND windowHandle, UINT msg, WPARAM wparam, LPARAM lparam);
-void showWindow(HWND windowHandle, int showCommand);
-void handleWindowsMessageQueueLoop();
-LRESULT CALLBACK mainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
-LRESULT CALLBACK commentWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
-LRESULT CALLBACK subEditProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
-void openCommentWindow();
-bool isWindow(HWND windowHandle);
-void setForegroundWindow(HWND windowHandle);
-void setOpponentNameInCommentWindowTitle();
-void disableCommentWindowEditbox();
-void setFocusCommentWindow();
-void setFocus(HWND windowHandle);
-void saveCommentAndCloseCommentWindow();
-void saveComment();
-char* getTextFromCommentEditbox();
-void writeCommentToFile(void* text);
-void setTekkenWindowed();
-void setTekkenFullscreen();
 void setScreenMode(DWORD screenMode);
 void minimizeAndRestoreTekkenWindow();
-void showOrHideConsoleWindow();
-BOOL isWindowVisible(HWND windowHandle);
-void print(std::string text);
-void printToStandardOutput(std::string text);
-void printToTextboxOutput(std::string text);
-void waitForWindowToBeCreated(HWND& windowHandle);
-void printTextToEditControl(std::string text, HWND& editControlHandle);
-wchar_t* stringToWString(std::string text);
-void closeAllWindows();
-void closeCommentWindow();
+HWND createWindow(DWORD extendedStyle, LPCWSTR className, LPCWSTR windowName, DWORD style,
+    int x, int y, int width, int height, HWND parentWindowHandle = NULL);
+void registerWindowClass(WNDCLASS windowClass);
+void sendMessage(HWND windowHandle, UINT msg, WPARAM wparam, LPARAM lparam);
+void showWindow(HWND windowHandle, int showCommand);
+bool isWindow(HWND windowHandle);
+BOOL isWindowVisible(HWND windowHandle); 
+void setForegroundWindow(HWND windowHandle);
+void setFocus(HWND windowHandle);
 void destroyWindow(HWND windowHandle);
-void deleteFontObjects();
 
 #endif
 

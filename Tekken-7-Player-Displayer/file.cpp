@@ -1,5 +1,6 @@
 #include "player-displayer.h"
 #include "pointers.h"
+#include "gui.h"
 
 char* extractCommentFromPlayerlistLine(char* line) {
 	int lineIndex = 0;

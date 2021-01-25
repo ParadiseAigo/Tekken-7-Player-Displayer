@@ -1,4 +1,5 @@
 #include "player-displayer.h"
+#include "gui.h"
 
 void handleHotkeyInput(WPARAM hotkey) {
     switch (hotkey) {
