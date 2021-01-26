@@ -8,12 +8,6 @@ It will display them both in-game and in the console.
 
 ![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/2git.png)
 
-## Update
-
-Now also has a gui!
-
-![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/4git.png)
-
 ## Commands
 * ALT+W  puts the game in windowed mode (so you don't have to worry about crashing the game by alt-tabbing)
 * ALT+F  puts the game in full-screen mode
@@ -34,3 +28,8 @@ To be sure the program is loaded correctly your name should be displayed in the 
 * There is a 1 out of 5 chance or so that the program is unable to get the name of the opponent. You can just decline those match requests.
 * Your game language has to be in English, if it isn't the in-game display will not work, but the program window will still display the correct information.
 * Sometimes some steam names can cause the program to behave in untended ways. (rare)
+
+## Update
+Now also has a gui!
+
+![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/4git.png)
