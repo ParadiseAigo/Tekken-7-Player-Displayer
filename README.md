@@ -8,6 +8,12 @@ It will display them both in-game and in the console.
 
 ![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/2git.png)
 
+## Update
+
+Now also has a gui!
+
+![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/4git.png)
+
 ## Commands
 * ALT+W  puts the game in windowed mode (so you don't have to worry about crashing the game by alt-tabbing)
 * ALT+F  puts the game in full-screen mode
