@@ -1,6 +1,27 @@
 #include "player-displayer.h"
 #include "pointers.h"
 
+char* extractPlayerNameFromPlayerlistLine(char* line) {
+	int lineIndexBegin = 0;  // player name is the first thing in the line so its always = 0
+	int lineIndexEnd = 0;
+	int lineSize = (int) strlen(line);
+	int tabsCount = 0;
+	std::string character(line);
+	if (line != NULL) {
+		while ((lineIndexEnd + 2) < lineSize) {
+			if (line[lineIndexEnd] != '\t') {
+				lineIndexEnd++;
+			}
+			else {
+				break;
+			}
+		}
+		std::string result = character.substr(lineIndexBegin, (lineIndexEnd - lineIndexBegin));
+		return copyString((char*)result.c_str());
+	}
+	return NULL;
+}
+
 char* extractCommentFromPlayerlistLine(char* line) {
 	int lineIndex = 0;
 	int lineSize = (int) strlen(line);
@@ -119,7 +140,12 @@ void saveNewPlayerlistEntry(char* currentLoadedOpponentName) {
 	std::string allCharacters[] = ALL_CHARACTERS;
 	opponentStructCharacterPointer = (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_CHARACTER_STATIC_POINTER, OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS);
 	newOpponentStructCharacter = readDwordFromMemory(tekkenHandle, opponentStructCharacterPointer);
-	steamId = lastFoundSteamId;
+	if (isNamelessSteamIdFound) {
+		steamId = lastFoundBetterSteamId;
+	}
+	else {
+		steamId = lastFoundSteamId;
+	}
 	myGuiTerminalPrint(std::string("New opponent    : ").append(std::string(currentLoadedOpponentName)).append(std::string("\r\n")));
 	myGuiTerminalPrint(std::string("Character id    : ").append(std::to_string(newOpponentStructCharacter)).append(std::string("\r\n")));
 	myGuiTerminalPrint(std::string("Steam id        : ").append(std::to_string(steamId)).append(std::string("\r\n")));
@@ -198,6 +224,12 @@ std::string fileToString(char* filePath) {
 	}
 	fclose(file);
 	return result;
+}
+
+char* getLastLineOfFile(char* filePath) {
+	std::string fileString = fileToString((char*)PLAYERLIST_PATH);
+	std::string line = stringToLines((char*)fileString.c_str())[0]; // first line is last line...
+	return copyString((char*) line.c_str());
 }
 
 bool bruteForceFind(char* text, char* pattern) {

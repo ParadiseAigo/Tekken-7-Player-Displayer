@@ -99,6 +99,8 @@ extern HANDLE tekkenHandle;
 extern HWND tekkenWindowHandle;
 extern int tekkenPid;
 extern QWORD lastFoundSteamId;
+extern QWORD lastFoundBetterSteamId;
+extern bool isNamelessSteamIdFound; // helps keep track of  lastFoundBetterSteamId
 extern char* lastFoughtOpponentName;
 
 extern void* fightThisPlayerMessagePointer;
@@ -106,7 +108,7 @@ extern void* secondsRemainingMessagePointer;
 extern void* opponentFoundMessagePointer;
 extern void* opponentNamePointer;
 extern void* screenModePointer;
-extern void* steamIdPointer;
+extern void* steamModulePointer;
 
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
@@ -131,17 +133,23 @@ void loadTargetProcess();
 void initTekkenHandle();
 void initTekkenWindowHandle();
 void initPointers();
+void initModuleAdresses();
 void editTargetProcessLoop();
 void closeProgram();
 
 //tekken.cpp
 bool isGameLoaded();
 bool isNewOpponentReceived(char* playerName, char* currentOpponentName);
+bool isSteamIdValid(void* steamIdPointer, QWORD* steamIdBuffer);
 bool isOpponentSteamIdValid();
 char* handleNewOpponent(char* currentOpponentName);
 void updateOpponentFoundMessage(char* message);
 void updateFightThisPlayerMessage(char* message);
 void updateSecondsRemainingMessage(char* message);
+bool didNameAddressFail(char* currentOpponentName);
+bool isNewBetterSteamIdReceived();
+char* updateMessagesWithBetterSteamId(char* currentOpponentName);
+char* updateMessagesWithoutOpponentName(char* currentOpponentName);
 void updateMessagesWithoutSteamId();
 bool isNewFightAccepted(char* playerName, char* currentOpponentName, char* currentLoadedOpponentName);
 bool isNewOpponentLoaded(char* playerName, char* currentOpponentName, char* currentLoadedOpponentName);
@@ -158,6 +166,7 @@ void unRegisterHotKeys();
 void unRegisterHotKey(HWND windowHandle, int hotkeyId);
 
 //file.cpp
+char* extractPlayerNameFromPlayerlistLine(char* line);
 char* extractCommentFromPlayerlistLine(char* line);
 char* extractCharacterFromPlayerlistLine(char* line);
 char* myStringCat(char* s1, char* s2);
@@ -172,6 +181,7 @@ void writeLineToFile(char* path, char* line);
 char* findLineInStringVector(std::vector<std::string> v, char* pattern);
 std::vector<std::string> stringToLines(char* s);
 std::string fileToString(char* filePath);
+char* getLastLineOfFile(char* filePath);
 bool bruteForceFind(char* text, char* pattern);
 void replaceCommentInLastLineInFile(char* path, char* comment);
 long writeAfterLastOccurenceOfCharInFile(char* path, char* text, char charToWriteAfter);
@@ -180,6 +190,7 @@ void setEndOfFileAtIndex(char* path, long position);
 //targetMemory.cpp
 HANDLE getProcessHandle(DWORD pid);
 DWORD getProcessId(const std::wstring& nameProgramExe);
+uintptr_t getModuleBaseAddress(DWORD pid, const wchar_t* moduleName);
 QWORD getDynamicPointer(HANDLE processHandle, void* basePointer, std::vector<DWORD> offsets);
 void writeDwordToMemory(HANDLE processHandle, void* address, DWORD newValue);
 void writeStringLimitedToMemory(HANDLE processHandle, void* address, char* newValue);

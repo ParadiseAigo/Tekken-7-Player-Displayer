@@ -39,6 +39,26 @@ DWORD getProcessId(const std::wstring& programNameExe) {
 	return 0;
 }
 
+// purpose: finding the base address of a module (example: "steam_api64_o.dll")
+uintptr_t getModuleBaseAddress(DWORD pid, const wchar_t* moduleName) {
+    uintptr_t result = 0;
+    HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
+    if (hSnap != INVALID_HANDLE_VALUE) {
+        MODULEENTRY32 modEntry;
+        modEntry.dwSize = sizeof(modEntry);
+        if (Module32First(hSnap, &modEntry)) {
+            do {
+                if (!_wcsicmp(modEntry.szModule, moduleName)) {
+                    result = (uintptr_t)modEntry.modBaseAddr;
+                    break;
+                }
+            } while (Module32Next(hSnap, &modEntry));
+        }
+    }
+    CloseHandle(hSnap);
+    return result;
+}
+
 QWORD getDynamicPointer(HANDLE processHandle, void* basePointer, std::vector<DWORD> offsets) {
 	QWORD resultPointer = 0, prevPointer;
 	DWORD errorCode;
@@ -46,13 +66,18 @@ QWORD getDynamicPointer(HANDLE processHandle, void* basePointer, std::vector<DWO
 		return (QWORD) basePointer;
 	}
 	prevPointer = (QWORD) basePointer;
+	//myGuiTerminalPrint(std::string("basepointer: ").append(std::to_string((QWORD)basePointer)).append(std::string("\r\n")));
 	for (int i = 0; i < offsets.size(); i++) {
 		if (ReadProcessMemory(processHandle, (void*) prevPointer, &resultPointer, sizeof(resultPointer), NULL) == 0) {
 			errorCode = GetLastError();
-			//print(std::string("Error! ReadProcessMemory in getDynamicPointer failed! Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
+			//myGuiTerminalPrint(std::string("Error! ReadProcessMemory in getDynamicPointer failed! Code: ").append(std::to_string(errorCode)).append(std::string(" .\r\n")));
+			//system("pause");
 			return 0;
 		}
 		prevPointer = resultPointer + offsets[i];
+		//myGuiTerminalPrint(std::string("resutlpointer:  ").append(std::to_string((QWORD)resultPointer)).append(std::string("\r\n")));
+		//myGuiTerminalPrint(std::string("offset:         ").append(std::to_string((QWORD)offsets[i])).append(std::string("\r\n")));
+		//myGuiTerminalPrint(std::string("prevpointer:    ").append(std::to_string((QWORD)prevPointer)).append(std::string("\r\n")));
 	}
 	resultPointer += offsets[offsets.size() - 1];
 	return resultPointer;

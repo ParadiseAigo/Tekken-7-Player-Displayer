@@ -8,6 +8,8 @@ HANDLE tekkenHandle;
 HWND tekkenWindowHandle;
 int tekkenPid;
 QWORD lastFoundSteamId;
+QWORD lastFoundBetterSteamId;
+bool isNamelessSteamIdFound; // helps keep track of  lastFoundBetterSteamId
 char* lastFoughtOpponentName;
 
 void* fightThisPlayerMessagePointer;
@@ -15,7 +17,7 @@ void* secondsRemainingMessagePointer;
 void* opponentFoundMessagePointer;
 void* opponentNamePointer;
 void* screenModePointer;
-void* steamIdPointer;
+void* steamModulePointer;
 
 HANDLE threadHandles[NR_OF_THREADS];
 bool continueThreads = true;
@@ -113,7 +115,7 @@ void initPointers() {
 	secondsRemainingMessagePointer = (void*)getDynamicPointer(tekkenHandle, (void*)SECONDS_REMAINING_MESSAGE_STATIC_POINTER, SECONDS_REMAINING_MESSAGE_POINTER_OFFSETS);
 	opponentFoundMessagePointer = (void*)getDynamicPointer(tekkenHandle, (void*)OPPONENT_FOUND_MESSAGE_STATIC_POINTER, OPPONENT_FOUND_MESSAGE_POINTER_OFFSETS);
 	screenModePointer = (void*)getDynamicPointer(tekkenHandle, (void*)SCREEN_MODE_STATIC_POINTER, SCREEN_MODE_POINTER_OFFSETS);
-	steamIdPointer = (void*)getDynamicPointer(tekkenHandle, (void*)STEAM_ID_STATIC_POINTER, STEAM_ID_POINTER_OFFSETS);
+	initModuleAdresses();
 	char* playerName = readStringFromMemory(tekkenHandle, opponentNamePointer);
 	myGuiTerminalPrint(std::string("Pointers loaded.\r\nPlayer name (yours): ")
 		.append(std::string(playerName)).append(std::string("\r\n"))
@@ -126,33 +128,29 @@ void initPointers() {
 	free(playerName);
 }
 
+void initModuleAdresses() {
+	steamModulePointer = (void*)getModuleBaseAddress(tekkenPid, STEAM_API_MODULE_NAME);
+}
+
 void editTargetProcessLoop() {
 	char* playerName;
 	char* currentOpponentName;
 	char* currentLoadedOpponentName;
-	enum tekkenState currentState;
 	int delayInSearch = 1000/60; // "60fps"
 	int delayInFight = 2000; // 2 seconds
 	playerName = readStringFromMemory(tekkenHandle, opponentNamePointer);
 	currentOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
 	currentLoadedOpponentName = (char*) malloc(10 * sizeof(char)); // dummy value
 	currentLoadedOpponentName[0] = '\0'; // empty string
-	currentState = IN_SEARCH;
+	lastFoughtOpponentName = 0;
+	lastFoundBetterSteamId = -1;  // global variable
+	isNamelessSteamIdFound = false; // global variable
 	while (continueThreads) {
-		if (currentState == IN_SEARCH) {
-			Sleep(delayInSearch);
-		}
-		else if (currentState == IN_FIGHT) {
-			Sleep(delayInFight);
-		}
-		if (isTimeToCleanMessages(playerName, currentOpponentName)) {
+		Sleep(delayInSearch);
+		if (isNewOpponentReceived(playerName, currentOpponentName)) {
 			cleanAllProcessMessages();
 			cleanAllGuiMessages();
-			currentOpponentName[0] = '\0';
-			currentState = IN_SEARCH;
-			myGuiTerminalPrint(std::string("Ready to find the next opponent.\r\n"));
-		}
-		if (isNewOpponentReceived(playerName, currentOpponentName)) {
+			isNamelessSteamIdFound = false;
 			if (isOpponentSteamIdValid()) {
 				currentOpponentName = handleNewOpponent(currentOpponentName);
 			}
@@ -163,10 +161,20 @@ void editTargetProcessLoop() {
 				updateMessagesWithoutSteamId();
 			}
 		}
+		else if (didNameAddressFail(currentOpponentName) && isNewBetterSteamIdReceived()){ 
+			cleanAllProcessMessages();
+			cleanAllGuiMessages();
+			isNamelessSteamIdFound = true;
+			currentOpponentName = updateMessagesWithBetterSteamId(currentOpponentName);
+			// aigo delete this
+//			myGuiTerminalPrint(std::string("currentname changed to: ")
+//				.append(currentOpponentName)
+//				.append(std::string("....\r\n"))
+//			);
+		}
 		if (isNewFightAccepted(playerName, currentOpponentName, currentLoadedOpponentName)) {
 			currentLoadedOpponentName = saveNewOpponentInPlayerlist(playerName, currentOpponentName, currentLoadedOpponentName);
 			lastFoughtOpponentName = currentLoadedOpponentName;
-			currentState = IN_FIGHT;
 		}
 		if (!isWindow(tekkenWindowHandle)) {
 			Sleep(3000); // wait to make sure the tekken process has closed after the window was closed
