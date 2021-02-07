@@ -357,7 +357,7 @@ void printToTextboxOutput(std::string text) {
 void waitForWindowToBeCreated(HWND& windowHandle) {
     do {
         Sleep(100);
-    } while (continueThreads && !isWindow(windowHandle));
+    } while (!isWindow(windowHandle));
 }
 
 void printTextToEditControl(std::string text, HWND& editControlHandle) {
