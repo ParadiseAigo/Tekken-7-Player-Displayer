@@ -354,8 +354,12 @@ void waitForWindowToBeCreated(HWND& windowHandle) {
 }
 
 void printTextToEditControl(std::string text, HWND& editControlHandle) {
+    QWORD indexEndOfText = GetWindowTextLength(editControlHandle);
+    QWORD sizeLimitText = SendMessage(editControlHandle, EM_GETLIMITTEXT, 0, 0);
+    if (indexEndOfText + (QWORD) text.size() >= sizeLimitText) {
+        sendMessage(editControlHandle, EM_SETLIMITTEXT, (WPARAM) (sizeLimitText + (QWORD)text.size() + (QWORD)EDITBOX_TEXT_MAX_LENGTH), 0);
+    }
     wchar_t* textBuffer = stringToWString(text);
-    int indexEndOfText = GetWindowTextLength(editControlHandle);
     sendMessage(editControlHandle, EM_SETSEL, (WPARAM)indexEndOfText, (LPARAM)indexEndOfText);
     sendMessage(editControlHandle, EM_REPLACESEL, 0, (LPARAM)textBuffer);
     delete[] textBuffer;
