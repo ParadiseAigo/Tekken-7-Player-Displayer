@@ -98,11 +98,8 @@ enum tekkenState {IN_FIGHT, IN_SEARCH};
 extern HANDLE tekkenHandle;
 extern HWND tekkenWindowHandle;
 extern int tekkenPid;
-extern QWORD lastFoundSteamId;  // aigo delete this
-extern QWORD lastFoundBetterSteamId;
-extern bool isNamelessSteamIdFound; // helps keep track of  lastFoundBetterSteamId
-extern bool didNamelessSteamIdChange; // helps keep track of  lastFoundBetterSteamId
-extern char* lastFoughtOpponentName;
+extern QWORD lastFoundSteamId;
+extern bool isSteamIdFound; // helps keep track of  lastFoundSteamId
 extern QWORD userSteamId;
 extern char* lastNameInPlayerlist;
 
@@ -148,19 +145,17 @@ bool isSteamApiLoaded(void* steamIdPointer);
 void resetSteamApiBaseModuleAddress();
 bool readAndIsSteamIdValid(void* steamIdPointer, QWORD* steamIdBuffer);
 void handleNewReceivedOpponent();
-char* handleNewOpponent(char* currentOpponentName);                              // aigooo, delete?
-char* updateMessagesWithoutOpponentName(char* currentOpponentName);                // aigooo, delete?
-void updateMessagesWithoutSteamId();                                            // aigooo, delete?
+char* updateMessagesWithoutOpponentName(char* currentOpponentName);
+void updateMessagesWithoutSteamId();
 void updateOpponentFoundMessage(char* message);
 void updateFightThisPlayerMessage(char* message);
 void updateSecondsRemainingMessage(char* message);
-bool didNameAddressFail(char* currentOpponentName); // aigooo, delete?
 bool isNewFightAccepted();
 bool isNewOpponentLoaded();
-//bool isTimeToCleanMessages();    // aigo delete this
 void cleanAllProcessMessages();
 char* getNewCurrentLoadedOpponent(char* currentLoadedOpponentName);
 bool isNewNameReceived(char* playerName, char* lastReceivedName);
+void displayOpponentName();
 
 //guiInput.cpp
 void handleHotkeyInput(WPARAM hotkey);
@@ -187,6 +182,7 @@ char* findLineInStringVector(std::vector<std::string> v, char* pattern);
 std::vector<std::string> stringToLines(char* s);
 std::string fileToString(char* filePath);
 char* getLastNameInPlayerlist(char* filePath);
+char* getLastCharacterInPlayerlist(char* filePath);
 char* getLastLineOfFile(char* filePath);
 bool bruteForceFind(char* text, char* pattern);
 void replaceCommentInLastLineInFile(char* path, char* comment);
@@ -250,6 +246,7 @@ void closeAllWindows();
 void closeCommentWindow();
 void deleteFontObjects();
 void setPlayerNameInGui(char* playerName);
+void setOpponentNameInGui(char* opponentName);
 void updateAllGuiMessages(char* newOpponentName, char* characterName, char* playerlistComment);
 void cleanAllGuiMessages();
 

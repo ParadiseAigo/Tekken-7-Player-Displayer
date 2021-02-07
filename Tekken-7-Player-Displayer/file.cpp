@@ -7,7 +7,7 @@ char* extractPlayerNameFromPlayerlistLine(char* line) {
 	int lineSize = (int) strlen(line);
 	int tabsCount = 0;
 	std::string character(line);
-	if (line != NULL) {
+	if ((line != NULL) && (strcmp(line, (char*) "")) != 0) {
 		while ((lineIndexEnd + 2) < lineSize) {
 			if (line[lineIndexEnd] != '\t') {
 				lineIndexEnd++;
@@ -140,12 +140,7 @@ void saveNewPlayerlistEntry(char* currentLoadedOpponentName) {
 	std::string allCharacters[] = ALL_CHARACTERS;
 	opponentStructCharacterPointer = (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_CHARACTER_STATIC_POINTER, OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS);
 	newOpponentStructCharacter = readDwordFromMemory(tekkenHandle, opponentStructCharacterPointer);
-	if (isNamelessSteamIdFound) {
-		steamId = lastFoundBetterSteamId;
-	}
-	else {
-		steamId = lastFoundSteamId;
-	}
+	steamId = lastFoundSteamId;
 	myGuiTerminalPrint(std::string("New opponent    : ").append(std::string(currentLoadedOpponentName)).append(std::string("\r\n")));
 	myGuiTerminalPrint(std::string("Character id    : ").append(std::to_string(newOpponentStructCharacter)).append(std::string("\r\n")));
 	myGuiTerminalPrint(std::string("Steam id        : ").append(std::to_string(steamId)).append(std::string("\r\n")));
@@ -178,8 +173,14 @@ void writeLineToFile(char* path, char* line) {
 	FILE* file;
 	errno_t errorCode;
 	if (0 != (errorCode = fopen_s(&file, path, "r+"))) {
-		myGuiTerminalPrint(std::string("Error opening a file in writeLineToFile, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
-		//system("PAUSE");
+		myGuiTerminalPrint(std::string("Error opening a file in writeLineToFile, error code = ")
+			.append(std::to_string(errorCode))
+			.append(std::string("\r\n"))
+		);
+		if (!doesFileExist((char*)PLAYERLIST_PATH)) {
+			myGuiTerminalPrint(std::string("Playerlist is not found, creating a new one...\r\n"));
+			createFile((char*) PLAYERLIST_PATH);
+		}
 		return;
 	}
 	fseek(file, 0L, SEEK_END);
@@ -204,6 +205,9 @@ std::vector<std::string> stringToLines(char* s) {
 	std::stringstream ss(s);
 	std::string line;
 	std::vector<std::string>::iterator i_vector;
+	if (strcmp(s, (char*)"") == 0) { // if empty
+		return {""};
+	}
 	i_vector = result.begin();
 	while(std::getline(ss,line,'\n')){
 		i_vector = result.insert(i_vector, line);
@@ -233,6 +237,15 @@ char* getLastNameInPlayerlist(char* filePath) {
 	lastNameInPlayerlist = extractPlayerNameFromPlayerlistLine(lastLineInPlayerlist);
 	free(lastLineInPlayerlist);
 	return lastNameInPlayerlist;
+}
+
+char* getLastCharacterInPlayerlist(char* filePath) {
+	char* lastLineInPlayerlist;
+	char* lastCharacterInPlayerlist;
+	lastLineInPlayerlist = getLastLineOfFile(filePath);
+	lastCharacterInPlayerlist = extractCharacterFromPlayerlistLine(lastLineInPlayerlist);
+	free(lastLineInPlayerlist);
+	return lastCharacterInPlayerlist;
 }
 
 char* getLastLineOfFile(char* filePath) {

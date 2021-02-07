@@ -8,10 +8,7 @@ HANDLE tekkenHandle;
 HWND tekkenWindowHandle;
 int tekkenPid;
 QWORD lastFoundSteamId;
-QWORD lastFoundBetterSteamId;
-bool isNamelessSteamIdFound; // helps keep track of  lastFoundBetterSteamId
-bool didNamelessSteamIdChange; // helps keep track of  lastFoundBetterSteamId
-char* lastFoughtOpponentName;
+bool isSteamIdFound; // helps keep track of  lastFoundSteamId
 QWORD userSteamId;
 char* lastNameInPlayerlist;
 
@@ -150,27 +147,27 @@ void editTargetProcessLoop() {
 	currentOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
 	currentLoadedOpponentName = (char*) malloc(10 * sizeof(char)); // dummy value
 	currentLoadedOpponentName[0] = '\0'; // empty string
-	lastFoughtOpponentName = 0;
-	lastFoundBetterSteamId = -1;  // global variable
-	isNamelessSteamIdFound = false; // global variable
-	didNamelessSteamIdChange = false; // global variable
+	lastFoundSteamId = -1;  // global variable
+	isSteamIdFound = false; // global variable
 	areMessagesClean = true;
-	lastNameInPlayerlist = getLastNameInPlayerlist((char*)PLAYERLIST_PATH); //global variable
+	lastNameInPlayerlist = getLastNameInPlayerlist((char*)PLAYERLIST_PATH); //global variable  // set equal to NULL if player list is empty
 	while (continueThreads) {
 		Sleep(delayInSearch);
 		if (isNewOpponentReceived()) {
 			cleanAllProcessMessages();
 			cleanAllGuiMessages();
 			handleNewReceivedOpponent();
+			areMessagesClean = false;
 		}
-		else if (isNewNameReceived(playerName, lastReceivedName)) {
+		else if (isNewNameReceived(playerName, lastReceivedName) && isSteamIdFound) {
 			if (lastReceivedName != NULL) {
 				free(lastReceivedName);
 			}
 			lastReceivedName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-			updateMessagesWithoutSteamId();
+			displayOpponentName();
+			areMessagesClean = false;
 		}
-		else if ((!areMessagesClean) && (!isNamelessSteamIdFound)) {
+		else if ((!areMessagesClean) && (!isSteamIdFound)) {
 			cleanAllProcessMessages();
 			cleanAllGuiMessages();
 			areMessagesClean = true;
@@ -181,7 +178,6 @@ void editTargetProcessLoop() {
 			}
 			currentLoadedOpponentName = saveNewOpponentInPlayerlist(playerName, currentOpponentName, currentLoadedOpponentName);
 			lastNameInPlayerlist = currentLoadedOpponentName;
-			lastFoughtOpponentName = currentLoadedOpponentName;
 		}
 		if (!isWindow(tekkenWindowHandle)) {
 			Sleep(3000); // wait to make sure the tekken process has closed after the window was closed

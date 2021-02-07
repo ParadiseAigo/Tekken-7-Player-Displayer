@@ -169,7 +169,7 @@ void createCommentWindow() {
     sendMessage(guiWindows.commentEditboxHandle, EM_SETLIMITTEXT, EDITBOX_TEXT_MAX_LENGTH, 0);
     sendMessage(guiWindows.commentButtonHandle, WM_SETFONT, (LPARAM)GetStockObject(DEFAULT_GUI_FONT), true);
 
-    if (lastFoughtOpponentName != NULL) {
+    if (lastNameInPlayerlist != NULL) {
         setOpponentNameInCommentWindowTitle();
     } else {
         disableCommentWindowEditbox();
@@ -269,9 +269,16 @@ void openCommentWindow() {
 }
 
 void setOpponentNameInCommentWindowTitle() {
-    wchar_t* name = stringToWString(lastFoughtOpponentName);
-    sendMessage(guiWindows.commentWindowHandle, WM_SETTEXT, 0, (LPARAM)std::wstring(L"Comment").append(L" - Player: ").append(std::wstring(name)).c_str());
+    char* lastCharacter;
+    lastCharacter = getLastCharacterInPlayerlist((char*)PLAYERLIST_PATH);
+    wchar_t* name = stringToWString(lastNameInPlayerlist);
+    wchar_t* character = stringToWString(lastCharacter);
+    sendMessage(guiWindows.commentWindowHandle, WM_SETTEXT, 0, (LPARAM)std::wstring(L"Comment").append(L" - Player: ").append(std::wstring(name)).append(L" - ").append(std::wstring(character)).c_str());
     delete[] name;
+    delete[] character;
+    if (lastCharacter != NULL) {
+		free(lastCharacter);
+    }
 }
 
 void disableCommentWindowEditbox() {
@@ -285,7 +292,7 @@ void disableCommentWindowEditbox() {
 }
 
 void setFocusCommentWindow() {
-    if (lastFoughtOpponentName != NULL) {
+    if (lastNameInPlayerlist != NULL) {
         setFocus(guiWindows.commentEditboxHandle);
     }
     sendMessage(guiWindows.commentEditboxHandle, WM_KEYDOWN, (WPARAM)VK_LBUTTON, 0);
@@ -298,7 +305,7 @@ void saveCommentAndCloseCommentWindow() {
 }
 
 void saveComment() {
-    if (lastFoughtOpponentName != NULL) {
+    if (lastNameInPlayerlist != NULL) {
         char* text = getTextFromCommentEditbox();
         if (text[0] != '\0') {
             _beginthread(writeCommentToFile, 0, (void*)text);
@@ -317,7 +324,7 @@ void writeCommentToFile(void* text) {
     char* comment = (char*)text;
     replaceCommentInLastLineInFile((char*)PLAYERLIST_PATH, comment);
 
-    myGuiTerminalPrint(std::string("Saved comment for player \"").append(std::string(lastFoughtOpponentName))
+    myGuiTerminalPrint(std::string("Saved comment for player \"").append(std::string(lastNameInPlayerlist))
         .append(std::string("\": ")).append(std::string(comment)).append(std::string("\r\n")));
     free(comment);
 }
@@ -402,6 +409,10 @@ void showOrHideConsoleWindow() {
 
 void setPlayerNameInGui(char* playerName) {
 	sendMessage(guiWindows.playerNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)stringToWString(playerName));
+}
+
+void setOpponentNameInGui(char* opponentName) {
+	sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)stringToWString(opponentName));
 }
 
 void updateAllGuiMessages(char* newOpponentName, char* characterName, char* playerlistComment) {
