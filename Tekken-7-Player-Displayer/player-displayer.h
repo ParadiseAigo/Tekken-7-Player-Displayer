@@ -98,10 +98,13 @@ enum tekkenState {IN_FIGHT, IN_SEARCH};
 extern HANDLE tekkenHandle;
 extern HWND tekkenWindowHandle;
 extern int tekkenPid;
-extern QWORD lastFoundSteamId;
+extern QWORD lastFoundSteamId;  // aigo delete this
 extern QWORD lastFoundBetterSteamId;
 extern bool isNamelessSteamIdFound; // helps keep track of  lastFoundBetterSteamId
+extern bool didNamelessSteamIdChange; // helps keep track of  lastFoundBetterSteamId
 extern char* lastFoughtOpponentName;
+extern QWORD userSteamId;
+extern char* lastNameInPlayerlist;
 
 extern void* fightThisPlayerMessagePointer;
 extern void* secondsRemainingMessagePointer;
@@ -139,23 +142,25 @@ void closeProgram();
 
 //tekken.cpp
 bool isGameLoaded();
-bool isNewOpponentReceived(char* playerName, char* currentOpponentName);
-bool isSteamIdValid(void* steamIdPointer, QWORD* steamIdBuffer);
-bool isOpponentSteamIdValid();
-char* handleNewOpponent(char* currentOpponentName);
+bool isNewOpponentReceived();
+bool isNewSteamIdReceived();                                          
+bool isSteamApiLoaded(void* steamIdPointer);
+void resetSteamApiBaseModuleAddress();
+bool readAndIsSteamIdValid(void* steamIdPointer, QWORD* steamIdBuffer);
+void handleNewReceivedOpponent();
+char* handleNewOpponent(char* currentOpponentName);                              // aigooo, delete?
+char* updateMessagesWithoutOpponentName(char* currentOpponentName);                // aigooo, delete?
+void updateMessagesWithoutSteamId();                                            // aigooo, delete?
 void updateOpponentFoundMessage(char* message);
 void updateFightThisPlayerMessage(char* message);
 void updateSecondsRemainingMessage(char* message);
-bool didNameAddressFail(char* currentOpponentName);
-bool isNewBetterSteamIdReceived();
-char* updateMessagesWithBetterSteamId(char* currentOpponentName);
-char* updateMessagesWithoutOpponentName(char* currentOpponentName);
-void updateMessagesWithoutSteamId();
-bool isNewFightAccepted(char* playerName, char* currentOpponentName, char* currentLoadedOpponentName);
-bool isNewOpponentLoaded(char* playerName, char* currentOpponentName, char* currentLoadedOpponentName);
-bool isTimeToCleanMessages(char* playerName, char* currentOpponentName);
+bool didNameAddressFail(char* currentOpponentName); // aigooo, delete?
+bool isNewFightAccepted();
+bool isNewOpponentLoaded();
+//bool isTimeToCleanMessages();    // aigo delete this
 void cleanAllProcessMessages();
 char* getNewCurrentLoadedOpponent(char* currentLoadedOpponentName);
+bool isNewNameReceived(char* playerName, char* lastReceivedName);
 
 //guiInput.cpp
 void handleHotkeyInput(WPARAM hotkey);
@@ -181,6 +186,7 @@ void writeLineToFile(char* path, char* line);
 char* findLineInStringVector(std::vector<std::string> v, char* pattern);
 std::vector<std::string> stringToLines(char* s);
 std::string fileToString(char* filePath);
+char* getLastNameInPlayerlist(char* filePath);
 char* getLastLineOfFile(char* filePath);
 bool bruteForceFind(char* text, char* pattern);
 void replaceCommentInLastLineInFile(char* path, char* comment);

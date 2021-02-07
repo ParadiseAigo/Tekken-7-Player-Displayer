@@ -10,7 +10,10 @@ int tekkenPid;
 QWORD lastFoundSteamId;
 QWORD lastFoundBetterSteamId;
 bool isNamelessSteamIdFound; // helps keep track of  lastFoundBetterSteamId
+bool didNamelessSteamIdChange; // helps keep track of  lastFoundBetterSteamId
 char* lastFoughtOpponentName;
+QWORD userSteamId;
+char* lastNameInPlayerlist;
 
 void* fightThisPlayerMessagePointer;
 void* secondsRemainingMessagePointer;
@@ -130,50 +133,54 @@ void initPointers() {
 
 void initModuleAdresses() {
 	steamModulePointer = (void*)getModuleBaseAddress(tekkenPid, STEAM_API_MODULE_NAME);
+	void* userSteamIdPointer = (void*)getDynamicPointer(tekkenHandle, (void*) ((QWORD)steamModulePointer + STEAM_ID_USER_STATIC_POINTER), STEAM_ID_USER_POINTER_OFFSETS);
+	userSteamId = readQwordFromMemory(tekkenHandle, userSteamIdPointer);
 }
 
 void editTargetProcessLoop() {
 	char* playerName;
+	char* lastReceivedName;
 	char* currentOpponentName;
 	char* currentLoadedOpponentName;
+	bool areMessagesClean;
 	int delayInSearch = 1000/60; // "60fps"
 	int delayInFight = 2000; // 2 seconds
 	playerName = readStringFromMemory(tekkenHandle, opponentNamePointer);
+	lastReceivedName = readStringFromMemory(tekkenHandle, opponentNamePointer);
 	currentOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
 	currentLoadedOpponentName = (char*) malloc(10 * sizeof(char)); // dummy value
 	currentLoadedOpponentName[0] = '\0'; // empty string
 	lastFoughtOpponentName = 0;
 	lastFoundBetterSteamId = -1;  // global variable
 	isNamelessSteamIdFound = false; // global variable
+	didNamelessSteamIdChange = false; // global variable
+	areMessagesClean = true;
+	lastNameInPlayerlist = getLastNameInPlayerlist((char*)PLAYERLIST_PATH); //global variable
 	while (continueThreads) {
 		Sleep(delayInSearch);
-		if (isNewOpponentReceived(playerName, currentOpponentName)) {
+		if (isNewOpponentReceived()) {
 			cleanAllProcessMessages();
 			cleanAllGuiMessages();
-			isNamelessSteamIdFound = false;
-			if (isOpponentSteamIdValid()) {
-				currentOpponentName = handleNewOpponent(currentOpponentName);
-			}
-			else {  // if opponent steam id is "late",
-					// update in-game messages anyway
-					// (using opponents name instead of steam id)
-					// or it might not ever update in-game
-				updateMessagesWithoutSteamId();
-			}
+			handleNewReceivedOpponent();
 		}
-		else if (didNameAddressFail(currentOpponentName) && isNewBetterSteamIdReceived()){ 
+		else if (isNewNameReceived(playerName, lastReceivedName)) {
+			if (lastReceivedName != NULL) {
+				free(lastReceivedName);
+			}
+			lastReceivedName = readStringFromMemory(tekkenHandle, opponentNamePointer);
+			updateMessagesWithoutSteamId();
+		}
+		else if ((!areMessagesClean) && (!isNamelessSteamIdFound)) {
 			cleanAllProcessMessages();
 			cleanAllGuiMessages();
-			isNamelessSteamIdFound = true;
-			currentOpponentName = updateMessagesWithBetterSteamId(currentOpponentName);
-			// aigo delete this
-//			myGuiTerminalPrint(std::string("currentname changed to: ")
-//				.append(currentOpponentName)
-//				.append(std::string("....\r\n"))
-//			);
+			areMessagesClean = true;
 		}
-		if (isNewFightAccepted(playerName, currentOpponentName, currentLoadedOpponentName)) {
+		if (isNewFightAccepted()) {
+			if ((lastNameInPlayerlist != NULL) && (lastNameInPlayerlist != currentLoadedOpponentName)) {
+				free(lastNameInPlayerlist);
+			}
 			currentLoadedOpponentName = saveNewOpponentInPlayerlist(playerName, currentOpponentName, currentLoadedOpponentName);
+			lastNameInPlayerlist = currentLoadedOpponentName;
 			lastFoughtOpponentName = currentLoadedOpponentName;
 		}
 		if (!isWindow(tekkenWindowHandle)) {

@@ -226,6 +226,15 @@ std::string fileToString(char* filePath) {
 	return result;
 }
 
+char* getLastNameInPlayerlist(char* filePath) {
+	char* lastLineInPlayerlist;
+	char* lastNameInPlayerlist;
+	lastLineInPlayerlist = getLastLineOfFile(filePath);
+	lastNameInPlayerlist = extractPlayerNameFromPlayerlistLine(lastLineInPlayerlist);
+	free(lastLineInPlayerlist);
+	return lastNameInPlayerlist;
+}
+
 char* getLastLineOfFile(char* filePath) {
 	std::string fileString = fileToString((char*)PLAYERLIST_PATH);
 	std::string line = stringToLines((char*)fileString.c_str())[0]; // first line is last line...

@@ -15,7 +15,9 @@ bool isGameLoaded() {
 	}
 }
 
-bool isNewOpponentReceived(char* playerName, char* currentOpponentName) {
+bool isNewOpponentReceived(/*char* playerName, char* currentOpponentName*/) {
+	return isNewSteamIdReceived();
+	/*
 	char* newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
 	if (strcmp(newOpponentName, currentOpponentName) == 0) { // if equal; still same opponent
 		free(newOpponentName);
@@ -27,9 +29,56 @@ bool isNewOpponentReceived(char* playerName, char* currentOpponentName) {
 	}
 	free(newOpponentName);
 	return true;
+	*/
 }
 
-bool isSteamIdValid(void* steamIdPointer, QWORD* steamIdBuffer) {
+bool isNewSteamIdReceived() {
+	QWORD newFoundSteamId;
+	void* steamIdPointer;
+	newFoundSteamId = -1;
+	steamIdPointer = (void*)getDynamicPointer(tekkenHandle,(void*) ((QWORD)steamModulePointer + STEAM_ID_BETTER_STATIC_POINTER), STEAM_ID_BETTER_POINTER_OFFSETS);
+	if (!isSteamApiLoaded(steamIdPointer)) {								// if steam api not loaded
+		resetSteamApiBaseModuleAddress();
+		return false;
+	}
+	else if ((!readAndIsSteamIdValid(steamIdPointer, &newFoundSteamId))) { 	// if steam id not valid
+		isNamelessSteamIdFound = false;
+		return false;
+	}
+	else if (userSteamId == newFoundSteamId) {								// if equal to user
+		isNamelessSteamIdFound = false;
+		return false;
+	}
+	else if (newFoundSteamId == lastFoundBetterSteamId) {					// if unchanged
+		isNamelessSteamIdFound = true;
+		return false;
+	}
+	else {																	// new steam id received!
+		myGuiTerminalPrint(std::string("New Steam id found: ")
+			.append(std::to_string(newFoundSteamId))
+			.append(std::string("\r\n"))
+		);
+		isNamelessSteamIdFound = true;
+		lastFoundBetterSteamId = newFoundSteamId;
+		return true;
+	}
+}
+
+bool isSteamApiLoaded(void* steamIdPointer) {
+	if (steamIdPointer == 0) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+void resetSteamApiBaseModuleAddress() {
+	myGuiTerminalPrint(std::string("Resetting Steam api module base address.\r\n"));
+	initModuleAdresses();
+}
+
+bool readAndIsSteamIdValid(void* steamIdPointer, QWORD* steamIdBuffer) {
 	if (! isMemoryReadable(tekkenHandle, steamIdPointer)) {
 		//myGuiTerminalPrint(std::string("Steam Id (memory) not readable (probably late).\r\n"));
 		return false;
@@ -57,17 +106,59 @@ bool isSteamIdValid(void* steamIdPointer, QWORD* steamIdBuffer) {
 	return true;
 }
 
-bool isOpponentSteamIdValid() {
-	QWORD steamId;
-	void* steamIdPointer;
-	steamIdPointer = (void*)getDynamicPointer(tekkenHandle, (void*)STEAM_ID_STATIC_POINTER, STEAM_ID_POINTER_OFFSETS);
-	if (isSteamIdValid(steamIdPointer, &steamId)) {
-		lastFoundSteamId = steamId;  // global variable
-		return true;
+void handleNewReceivedOpponent() {
+	std::string fileString;
+	char* line;
+	char* steamIdBuffer;
+	size_t steamIdBufferSize;
+	char* newOpponentNameMessage;
+	char* characterName;
+	char* characterNameMessage;
+	char* playerlistComment;
+
+	steamIdBufferSize = 100;
+	steamIdBuffer = (char*)malloc(steamIdBufferSize * sizeof(char));
+	sprintf_s(steamIdBuffer, steamIdBufferSize, "(%I64u)", lastFoundBetterSteamId);
+	fileString = fileToString((char*)PLAYERLIST_PATH);
+	line = findLineInStringVector(stringToLines((char*) fileString.c_str()), steamIdBuffer);
+
+	if (line != NULL) {  // steam id found in player list!
+		myGuiTerminalPrint(std::string("Steam id found in player list!\r\n"));
+		newOpponentNameMessage = extractPlayerNameFromPlayerlistLine(line);
+		playerlistComment = extractCommentFromPlayerlistLine(line);
+		characterName = extractCharacterFromPlayerlistLine(line);
+		characterNameMessage = myStringCat((char*)"| Last used: ", characterName);
+		myGuiTerminalPrint(std::string("New opponent found:  ").append(std::string(newOpponentNameMessage)).append(std::string("\r\n")));
+		myGuiTerminalPrint(std::string("Last used character: ").append(std::string(characterName)).append(std::string("\r\n")));
+		myGuiTerminalPrint(std::string("Comment:             ").append(std::string(playerlistComment)).append(std::string("\r\n")));
 	}
-	else {
-		return false;
+	else {  // steam id NOT found in player list!
+		myGuiTerminalPrint(std::string("Steam id NOT found in player list!\r\n"));
+		newOpponentNameMessage = copyString((char*) "New (not in list)");
+		playerlistComment = copyString((char*) "Brand new opponent!");
+		characterName = NULL;
+		characterNameMessage = copyString((char*) "| Unknown character.");
 	}
+	updateOpponentFoundMessage(newOpponentNameMessage);
+	updateFightThisPlayerMessage(playerlistComment);
+	updateSecondsRemainingMessage(characterNameMessage);
+	updateAllGuiMessages(newOpponentNameMessage, characterName, playerlistComment);
+	if (characterName != NULL) {
+		free(characterName);
+	}
+	if (characterNameMessage != NULL) {
+		free(characterNameMessage);
+	}
+	if (playerlistComment != NULL) {
+		free(playerlistComment);
+	}
+	if (line != NULL) {
+		free(line);
+	}
+	if ((newOpponentNameMessage != NULL)) {
+		free(newOpponentNameMessage);
+	}
+	free(steamIdBuffer);
 }
 
 char* handleNewOpponent(char* currentOpponentName) {
@@ -126,66 +217,6 @@ char* handleNewOpponent(char* currentOpponentName) {
 	return newOpponentName; // calling function should set currentOpponentName equal to newOpponentName
 }
 
-void updateOpponentFoundMessage(char* message) {
-	writeStringUnlimitedToMemory(tekkenHandle, opponentFoundMessagePointer, message);
-}
-
-void updateFightThisPlayerMessage(char* message) {
-	writeStringUnlimitedToMemory(tekkenHandle, fightThisPlayerMessagePointer, message);
-}
-
-void updateSecondsRemainingMessage(char* message) {
-	writeStringUnlimitedToMemory(tekkenHandle, secondsRemainingMessagePointer, message);
-}
-
-bool didNameAddressFail(char* currentOpponentName) {
-	char* newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	if (strcmp(newOpponentName, currentOpponentName) != 0) { // if name I found does not match the one in the address
-		free(newOpponentName);
-		return true;
-	}
-	else {
-		free(newOpponentName);
-		return false;
-	}
-}
-
-bool isNewBetterSteamIdReceived() {
-	void* steamIdPointer = (void*)getDynamicPointer(tekkenHandle, (void*) ((QWORD)steamModulePointer + STEAM_ID_BETTER_STATIC_POINTER), STEAM_ID_BETTER_POINTER_OFFSETS);
-	QWORD newFoundSteamId = -1;
-	if (steamIdPointer == 0) { // steam api base module not loaded correctly
-		myGuiTerminalPrint(std::string("Resetting Steam api module base address. \r\n"));
-		initModuleAdresses();
-		return false;
-	}
-	bool isSteamIdOk = isSteamIdValid(steamIdPointer, &newFoundSteamId);  // gets the new steam id
-	if (newFoundSteamId != lastFoundBetterSteamId) {
-		// aigo delete this
-		myGuiTerminalPrint(std::string("Nameless steam id changed. (set to false)\r\n"));
-		isNamelessSteamIdFound = false;
-	}
-	if (isSteamIdOk) {
-		if (lastFoundBetterSteamId == -1) {   // ignore first found steam id after starting the program
-			lastFoundBetterSteamId = newFoundSteamId;
-			return false;
-		}
-		else if (newFoundSteamId != lastFoundBetterSteamId) {
-			myGuiTerminalPrint(std::string("New nameless steam id found: ")
-				.append(std::to_string(newFoundSteamId))
-				.append(std::string("\r\n"))
-			);
-			lastFoundBetterSteamId = newFoundSteamId;
-			return true;
-		}
-	}
-	return false;
-}
-
-char* updateMessagesWithBetterSteamId(char* currentOpponentName) {
-	currentOpponentName = updateMessagesWithoutOpponentName(currentOpponentName);
-	return currentOpponentName;
-}
-
 char* updateMessagesWithoutOpponentName(char* currentOpponentName) {
 	std::string fileString;
 	char* line;
@@ -203,7 +234,7 @@ char* updateMessagesWithoutOpponentName(char* currentOpponentName) {
 	line = findLineInStringVector(stringToLines((char*) fileString.c_str()), steamIdBuffer);
 
 	if (line != NULL) {  // steam id found in player list!
-		myGuiTerminalPrint(std::string("Nameless steam id found in player list!\r\n"));
+		myGuiTerminalPrint(std::string("Steam id found in player list!\r\n"));
 		if (currentOpponentName != NULL) {
 			free(currentOpponentName);
 		}
@@ -216,7 +247,7 @@ char* updateMessagesWithoutOpponentName(char* currentOpponentName) {
 		myGuiTerminalPrint(std::string("Comment:             ").append(std::string(playerlistComment)).append(std::string("\r\n")));
 	}
 	else {  // steam id NOT found in player list!
-		myGuiTerminalPrint(std::string("Nameless steam id NOT found in player list!\r\n"));
+		myGuiTerminalPrint(std::string("Steam id NOT found in player list!\r\n"));
 		newOpponentNameMessage = copyString((char*) "New (not in list)");
 		playerlistComment = copyString((char*) "Brand new opponent!");
 		characterName = NULL;
@@ -245,6 +276,7 @@ char* updateMessagesWithoutOpponentName(char* currentOpponentName) {
 	return currentOpponentName;
 }
 
+// aigooo delete this
 void updateMessagesWithoutSteamId() {
 	char* newOpponentName;
 	std::string fileString;
@@ -287,85 +319,68 @@ void updateMessagesWithoutSteamId() {
 	}
 }
 
-bool isNewFightAccepted(char* playerName, char* currentOpponentName, char* currentLoadedOpponentName) {
-	return isNewOpponentLoaded(playerName, currentOpponentName, currentLoadedOpponentName);
+void updateOpponentFoundMessage(char* message) {
+	writeStringUnlimitedToMemory(tekkenHandle, opponentFoundMessagePointer, message);
 }
 
-bool isNewOpponentLoaded(char* playerName, char* currentOpponentName, char* currentLoadedOpponentName) {
-	//void* opponentStructSignaturePointer =  (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_SIGNATURE_STATIC_POINTER, OPPONENT_STRUCT_SIGNATURE_POINTER_OFFSETS);
+void updateFightThisPlayerMessage(char* message) {
+	writeStringUnlimitedToMemory(tekkenHandle, fightThisPlayerMessagePointer, message);
+}
+
+void updateSecondsRemainingMessage(char* message) {
+	writeStringUnlimitedToMemory(tekkenHandle, secondsRemainingMessagePointer, message);
+}
+
+bool didNameAddressFail(char* currentOpponentName) {
+	char* newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
+	if (strcmp(newOpponentName, currentOpponentName) != 0) { // if name I found does not match the one in the address
+		free(newOpponentName);
+		return true;
+	}
+	else {
+		free(newOpponentName);
+		return false;
+	}
+}
+
+bool isNewFightAccepted() {
+	return isNewOpponentLoaded();
+}
+
+bool isNewOpponentLoaded() {
 	void* opponentStructNamePointer = (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_NAME_STATIC_POINTER, OPPONENT_STRUCT_NAME_POINTER_OFFSETS);
-	//QWORD opponentStructSignature;
 	char* opponentStructName;
-	char* lastLineInPlayerlist;
-	char* lastNameInPlayerlist;
 	if (! isMemoryReadable(tekkenHandle, opponentStructNamePointer)) {
 		return false;
 	}
-	//if (! isMemoryReadable(tekkenHandle, opponentStructSignaturePointer)) {
-	//	return false;
-	//}
-	//opponentStructSignature = readQwordFromMemory(tekkenHandle, opponentStructSignaturePointer);
-	//if (opponentStructSignature != OPPONENT_STRUCT_SIGNATURE) { //struct not loaded yet
-	//	return false;
-	//}
 	opponentStructName = readStringFromMemory(tekkenHandle, opponentStructNamePointer);
 	// aigo debugging (delete this)
 //	myGuiTerminalPrint(std::string("opponentstructname = ")
 //		.append(opponentStructName)
 //		.append(std::string("\r\n"))
 //	);
-	// empty name, so no opponent loaded
-	if ((strcmp((char*)"NOT_LOGGED_IN", opponentStructName) == 0) ||
-		(opponentStructName[0] == '\0')) {
-		free(opponentStructName);
-		return false;
-	}
-	// still playing against the same person
-	if (strcmp(currentLoadedOpponentName, opponentStructName) == 0) {
-		free(opponentStructName);
-		return false;
-	}
-	// name before accept is now same as loaded so true
-	if (strcmp(currentOpponentName, opponentStructName) == 0) {
+	if ((strcmp((char*)"NOT_LOGGED_IN", opponentStructName) != 0) &&
+		(opponentStructName[0] != '\0') &&
+		(isNamelessSteamIdFound == true) &&
+		(strcmp(lastNameInPlayerlist, opponentStructName) != 0)) {
 		free(opponentStructName);
 		return true;
 	}
-	// if last saved name (in player list) same as the one loaded: dont save again
-	lastLineInPlayerlist = getLastLineOfFile((char*)PLAYERLIST_PATH);
-	lastNameInPlayerlist = extractPlayerNameFromPlayerlistLine(lastLineInPlayerlist);
-	if (strcmp(opponentStructName, lastNameInPlayerlist) == 0) { 
-		free(opponentStructName);
-		free(lastLineInPlayerlist);
-		free(lastNameInPlayerlist);
-		return false;
-	}
-	// if
-	// name address didnt change (still equal to the name of the user)
-	// and
-	// nameless steam id not found
-	// then
-	// this means the program failed to get any info, maybe the opp. is loaded, but it doesnt matter
-	// this program just pretends there is no new opponent even if there is
-	// (user shouldnt accept if the name is not displayed)
-	if ((strcmp(currentOpponentName, playerName) == 0) &&
-		(isNamelessSteamIdFound == false)) {	
-		free(opponentStructName);
-		free(lastLineInPlayerlist);
-		free(lastNameInPlayerlist);
-		return false;
-	}
 	else {
-		free(opponentStructName);								  
-		free(lastLineInPlayerlist);
-		free(lastNameInPlayerlist);
-		return true;											   
+		free(opponentStructName);
+		return false;
 	}
 }
 
-// this function is not used:
-// improves performance and modularity
-// but makes readability worse 
-bool isTimeToCleanMessages(char* playerName, char* currentOpponentName) {
+//aigo delete this
+/*
+bool isTimeToCleanMessages() {
+	if ((!isNamelessSteamIdFound) && didNamelessSteamIdChange) {
+		return true;
+	}
+	else {
+		return false;
+	}
 	opponentNamePointer = (void*)getDynamicPointer(tekkenHandle, (void*)OPPONENT_NAME_STATIC_POINTER, OPPONENT_NAME_POINTER_OFFSETS);
 	char* newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
 	if ((strcmp(newOpponentName, playerName) == 0) &&  // dont clean if name address is not same as user
@@ -380,6 +395,7 @@ bool isTimeToCleanMessages(char* playerName, char* currentOpponentName) {
 		return false;
 	}
 }
+*/
 
 void cleanAllProcessMessages() {
 	writeStringUnlimitedToMemory(tekkenHandle, fightThisPlayerMessagePointer, (char*) "Dont accept :)");
@@ -394,4 +410,18 @@ char* getNewCurrentLoadedOpponent(char* currentLoadedOpponentName) {
 	newOpponentStructName = readStringFromMemory(tekkenHandle, opponentStructNamePointer);
 	free(currentLoadedOpponentName);
 	return newOpponentStructName;
+}
+
+bool isNewNameReceived(char* playerName, char* lastReceivedName) {
+	char* newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
+	if (strcmp(newOpponentName, lastReceivedName) == 0) { // if equal; still same opponent
+		free(newOpponentName);
+		return false;
+	}
+	if (strcmp(newOpponentName, playerName) == 0) { // if equal; failed to retreive data, or there is no new opponent
+		free(newOpponentName);
+		return false;
+	}
+	free(newOpponentName);
+	return true;
 }
