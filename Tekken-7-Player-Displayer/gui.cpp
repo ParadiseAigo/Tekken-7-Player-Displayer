@@ -342,9 +342,8 @@ void printToStandardOutput(std::string text) {
 void printToTextboxOutput(std::string text) {
     if (!isWindow(guiWindows.outputTextHandle)) {
         waitForWindowToBeCreated(guiWindows.outputTextHandle);
-    } else {
-        printTextToEditControl(text, guiWindows.outputTextHandle);
     }
+    printTextToEditControl(text, guiWindows.outputTextHandle);
 }
 
 void waitForWindowToBeCreated(HWND& windowHandle) {
