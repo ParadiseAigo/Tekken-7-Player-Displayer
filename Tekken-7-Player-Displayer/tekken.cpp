@@ -267,12 +267,21 @@ bool isNewFightAccepted() {
 }
 
 bool isNewOpponentLoaded() {
-	void* opponentStructNamePointer = (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_NAME_STATIC_POINTER, OPPONENT_STRUCT_NAME_POINTER_OFFSETS);
+	void* opponentStructNamePointer;
 	char* opponentStructName;
-	if (! isMemoryReadable(tekkenHandle, opponentStructNamePointer)) {
+	void* opponentStructCharacterPointer;
+	QWORD opponentStructCharacter;
+	int numberOfCharacters;
+	std::vector<std::string> allCharacters ALL_CHARACTERS;
+	numberOfCharacters = allCharacters.size();
+	opponentStructNamePointer = (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_NAME_STATIC_POINTER, OPPONENT_STRUCT_NAME_POINTER_OFFSETS);
+	opponentStructCharacterPointer = (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_CHARACTER_STATIC_POINTER, OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS);
+	if ((!isMemoryReadable(tekkenHandle, opponentStructNamePointer)) ||
+		(!isMemoryReadable(tekkenHandle, opponentStructCharacterPointer))) {
 		return false;
 	}
 	opponentStructName = readStringFromMemory(tekkenHandle, opponentStructNamePointer);
+	opponentStructCharacter = readQwordFromMemory(tekkenHandle, opponentStructCharacterPointer);
 	// aigo debugging (delete this)
 //	myGuiTerminalPrint(std::string("opponentstructname = ")
 //		.append(opponentStructName)
@@ -281,6 +290,8 @@ bool isNewOpponentLoaded() {
 	if ((strcmp((char*)"NOT_LOGGED_IN", opponentStructName) != 0) &&
 		(opponentStructName[0] != '\0') &&
 		(isSteamIdFound == true) &&
+		(opponentStructCharacter < numberOfCharacters) &&
+		(opponentStructCharacter >= 0) && // 0 is paul ^_^
 		(strcmp(lastNameInPlayerlist, opponentStructName) != 0)) {
 		free(opponentStructName);
 		return true;
