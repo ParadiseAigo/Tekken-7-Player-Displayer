@@ -22,7 +22,7 @@ Now also comes with a GUI!
 * ALT+C  opens the comment window where you can write a comment after playing against an opponent
 
 ## Installation
-Download the executable [here](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/releases/download/v1.0.0/Tekken-7-Player-Displayer.zip) or you can build it yourself by loading the .sln file in Visual Studio.
+Download the executable [here](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/releases/download/v1.1.0/Tekken-7-Player-Displayer.v1.1.0.zip) or you can build it yourself by loading the .sln file in Visual Studio.
 
 ## Usage
 Run the executable before or after opening Tekken 7, but not during a match and sometimes not while you are in the waiting room.
