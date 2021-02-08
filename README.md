@@ -30,7 +30,7 @@ To be sure the program is loaded correctly your name should be displayed in the 
 
 ![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/3git.png)
 
-If you get the message "New (not in list)" as the opponents name, it means the program didn't get their name but it did get their steam id, and it was not found in the player list (list of people you played against), so you can play against them and they will be saved, so you can identify them next time.
+If you get the message "New (not in list)" as the opponents name, it means the program didn't get their name but it did get their Steam id, and it was not found in the player list (list of people you played against). You can play against them and they will be saved, so you can identify them next time using only their Steam id.
 
 If you get the message "Failed to get any info." as the opponents name it's best not to accept and instead wait for the next person because they won't be saved in the list if you choose to play against them.
 
