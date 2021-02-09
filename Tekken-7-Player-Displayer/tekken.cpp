@@ -281,9 +281,11 @@ bool isNewOpponentLoaded() {
 		return false;
 	}
 	opponentStructName = readStringFromMemory(tekkenHandle, opponentStructNamePointer);
-	opponentStructCharacter = readQwordFromMemory(tekkenHandle, opponentStructCharacterPointer);
+	opponentStructCharacter = readDwordFromMemory(tekkenHandle, opponentStructCharacterPointer);
 	// aigo debugging (delete this)
-//	myGuiTerminalPrint(std::string("opponentstructname = ")
+//	myGuiTerminalPrint(std::string("opponentstructcharacter = ")
+//		.append(std::to_string(opponentStructCharacter))
+//		.append(std::string(" , opponentstructname = "))
 //		.append(opponentStructName)
 //		.append(std::string("\r\n"))
 //	);
