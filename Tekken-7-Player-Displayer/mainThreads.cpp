@@ -159,7 +159,7 @@ void editTargetProcessLoop() {
 			handleNewReceivedOpponent();
 			areMessagesClean = false;
 		}
-		else if (isNewNameReceived(playerName, lastReceivedName) && isSteamIdFound) {
+		else if (isNewNameReceived(playerName, lastReceivedName) && isSteamIdFound) {  // aigo lastReceivedName isnt getting cleaned up maybe
 			if (lastReceivedName != NULL) {
 				free(lastReceivedName);
 			}
