@@ -60,8 +60,6 @@
 #define KEY_O 0x4F
 #define KEY_T 0x54
 
-#define NR_OF_THREADS 2
-
 typedef __int64 QWORD;
 
 typedef struct GuiWindows {
@@ -96,6 +94,11 @@ typedef struct Hotkey {
         : id(idValue), key1(key1Value), key2(key2Value) {}
 } Hotkey;
 
+typedef struct ProgramThreads {
+    HANDLE mainThread;
+    HANDLE guiThread;
+} ProgramThreads;
+
 enum tekkenState {IN_FIGHT, IN_SEARCH};
 
 extern HANDLE tekkenHandle;
@@ -121,9 +124,6 @@ extern HBRUSH solidBrush;
 extern WNDPROC defaultEditProc;
 
 extern Hotkey* hotkeys[NR_OF_HOTKEYS];
-
-extern HANDLE threadHandles[NR_OF_THREADS];
-extern bool continueThreads;
 
 //mainThreads.cpp
 void createThreads();

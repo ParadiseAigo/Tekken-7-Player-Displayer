@@ -19,8 +19,7 @@ void* opponentNamePointer;
 void* screenModePointer;
 void* steamModulePointer;
 
-HANDLE threadHandles[NR_OF_THREADS];
-bool continueThreads = true;
+ProgramThreads programThreads;
 
 int main() {
 	createThreads();
@@ -29,8 +28,8 @@ int main() {
 }
 
 void createThreads() {
-	threadHandles[0] = beginThread(&mainThread);  
-	threadHandles[1] = beginThread(&guiThread);
+	programThreads.mainThread = beginThread(&mainThread);  
+	programThreads.guiThread = beginThread(&guiThread);
 }
 
 HANDLE beginThread(_beginthreadex_proc_type proc) {
@@ -44,13 +43,14 @@ void endThread() {
 }
 
 void waitForThreadsToTerminate() {
-	WaitForMultipleObjects(NR_OF_THREADS, threadHandles, TRUE, INFINITE);
+	WaitForSingleObject(programThreads.guiThread, INFINITE);
 }
 
 void closeThreads() {
-	for (int i = 0; i < NR_OF_THREADS; i++) {
-		CloseHandle(threadHandles[i]);
-	}
+	CloseHandle(programThreads.guiThread);
+	DWORD delayBeforeClosingMainThread = 200;
+	Sleep(delayBeforeClosingMainThread);
+	CloseHandle(programThreads.mainThread);
 }
 
 unsigned __stdcall mainThread(void* arguments) {
@@ -85,7 +85,7 @@ void initTekkenHandle() {
 	DWORD pid, secondsDelay;
 	pid = getProcessId(TEXT(TEKKEN_EXE_NAME));
 	secondsDelay = 2;
-	while (continueThreads && (pid == 0)) {
+	while (pid == 0) {
 		myGuiTerminalPrint(std::string("Tekken not found. Trying again in ")
 			.append(std::to_string(secondsDelay))
 			.append(std::string(" seconds...\r\n"))
@@ -103,7 +103,7 @@ void initTekkenHandle() {
 void initTekkenWindowHandle() {
 	DWORD secondsDelay;
 	secondsDelay = 2;
-	while (continueThreads && NULL == ((tekkenWindowHandle = getWindowHandle(TEXT(TEKKEN_WINDOW_NAME))))) { // global variable
+	while (NULL == ((tekkenWindowHandle = getWindowHandle(TEXT(TEKKEN_WINDOW_NAME))))) { // global variable
 		myGuiTerminalPrint(std::string("Searching for Tekken window. Trying again in ")
 			.append(std::to_string(secondsDelay))
 			.append(std::string(" seconds...\r\n"))
@@ -116,7 +116,7 @@ void initTekkenWindowHandle() {
 void initPointers() {
 	DWORD secondsDelay;
 	secondsDelay = 2;
-	while (continueThreads && !isGameLoaded()) {
+	while (!isGameLoaded()) {
 		myGuiTerminalPrint(std::string("Game not loaded yet. Waiting ")
 			.append(std::to_string(secondsDelay))
 			.append(std::string(" seconds...\r\n"))
@@ -164,7 +164,7 @@ void editTargetProcessLoop() {
 	isSteamIdFound = false; // global variable
 	areMessagesClean = true;
 	lastNameInPlayerlist = getLastNameInPlayerlist((char*)PLAYERLIST_PATH); //global variable  // set equal to NULL if player list is empty
-	while (continueThreads) {
+	while (true) {
 		Sleep(delayInSearch);
 		if (isNewOpponentReceived()) {
 			cleanAllProcessMessages();
@@ -201,5 +201,4 @@ void editTargetProcessLoop() {
 
 void closeProgram() {
 	CloseHandle(tekkenHandle);
-	continueThreads = false;
 }
