@@ -50,6 +50,9 @@
     <ClCompile Include="mainThreads.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="steamURL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Tekken-7-Player-Displayer.rc">

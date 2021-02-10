@@ -144,6 +144,7 @@
     <ClCompile Include="guiWindow.cpp" />
     <ClCompile Include="guiInput.cpp" />
     <ClCompile Include="mainThreads.cpp" />
+    <ClCompile Include="steamURL.cpp" />
     <ClCompile Include="targetMemory.cpp" />
     <ClCompile Include="tekken.cpp" />
     <ClCompile Include="targetWindow.cpp" />

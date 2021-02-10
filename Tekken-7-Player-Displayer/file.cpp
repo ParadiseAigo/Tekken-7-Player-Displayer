@@ -291,6 +291,28 @@ bool bruteForceFind(char* text, char* pattern) {
 	}
 }
 
+int bruteForceFindIndex(char* text, char* pattern) {
+	int i_t = 0, i_p = 0; //index
+	int n_t = (int)strlen(text);
+	int n_p = (int)strlen(pattern);
+	while (true) {
+		if (i_p == n_p) { //pattern found
+			return i_t - i_p;
+		}
+		else if (i_t == n_t) { //pattern not found
+			return -1;
+		}
+		else if (text[i_t] == pattern[i_p]) { //match
+			i_t++;
+			i_p++;
+		}
+		else { // mismatch
+			i_t = i_t - i_p + 1;
+			i_p = 0;
+		}
+	}
+}
+
 void replaceCommentInLastLineInFile(char* path, char* comment) {
 	long indexCommentBegin = writeAfterLastOccurenceOfCharInFile(path, comment, '\t');
 	if (indexCommentBegin == -1) {

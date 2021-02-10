@@ -271,7 +271,7 @@ bool isNewOpponentLoaded() {
 	char* opponentStructName;
 	void* opponentStructCharacterPointer;
 	QWORD opponentStructCharacter;
-	int numberOfCharacters;
+	QWORD numberOfCharacters;
 	std::vector<std::string> allCharacters ALL_CHARACTERS;
 	numberOfCharacters = allCharacters.size();
 	opponentStructNamePointer = (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_NAME_STATIC_POINTER, OPPONENT_STRUCT_NAME_POINTER_OFFSETS);

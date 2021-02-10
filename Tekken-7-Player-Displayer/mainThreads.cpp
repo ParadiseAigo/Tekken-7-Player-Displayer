@@ -71,7 +71,6 @@ void initPlayerlist() {
 	else {
 		myGuiTerminalPrint(std::string("Good  \"Tekken Player List.txt\"  is OK.\r\n"));
 	}
-
 }
 
 void loadTargetProcess() {

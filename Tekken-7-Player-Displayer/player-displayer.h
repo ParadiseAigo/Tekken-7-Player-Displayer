@@ -9,6 +9,7 @@
 #include <fstream>
 #include <vector>
 #include <process.h> // _beginthread
+#include <urlmon.h>  // to download a website
 #include "resource.h" 
 
 #pragma comment(linker,"/manifestdependency:\"type='win32' "\
@@ -18,6 +19,8 @@
                    "publicKeyToken='6595b64144ccf1df' "\
                    "language='*' "\
                    "\"") 
+
+#pragma comment(lib, "urlmon.lib") // to download a website
 
 #define PLAYERLIST_PATH "Tekken Player List.txt"
 
@@ -187,6 +190,7 @@ char* getLastNameInPlayerlist(char* filePath);
 char* getLastCharacterInPlayerlist(char* filePath);
 char* getLastLineOfFile(char* filePath);
 bool bruteForceFind(char* text, char* pattern);
+int bruteForceFindIndex(char* text, char* pattern);
 void replaceCommentInLastLineInFile(char* path, char* comment);
 long writeAfterLastOccurenceOfCharInFile(char* path, char* text, char charToWriteAfter);
 void setEndOfFileAtIndex(char* path, long position);
@@ -263,6 +267,12 @@ BOOL isWindowVisible(HWND windowHandle);
 void setForegroundWindow(HWND windowHandle);
 void setFocus(HWND windowHandle);
 void destroyWindow(HWND windowHandle);
+
+//steamURL.cpp
+std::string urlToString(LPCTSTR url);
+void urlToFile(char* url, char* filePath);
+std::string extractNameFromSteamHtmlString(std::string htmlString);
+std::string getOnlineNameUsingSteamId(QWORD steamId);
 
 #endif
 

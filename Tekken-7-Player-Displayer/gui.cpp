@@ -143,6 +143,7 @@ void createMainWindow() {
     sendMessage(guiWindows.commentValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.commentTextFont, true);
 
     showWindow(guiWindows.consoleWindowHandle, SW_HIDE);
+    //showWindow(guiWindows.consoleWindowHandle, SW_SHOW);
     showWindow(guiWindows.mainWindowHandle, SW_SHOW);
 }
 
