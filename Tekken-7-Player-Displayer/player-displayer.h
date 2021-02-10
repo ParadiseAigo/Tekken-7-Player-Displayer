@@ -129,6 +129,7 @@ void endThread();
 void waitForThreadsToTerminate();
 void closeThreads();
 unsigned __stdcall mainThread(void* arguments);
+void initPlayerlist();
 void loadTargetProcess();
 void initTekkenHandle();
 void initTekkenWindowHandle();
@@ -166,6 +167,7 @@ void unRegisterHotKeys();
 void unRegisterHotKey(HWND windowHandle, int hotkeyId);
 
 //file.cpp
+void createExamplePlayerlist();
 char* extractPlayerNameFromPlayerlistLine(char* line);
 char* extractCommentFromPlayerlistLine(char* line);
 char* extractCharacterFromPlayerlistLine(char* line);

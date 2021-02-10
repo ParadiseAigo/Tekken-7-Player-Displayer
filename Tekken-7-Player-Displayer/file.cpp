@@ -1,6 +1,21 @@
 #include "player-displayer.h"
 #include "pointers.h"
 
+void createExamplePlayerlist() {
+	char* newPlayerlistLine;
+	std::string allCharacters[] = ALL_CHARACTERS;
+	int paul = 0;
+	int hwo = 4;
+	createFile((char*) PLAYERLIST_PATH);
+	newPlayerlistLine = makePlayerlistEntry((char*)"narcissist_city", (char*) allCharacters[paul].c_str(), 76561197960265729);
+	writeLineToFile((char*)PLAYERLIST_PATH, newPlayerlistLine);
+	free(newPlayerlistLine);
+	replaceCommentInLastLineInFile((char*)PLAYERLIST_PATH, (char*)"toxic plugger stay away");
+	newPlayerlistLine = makePlayerlistEntry((char*)"bigboss99", (char*) allCharacters[hwo].c_str(), 76561197960265730);
+	writeLineToFile((char*)PLAYERLIST_PATH, newPlayerlistLine);
+	free(newPlayerlistLine);
+}
+
 char* extractPlayerNameFromPlayerlistLine(char* line) {
 	int lineIndexBegin = 0;  // player name is the first thing in the line so its always = 0
 	int lineIndexEnd = 0;

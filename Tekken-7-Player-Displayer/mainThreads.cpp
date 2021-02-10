@@ -54,10 +54,24 @@ void closeThreads() {
 }
 
 unsigned __stdcall mainThread(void* arguments) {
+	initPlayerlist();
 	loadTargetProcess();
 	editTargetProcessLoop();
 	endThread();
 	return ERROR_SUCCESS;
+}
+
+void initPlayerlist() {
+	myGuiTerminalPrint(std::string("Checking your list  \"Tekken Player List.txt\"  ...\r\n"));
+	if (!doesFileExist((char*)PLAYERLIST_PATH)) {
+		myGuiTerminalPrint(std::string("\"Tekken Player List.txt\" not found.\r\n"));
+		myGuiTerminalPrint(std::string("Attempting to create a new one.\r\n"));
+		createExamplePlayerlist();
+	}
+	else {
+		myGuiTerminalPrint(std::string("Good  \"Tekken Player List.txt\"  is OK.\r\n"));
+	}
+
 }
 
 void loadTargetProcess() {
@@ -159,7 +173,7 @@ void editTargetProcessLoop() {
 			handleNewReceivedOpponent();
 			areMessagesClean = false;
 		}
-		else if (isNewNameReceived(playerName, lastReceivedName) && isSteamIdFound) {  // aigo lastReceivedName isnt getting cleaned up maybe
+		else if (isNewNameReceived(playerName, lastReceivedName) && isSteamIdFound) {
 			if (lastReceivedName != NULL) {
 				free(lastReceivedName);
 			}
