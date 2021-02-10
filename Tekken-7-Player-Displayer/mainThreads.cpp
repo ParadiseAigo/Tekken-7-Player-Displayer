@@ -48,7 +48,7 @@ void waitForThreadsToTerminate() {
 
 void closeThreads() {
 	CloseHandle(programThreads.guiThread);
-	DWORD delayBeforeClosingMainThread = 2000;
+	DWORD delayBeforeClosingMainThread = 200;
 	Sleep(delayBeforeClosingMainThread);
 	CloseHandle(programThreads.mainThread);
 }
