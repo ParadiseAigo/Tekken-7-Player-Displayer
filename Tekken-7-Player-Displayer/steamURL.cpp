@@ -45,14 +45,13 @@ std::string extractNameFromSteamHtmlString(std::string htmlString) {
 }
 
 std::string getOnlineNameUsingSteamId(QWORD steamId) {
-    /*
-    std::string url;
+    std::wstring url;
     std::string htmlString;
     std::string name;
-    url = 
-    extractNameFromSteamHtmlString(urlToString(TEXT("https://steamcommunity.com/profiles/76561197960265729")));
+    url = std::wstring(L"https://steamcommunity.com/profiles/").append(std::to_wstring(steamId));
+    htmlString = urlToString((LPCTSTR)url.c_str());
+    name = extractNameFromSteamHtmlString(htmlString);
 	return name;
-    */
 }
 
 
