@@ -142,7 +142,10 @@ void initPointers() {
 }
 
 void initModuleAdresses() {
-	steamModulePointer = (void*)getModuleBaseAddress(tekkenPid, STEAM_API_MODULE_NAME);
+	steamModulePointer = (void*)getModuleBaseAddress(tekkenPid, STEAM_API_MODULE_EDITED_NAME);
+	if (steamModulePointer == 0) {
+		steamModulePointer = (void*)getModuleBaseAddress(tekkenPid, STEAM_API_MODULE_NAME);
+	}
 	void* userSteamIdPointer = (void*)getDynamicPointer(tekkenHandle, (void*) ((QWORD)steamModulePointer + STEAM_ID_USER_STATIC_POINTER), STEAM_ID_USER_POINTER_OFFSETS);
 	userSteamId = readQwordFromMemory(tekkenHandle, userSteamIdPointer);
 }
