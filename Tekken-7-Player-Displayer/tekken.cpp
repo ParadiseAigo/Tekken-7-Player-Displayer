@@ -340,3 +340,6 @@ void displayOpponentName() {
 	setOpponentNameInGui(newOpponentName);
 	free(newOpponentName);
 }
+
+void displayOpponentNameFromWeb() {
+}

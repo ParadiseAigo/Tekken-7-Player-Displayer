@@ -158,8 +158,9 @@ bool isNewFightAccepted();
 bool isNewOpponentLoaded();
 void cleanAllProcessMessages();
 char* getNewCurrentLoadedOpponent(char* currentLoadedOpponentName);
-bool isNewNameReceived(char* playerName, char* lastReceivedName);
-void displayOpponentName();
+bool isNewNameReceived(char* playerName, char* lastReceivedName); // no longer needed (now name obtained from web)
+void displayOpponentName(); // no longer needed
+void displayOpponentNameFromWeb();
 
 //guiInput.cpp
 void handleHotkeyInput(WPARAM hotkey);
@@ -191,6 +192,7 @@ char* getLastCharacterInPlayerlist(char* filePath);
 char* getLastLineOfFile(char* filePath);
 bool bruteForceFind(char* text, char* pattern);
 int bruteForceFindIndex(char* text, char* pattern);
+int bruteForceFindIndexAfterIndex(char* text, char* pattern, int startIndex);
 void replaceCommentInLastLineInFile(char* path, char* comment);
 long writeAfterLastOccurenceOfCharInFile(char* path, char* text, char charToWriteAfter);
 void setEndOfFileAtIndex(char* path, long position);
@@ -270,9 +272,12 @@ void destroyWindow(HWND windowHandle);
 
 //steamURL.cpp
 std::string urlToString(LPCTSTR url);
-void urlToFile(char* url, char* filePath);
+std::wstring urlToWString(LPCTSTR url);
+void urlToFile(LPCTSTR url, LPCTSTR filePath);
 std::string extractNameFromSteamHtmlString(std::string htmlString);
+std::wstring extractProfilePictureUrlFromSteamHtmlString(std::wstring htmlString);
 std::string getOnlineNameUsingSteamId(QWORD steamId);
+std::wstring getOnlineProfilePictureUrlUsingSteamId(QWORD steamId);
 
 #endif
 
