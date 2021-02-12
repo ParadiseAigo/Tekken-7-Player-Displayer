@@ -39,7 +39,7 @@ DWORD getProcessId(const std::wstring& programNameExe) {
 	return 0;
 }
 
-// purpose: finding the base address of a module (example: "steam_api64_o.dll")
+// purpose: finding the base address of a module (example: "steam_api64.dll")
 uintptr_t getModuleBaseAddress(DWORD pid, const wchar_t* moduleName) {
     uintptr_t result = 0;
     HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
@@ -48,8 +48,8 @@ uintptr_t getModuleBaseAddress(DWORD pid, const wchar_t* moduleName) {
         modEntry.dwSize = sizeof(modEntry);
         if (Module32First(hSnap, &modEntry)) {
             do {
-                if (!_wcsicmp(modEntry.szModule, moduleName)) {
-                    result = (uintptr_t)modEntry.modBaseAddr;
+				if (!_wcsicmp(modEntry.szModule, moduleName)) {
+					result = (uintptr_t)modEntry.modBaseAddr;
                     break;
                 }
             } while (Module32Next(hSnap, &modEntry));
