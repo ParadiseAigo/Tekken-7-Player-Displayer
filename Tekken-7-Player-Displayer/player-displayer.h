@@ -162,10 +162,10 @@ bool isNewOpponentLoaded();
 void cleanAllProcessMessages();
 char* getNewCurrentLoadedOpponent(char* currentLoadedOpponentName);
 bool isNewNameReceived(char* playerName, char* lastReceivedName); // no longer needed (now name obtained from web)
-void displayOpponentInfoFromWeb();
 void displayOpponentName(); // no longer needed
-void displayOpponentNameFromWeb();
-void displayOpponentProfilePictureFromWeb();
+void displayOpponentInfoFromWeb(QWORD steamId);
+void displayOpponentNameFromWeb(std::string name);
+void displayOpponentProfilePictureFromWeb(std::string pictureLink);
 
 //guiInput.cpp
 void handleHotkeyInput(WPARAM hotkey);
@@ -284,9 +284,10 @@ void drawPictureOnWindow(LPPICTURE picture, HWND hWnd);
 //steamURL.cpp
 std::string urlToString(LPCTSTR url);
 std::wstring urlToWString(LPCTSTR url);
-void urlToFile(LPCTSTR url, LPCTSTR filePath);
+void urlToFile(std::string url, LPCTSTR filePath);
 std::string extractNameFromSteamHtmlString(std::string htmlString);
 std::string extractProfilePictureUrlFromSteamHtmlString(std::string htmlString);
+std::string getSteamPageHtml(QWORD steamId);
 std::string getOnlineNameUsingSteamId(QWORD steamId);
 std::string getOnlineProfilePictureUrlUsingSteamId(QWORD steamId);
 

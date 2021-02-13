@@ -380,7 +380,7 @@ void printTextToEditControl(std::string text, HWND& editControlHandle) {
 std::wstring charPtrToWString(char* text) {
     size_t textSize = strlen(text) + 1;
     wchar_t* buffer = (wchar_t*)malloc(textSize * sizeof(wchar_t));
-    MultiByteToWideChar(CP_UTF8, 0, text, -1, buffer, textSize);
+    MultiByteToWideChar(CP_UTF8, 0, text, -1, buffer, (int) textSize);
     std::wstring wstr(buffer);
     free(buffer);
     return wstr;
@@ -435,7 +435,6 @@ void setOpponentNameInGui(char* opponentName) {
 
 void loadOpponentProfilePictureFromFileAndRedraw(LPCTSTR filePath) { // this function only works for jpg, gif
     opponentProfilePicture = loadImageFromFile(filePath);            // the global variable is used to draw the picture in WM_PAINT 
-    HBITMAP bitmapHandle;
     RedrawWindow(guiWindows.opponentProfilePictureHandle, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
 }
 
@@ -463,7 +462,6 @@ void updateAllGuiMessages(char* newOpponentName, char* characterName, char* play
 		sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(characterName).c_str());
 	}
 	sendMessage(guiWindows.commentValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(playerlistComment).c_str());
-    displayOpponentProfilePictureFromWeb();
 }
 
 void cleanAllGuiMessages() {

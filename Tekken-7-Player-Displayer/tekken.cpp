@@ -127,6 +127,7 @@ void handleNewReceivedOpponent() {
 		characterName = NULL;
 		characterNameMessage = copyString((char*) "| Unknown character.");
 	}
+	//aigo make a function called  updateAllProcessMessages(.., .., ..);  // and inside it put an "if" silent mode ...
 	updateOpponentFoundMessage(newOpponentNameMessage);
 	updateFightThisPlayerMessage(playerlistComment);
 	updateSecondsRemainingMessage(characterNameMessage);
@@ -341,26 +342,36 @@ void displayOpponentName() {
 	free(newOpponentName);
 }
 
-void displayOpponentInfoFromWeb() {
+void displayOpponentInfoFromWeb(QWORD steamId) {
+    std::string htmlString;
+	std::string name;
+	std::string pictureLink;
+    htmlString = getSteamPageHtml(steamId);
+	name = extractNameFromSteamHtmlString(htmlString);
+	pictureLink = extractProfilePictureUrlFromSteamHtmlString(htmlString);
+	displayOpponentNameFromWeb(name);
+	displayOpponentProfilePictureFromWeb(pictureLink);
 }
 
-void displayOpponentNameFromWeb() {
+void displayOpponentNameFromWeb(std::string name) {
+	char* opponentName = (char*)name.c_str();
+	myGuiTerminalPrint(std::string("Steam id's name:  ").append(std::string(opponentName)).append(std::string("\r\n")));
+	updateOpponentFoundMessage(opponentName);
+	setOpponentNameInGui(opponentName);
 }
 
-void displayOpponentProfilePictureFromWeb() {
-	TCHAR path[MAX_PATH];
-	GetTempPathW(MAX_PATH, path);
-	wsprintf(path, TEXT("%s\\opponent.jpg"), path);
+void displayOpponentProfilePictureFromWeb(std::string pictureLink) {
+	TCHAR picturePath[MAX_PATH];
+	GetTempPathW(MAX_PATH, picturePath);
+	wsprintf(picturePath, TEXT("%s\\opponent.jpg"), picturePath);
 
-	std::string url = getOnlineProfilePictureUrlUsingSteamId(lastFoundSteamId);
-	std::wstring urlWString = charPtrToWString((char*)url.c_str());
-	urlToFile((LPCTSTR)urlWString.c_str(), path);
+	urlToFile(pictureLink, picturePath);
 	
-	size_t posExtension = url.find_last_of('.');
-	std::string fileExtension = url.substr(posExtension + 1);
+	size_t posExtension = pictureLink.find_last_of('.');
+	std::string fileExtension = pictureLink.substr(posExtension + 1);
 	if (fileExtension.compare("png") == 0) {
-		loadOpponentProfilePictureFromPNGFileAndRedraw(path);
+		loadOpponentProfilePictureFromPNGFileAndRedraw(picturePath);
 	} else {
-		loadOpponentProfilePictureFromFileAndRedraw(path);
+		loadOpponentProfilePictureFromFileAndRedraw(picturePath);
 	}
 }

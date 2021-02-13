@@ -152,14 +152,14 @@ void initModuleAdresses() {
 
 void editTargetProcessLoop() {
 	char* playerName;
-	char* lastReceivedName;
+	//char* lastReceivedName;  // name obtained directly from web, this variable is not need anymore
 	char* currentOpponentName;
 	char* currentLoadedOpponentName;
 	bool areMessagesClean;
 	int delayInSearch = 1000/60; // "60fps"
 	int delayInFight = 2000; // 2 seconds
 	playerName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	lastReceivedName = readStringFromMemory(tekkenHandle, opponentNamePointer);
+	//lastReceivedName = readStringFromMemory(tekkenHandle, opponentNamePointer);
 	currentOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
 	currentLoadedOpponentName = (char*) malloc(10 * sizeof(char)); // dummy value
 	currentLoadedOpponentName[0] = '\0'; // empty string
@@ -170,21 +170,23 @@ void editTargetProcessLoop() {
 	while (true) {
 		Sleep(delayInSearch);
 		if (isNewOpponentReceived()) {
-			cleanAllProcessMessages();
+			cleanAllProcessMessages();  // aigo: inside it put an "if" silent mode
 			cleanAllGuiMessages();
 			handleNewReceivedOpponent();
-			displayOpponentInfoFromWeb();
+			displayOpponentInfoFromWeb(lastFoundSteamId);
 			areMessagesClean = false;
 		}
+		// opponent name is obtained directly from steam using the steam id; no need to scan the process for the name
+		/*
 		else if (isNewNameReceived(playerName, lastReceivedName) && isSteamIdFound) {
 			if (lastReceivedName != NULL) {
 				free(lastReceivedName);
 			}
 			lastReceivedName = readStringFromMemory(tekkenHandle, opponentNamePointer);
 			displayOpponentName();
-			//displayOpponentNameFromWeb(); // replace above call with this one
 			areMessagesClean = false;
 		}
+		*/
 		else if ((!areMessagesClean) && (!isSteamIdFound)) {
 			cleanAllProcessMessages();
 			cleanAllGuiMessages();

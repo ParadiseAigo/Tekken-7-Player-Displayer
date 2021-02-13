@@ -51,20 +51,23 @@ std::wstring urlToWString(LPCTSTR url) {
     return result;
 }
 
-void urlToFile(LPCTSTR url, LPCTSTR filePath) {
-    HRESULT errorCode = URLDownloadToFile(0, url, filePath, 0, 0);
+void urlToFile(std::string url, LPCTSTR filePath) {
+    std::wstring wurl;
+    HRESULT errorCode;
+    wurl = charPtrToWString((char*)url.c_str());
+    errorCode = URLDownloadToFile(0, (LPCTSTR)wurl.c_str(), filePath, 0, 0);
     switch (errorCode) {
     case S_OK:
         //std::cout << "ok" << std::endl;
         break;
     case E_OUTOFMEMORY:
-        std::cout << "error: out of memory" << std::endl;
+        myGuiTerminalPrint(std::string("Error in urlToFile(): Out of memory.\r\n"));
         break;
     case INET_E_DOWNLOAD_FAILURE:
-        std::cout << "error: inet download failure" << std::endl;
+        myGuiTerminalPrint(std::string("Error in urlToFile(): Inet download failure.\r\n"));
         break;
     default: // other
-        std::cout << "error: other: " << errorCode << std::endl;
+        myGuiTerminalPrint(std::string("Error in urlToFile(): Failed to download file: ").append(url).append(std::string(" Error code: ")).append(std::to_string(errorCode)).append(std::string("\r\n")));
         break;
     }
 }
@@ -108,22 +111,26 @@ std::string extractProfilePictureUrlFromSteamHtmlString(std::string htmlString) 
     return result;
 }
 
-std::string getOnlineNameUsingSteamId(QWORD steamId) {
+std::string getSteamPageHtml(QWORD steamId) {
     std::wstring url;
     std::string htmlString;
-    std::string name;
     url = std::wstring(L"https://steamcommunity.com/profiles/").append(std::to_wstring(steamId));
     htmlString = urlToString((LPCTSTR)url.c_str());
+    return htmlString;
+}
+
+std::string getOnlineNameUsingSteamId(QWORD steamId) {
+    std::string htmlString;
+    std::string name;
+    htmlString = getSteamPageHtml(steamId);
     name = extractNameFromSteamHtmlString(htmlString);
 	return name;
 }
 
 std::string getOnlineProfilePictureUrlUsingSteamId(QWORD steamId) {
-    std::wstring url;
     std::string htmlString;
     std::string result;
-    url = std::wstring(L"https://steamcommunity.com/profiles/").append(std::to_wstring(steamId));
-    htmlString = urlToString((LPCTSTR)url.c_str());
+    htmlString = getSteamPageHtml(steamId);
     result = extractProfilePictureUrlFromSteamHtmlString(htmlString);
 	return result;
 }
