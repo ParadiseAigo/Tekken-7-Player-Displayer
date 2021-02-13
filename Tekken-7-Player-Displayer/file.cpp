@@ -428,18 +428,11 @@ LPPICTURE loadImageFromFile(LPCTSTR filePath) {
 
 	// create picture from stream
 	LPPICTURE picture = NULL;
-	if (picture) {
-		picture->Release();
-	}
 	result = OleLoadPicture(stream, fileSize, FALSE, IID_IPicture, (LPVOID*)&picture);
 	if (FAILED(result) || picture == NULL) {
 		myGuiTerminalPrint(std::string("Error: OleLoadPicture failed in drawPictureFromFile.\r\n"));
 		return NULL;
 	}
 	stream->Release();
-
-	// get bitmap from picture
-	HBITMAP bitmapHandle;
-	picture->get_Handle((OLE_HANDLE*)&bitmapHandle);
 	return picture;
 }

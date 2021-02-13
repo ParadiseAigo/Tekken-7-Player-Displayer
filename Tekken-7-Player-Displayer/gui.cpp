@@ -446,7 +446,10 @@ void loadOpponentProfilePictureFromPNGFileAndRedraw(LPCTSTR filePath) { // this 
 }
 
 void clearOpponentProfilePicture() {
-    opponentProfilePicture = NULL;
+    if (opponentProfilePicture != NULL) {
+        opponentProfilePicture->Release();
+        opponentProfilePicture = NULL;
+    }
     sendMessage(guiWindows.opponentProfilePictureHandle, STM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)NULL);
     RECT rect;
     GetClientRect(guiWindows.opponentProfilePictureHandle, &rect);

@@ -61,5 +61,4 @@ void drawPictureOnWindow(LPPICTURE picture, HWND hWnd) {
     HDC hdc = GetDC(hWnd);
     picture->Render(hdc, 0, 0, rectWidth, rectHeight, 0, pictureHeight, pictureWidth, -pictureHeight, &rc);
     ReleaseDC(hWnd, hdc);
-    picture->Release();
 }

@@ -88,12 +88,12 @@ std::string extractNameFromSteamHtmlString(std::string htmlString) {
 std::string extractProfilePictureUrlFromSteamHtmlString(std::string htmlString) {
     const char* prefixOne = "playerAvatarAutoSizeInner";
     const char* prefixTwo = "<img src=\"";
-    const char* postfix = "\">";
+    const char* postfix = "\"";
     int urlIndex, urlSize, prefixOneIndex, prefixTwoIndex, postfixIndex; // locations in the html string
     std::string result;
     prefixOneIndex = bruteForceFindIndex((char*)htmlString.c_str(), (char*)prefixOne);
     prefixTwoIndex = bruteForceFindIndexAfterIndex((char*)htmlString.c_str(), (char*)prefixTwo, prefixOneIndex);
-    postfixIndex = bruteForceFindIndexAfterIndex((char*)htmlString.c_str(), (char*)postfix, prefixTwoIndex);
+    postfixIndex = bruteForceFindIndexAfterIndex((char*)htmlString.c_str(), (char*)postfix, prefixTwoIndex + (int) strlen(prefixTwo) + 1);
     urlIndex = prefixTwoIndex + (int) strlen(prefixTwo);
     urlSize = postfixIndex - urlIndex;
     result = htmlString.substr(urlIndex, urlSize);
@@ -103,7 +103,7 @@ std::string extractProfilePictureUrlFromSteamHtmlString(std::string htmlString) 
     if (fileExtension.compare("png") == 0) {
         int secondPrefixTwoIndex, secondPostfixIndex, secondUrlIndex, secondUrlSize;
         secondPrefixTwoIndex = bruteForceFindIndexAfterIndex((char*)htmlString.c_str(), (char*)prefixTwo, postfixIndex);
-        secondPostfixIndex = bruteForceFindIndexAfterIndex((char*)htmlString.c_str(), (char*)postfix, secondPrefixTwoIndex);
+        secondPostfixIndex = bruteForceFindIndexAfterIndex((char*)htmlString.c_str(), (char*)postfix, secondPrefixTwoIndex + (int)strlen(prefixTwo) + 1);
         secondUrlIndex = secondPrefixTwoIndex + (int)strlen(prefixTwo);
         secondUrlSize = secondPostfixIndex - secondUrlIndex;
         result = htmlString.substr(secondUrlIndex, secondUrlSize);
