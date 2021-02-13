@@ -52,20 +52,10 @@ std::wstring urlToWString(LPCTSTR url) {
 }
 
 void urlToFile(LPCTSTR url, LPCTSTR filePath) {
-    std::string data = urlToString(url);
-    std::cout << data << std::endl;
-    std::ofstream out(filePath);
-    out << data;
-    out.close();
-}
-
-// trying out URLDownloadToFile();
-/*
-void urlToFile(LPCTSTR url, LPCTSTR filePath) {
     HRESULT errorCode = URLDownloadToFile(0, url, filePath, 0, 0);
     switch (errorCode) {
     case S_OK:
-        std::cout << "ok" << std::endl;
+        //std::cout << "ok" << std::endl;
         break;
     case E_OUTOFMEMORY:
         std::cout << "error: out of memory" << std::endl;
@@ -78,7 +68,6 @@ void urlToFile(LPCTSTR url, LPCTSTR filePath) {
         break;
     }
 }
-*/
 
 std::string extractNameFromSteamHtmlString(std::string htmlString) {
     const char* prefix = "<title>Steam Community :: ";
@@ -93,18 +82,29 @@ std::string extractNameFromSteamHtmlString(std::string htmlString) {
     return result;
 }
 
-std::wstring extractProfilePictureUrlFromSteamHtmlString(std::wstring htmlString) {
+std::string extractProfilePictureUrlFromSteamHtmlString(std::string htmlString) {
     const char* prefixOne = "playerAvatarAutoSizeInner";
     const char* prefixTwo = "<img src=\"";
     const char* postfix = "\">";
-    int nameIndex, nameSize, prefixOneIndex, prefixTwoIndex, postfixIndex; // locations in the html string
-    std::wstring result;
+    int urlIndex, urlSize, prefixOneIndex, prefixTwoIndex, postfixIndex; // locations in the html string
+    std::string result;
     prefixOneIndex = bruteForceFindIndex((char*)htmlString.c_str(), (char*)prefixOne);
     prefixTwoIndex = bruteForceFindIndexAfterIndex((char*)htmlString.c_str(), (char*)prefixTwo, prefixOneIndex);
     postfixIndex = bruteForceFindIndexAfterIndex((char*)htmlString.c_str(), (char*)postfix, prefixTwoIndex);
-    nameIndex = prefixTwoIndex + (int) strlen(prefixTwo);
-    nameSize = postfixIndex - nameIndex;
-    result = htmlString.substr(nameIndex, nameSize);
+    urlIndex = prefixTwoIndex + (int) strlen(prefixTwo);
+    urlSize = postfixIndex - urlIndex;
+    result = htmlString.substr(urlIndex, urlSize);
+    
+    size_t posExtension = result.find_last_of('.');
+    std::string fileExtension = result.substr(posExtension + 1);
+    if (fileExtension.compare("png") == 0) {
+        int secondPrefixTwoIndex, secondPostfixIndex, secondUrlIndex, secondUrlSize;
+        secondPrefixTwoIndex = bruteForceFindIndexAfterIndex((char*)htmlString.c_str(), (char*)prefixTwo, postfixIndex);
+        secondPostfixIndex = bruteForceFindIndexAfterIndex((char*)htmlString.c_str(), (char*)postfix, secondPrefixTwoIndex);
+        secondUrlIndex = secondPrefixTwoIndex + (int)strlen(prefixTwo);
+        secondUrlSize = secondPostfixIndex - secondUrlIndex;
+        result = htmlString.substr(secondUrlIndex, secondUrlSize);
+    }
     return result;
 }
 
@@ -118,12 +118,12 @@ std::string getOnlineNameUsingSteamId(QWORD steamId) {
 	return name;
 }
 
-std::wstring getOnlineProfilePictureUrlUsingSteamId(QWORD steamId) {
+std::string getOnlineProfilePictureUrlUsingSteamId(QWORD steamId) {
     std::wstring url;
-    std::wstring htmlString;
-    std::wstring result;
+    std::string htmlString;
+    std::string result;
     url = std::wstring(L"https://steamcommunity.com/profiles/").append(std::to_wstring(steamId));
-    htmlString = urlToWString((LPCTSTR)url.c_str());
+    htmlString = urlToString((LPCTSTR)url.c_str());
     result = extractProfilePictureUrlFromSteamHtmlString(htmlString);
 	return result;
 }

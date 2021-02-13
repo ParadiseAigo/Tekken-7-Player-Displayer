@@ -22,15 +22,6 @@ void* steamModulePointer;
 ProgramThreads programThreads;
 
 int main() {
-	/*
-	TCHAR path[MAX_PATH];
-	GetCurrentDirectory(MAX_PATH, path);
-	wsprintf(path, TEXT("%s\\rich.jpg"), path);
-	printf("path: %S\n", path);
-	std::wstring url = getOnlineProfilePictureUrlUsingSteamId(76561197960265729);
-	std::wcout << "url: " << url << std::endl;
-	//urlToFile((LPCTSTR)url.c_str(), path);
-	*/
 	createThreads();
 	waitForThreadsToTerminate();
 	closeThreads();
@@ -182,6 +173,7 @@ void editTargetProcessLoop() {
 			cleanAllProcessMessages();
 			cleanAllGuiMessages();
 			handleNewReceivedOpponent();
+			displayOpponentInfoFromWeb();
 			areMessagesClean = false;
 		}
 		else if (isNewNameReceived(playerName, lastReceivedName) && isSteamIdFound) {

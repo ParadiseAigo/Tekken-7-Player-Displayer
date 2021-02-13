@@ -377,3 +377,69 @@ void setEndOfFileAtIndex(char* path, long index) {
 	CloseHandle(fileHandle);
 }
 
+LPPICTURE loadImageFromFile(LPCTSTR filePath) {
+	// open file
+	HANDLE fileHandle = CreateFile(filePath, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+	errno_t errorCode = GetLastError();
+	if (errorCode > 0) {
+		myGuiTerminalPrint(std::string("Error opening a file in drawPictureFromFile, error code = ").append(std::to_string(errorCode)).append(std::string("\r\n")));
+		return NULL;
+	}
+
+	// get file size
+	DWORD fileSize = GetFileSize(fileHandle, NULL);
+	if (fileSize <= 0) {
+		myGuiTerminalPrint(std::string("Error in drawPictureFromFile, file size is = ").append(std::to_string(fileSize)).append(std::string("\r\n")));
+		return NULL;
+	}
+
+	// alloc memory based on file size
+	HGLOBAL memory = GlobalAlloc(GMEM_MOVEABLE, fileSize);
+	if (memory == NULL) {
+		myGuiTerminalPrint(std::string("Error: GlobalAlloc failed in drawPictureFromFile.\r\n"));
+		return NULL;
+	}
+
+	// get a pointer to the first byte of the allocated memory
+	LPVOID data = NULL;
+	data = GlobalLock(memory);
+	if (data == NULL) {
+		myGuiTerminalPrint(std::string("Error: GlobalLock failed in drawPictureFromFile.\r\n"));
+		return NULL;
+	}
+
+	// read file and store in memory
+	DWORD bytesRead = 0;
+	BOOL isReadSuccess = ReadFile(fileHandle, data, fileSize, &bytesRead, NULL);
+	if (isReadSuccess == FALSE) {
+		myGuiTerminalPrint(std::string("Error: ReadFile failed in drawPictureFromFile.\r\n"));
+		return NULL;
+	}
+	GlobalUnlock(memory);
+	CloseHandle(fileHandle);
+
+	// create stream from memory
+	LPSTREAM stream = NULL;
+	HRESULT result = CreateStreamOnHGlobal(memory, TRUE, &stream);
+	if (FAILED(result) || stream == NULL) {
+		myGuiTerminalPrint(std::string("Error: CreateStreamOnHGlobal failed in drawPictureFromFile.\r\n"));
+		return NULL;
+	}
+
+	// create picture from stream
+	LPPICTURE picture = NULL;
+	if (picture) {
+		picture->Release();
+	}
+	result = OleLoadPicture(stream, fileSize, FALSE, IID_IPicture, (LPVOID*)&picture);
+	if (FAILED(result) || picture == NULL) {
+		myGuiTerminalPrint(std::string("Error: OleLoadPicture failed in drawPictureFromFile.\r\n"));
+		return NULL;
+	}
+	stream->Release();
+
+	// get bitmap from picture
+	HBITMAP bitmapHandle;
+	picture->get_Handle((OLE_HANDLE*)&bitmapHandle);
+	return picture;
+}

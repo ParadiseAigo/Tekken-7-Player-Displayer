@@ -341,5 +341,26 @@ void displayOpponentName() {
 	free(newOpponentName);
 }
 
+void displayOpponentInfoFromWeb() {
+}
+
 void displayOpponentNameFromWeb() {
+}
+
+void displayOpponentProfilePictureFromWeb() {
+	TCHAR path[MAX_PATH];
+	GetTempPathW(MAX_PATH, path);
+	wsprintf(path, TEXT("%s\\opponent.jpg"), path);
+
+	std::string url = getOnlineProfilePictureUrlUsingSteamId(lastFoundSteamId);
+	std::wstring urlWString = charPtrToWString((char*)url.c_str());
+	urlToFile((LPCTSTR)urlWString.c_str(), path);
+	
+	size_t posExtension = url.find_last_of('.');
+	std::string fileExtension = url.substr(posExtension + 1);
+	if (fileExtension.compare("png") == 0) {
+		loadOpponentProfilePictureFromPNGFileAndRedraw(path);
+	} else {
+		loadOpponentProfilePictureFromFileAndRedraw(path);
+	}
 }

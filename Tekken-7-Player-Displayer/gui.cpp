@@ -10,6 +10,8 @@ GuiFonts guiFonts;
 HBRUSH solidBrush;
 WNDPROC defaultEditProc;
 
+LPPICTURE opponentProfilePicture;
+
 unsigned __stdcall guiThread(void* arguments) {
     initWindowsAndHotkeys();
     handleWindowsMessageQueueLoop();
@@ -95,6 +97,10 @@ void createMainWindow() {
         WS_CHILD | WS_VISIBLE | SS_BITMAP,
         0, 0, 0, 0, guiWindows.mainWindowHandle);
 
+    guiWindows.opponentProfilePictureHandle = createWindow(0, TEXT("STATIC"), NULL,
+        WS_CHILD | WS_VISIBLE | WS_BORDER | SS_BITMAP | SS_REALSIZECONTROL,
+        910, 545, 100, 100, guiWindows.mainWindowHandle);
+
     guiWindows.outputTextHandle = createWindow(WS_EX_PALETTEWINDOW, TEXT("Edit"), NULL,
         WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL | ES_READONLY,
         40, 40, 580, FONT_SIZE * 30 + 10, guiWindows.mainWindowHandle);
@@ -127,7 +133,7 @@ void createMainWindow() {
         X_TEXTBOX, 460, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
     guiWindows.commentValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL | ES_READONLY,
-        40, 580, 990, 20 * 2 + 10, guiWindows.mainWindowHandle);
+        40, 580, 845, 20 * 2 + 10, guiWindows.mainWindowHandle);
 
     HBITMAP backgroundBitmapHandle = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(BACKGROUND));
     sendMessage(backgroundImageHandle, STM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)backgroundBitmapHandle);
@@ -141,9 +147,8 @@ void createMainWindow() {
     sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
     sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
     sendMessage(guiWindows.commentValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.commentTextFont, true);
-
+    
     showWindow(guiWindows.consoleWindowHandle, SW_HIDE);
-    //showWindow(guiWindows.consoleWindowHandle, SW_SHOW);
     showWindow(guiWindows.mainWindowHandle, SW_SHOW);
 }
 
@@ -195,6 +200,9 @@ LRESULT CALLBACK mainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpara
             SetTextColor((HDC)wparam, COLOR_WHITE);
             SetBkColor((HDC)wparam, COLOR_BLACK);
             return (LRESULT)(HBRUSH)GetStockObject(BLACK_BRUSH);
+        } else if (lparam == (LPARAM)guiWindows.opponentProfilePictureHandle) {
+            drawPictureOnWindow(opponentProfilePicture, guiWindows.opponentProfilePictureHandle);
+            return (LRESULT)(HBRUSH)GetStockObject(HOLLOW_BRUSH);
         } else {
             SetBkColor((HDC)wparam, COLOR_GRAY);
             return (LRESULT)solidBrush;
@@ -272,11 +280,10 @@ void openCommentWindow() {
 void setOpponentNameInCommentWindowTitle() {
     char* lastCharacter;
     lastCharacter = getLastCharacterInPlayerlist((char*)PLAYERLIST_PATH);
-    wchar_t* name = stringToWString(lastNameInPlayerlist);
-    wchar_t* character = stringToWString(lastCharacter);
-    sendMessage(guiWindows.commentWindowHandle, WM_SETTEXT, 0, (LPARAM)std::wstring(L"Comment").append(L" - Player: ").append(std::wstring(name)).append(L" - ").append(std::wstring(character)).c_str());
-    delete[] name;
-    delete[] character;
+    sendMessage(guiWindows.commentWindowHandle, WM_SETTEXT, 0, (LPARAM)std::wstring(L"Comment - Player: ")
+        .append(charPtrToWString(lastNameInPlayerlist)).append(L" - ")
+        .append(charPtrToWString(lastCharacter)).c_str()
+    );
     if (lastCharacter != NULL) {
 		free(lastCharacter);
     }
@@ -366,17 +373,27 @@ void printTextToEditControl(std::string text, HWND& editControlHandle) {
     if (indexEndOfText + (QWORD) text.size() >= sizeLimitText) {
         sendMessage(editControlHandle, EM_SETLIMITTEXT, (WPARAM) (sizeLimitText + (QWORD)text.size() + (QWORD)EDITBOX_TEXT_MAX_LENGTH), 0);
     }
-    wchar_t* textBuffer = stringToWString(text);
     sendMessage(editControlHandle, EM_SETSEL, (WPARAM)indexEndOfText, (LPARAM)indexEndOfText);
-    sendMessage(editControlHandle, EM_REPLACESEL, 0, (LPARAM)textBuffer);
-    delete[] textBuffer;
+    sendMessage(editControlHandle, EM_REPLACESEL, 0, (LPARAM)(wchar_t*)charPtrToWString((char*)text.c_str()).c_str());
 }
 
-wchar_t* stringToWString(std::string text) { // caller of this function has to do delete[] textBuffer;
+std::wstring charPtrToWString(char* text) {
+    size_t textSize = strlen(text) + 1;
+    wchar_t* buffer = (wchar_t*)malloc(textSize * sizeof(wchar_t));
+    MultiByteToWideChar(CP_UTF8, 0, text, -1, buffer, textSize);
+    std::wstring wstr(buffer);
+    free(buffer);
+    return wstr;
+}
+
+std::string wcharPtrToString(wchar_t* text) {
+    size_t textSize = wcslen(text) + 1;
+    char* buffer = (char*)malloc(textSize * sizeof(char));
     size_t nrOfCharConverted;
-    wchar_t* textBuffer = new wchar_t[text.size() + 1];
-    mbstowcs_s(&nrOfCharConverted, textBuffer, text.size() + 1, text.c_str(), text.size());
-    return textBuffer;
+    wcstombs_s(&nrOfCharConverted, buffer, textSize, (const wchar_t*)text, textSize);
+    std::string str(buffer);
+    free(buffer);
+    return str;
 }
 
 void closeAllWindows() {
@@ -409,25 +426,49 @@ void showOrHideConsoleWindow() {
 }
 
 void setPlayerNameInGui(char* playerName) {
-	sendMessage(guiWindows.playerNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)stringToWString(playerName));
+	sendMessage(guiWindows.playerNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(playerName).c_str());
 }
 
 void setOpponentNameInGui(char* opponentName) {
-	sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)stringToWString(opponentName));
+	sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(opponentName).c_str());
+}
+
+void loadOpponentProfilePictureFromFileAndRedraw(LPCTSTR filePath) { // this function only works for jpg, gif
+    opponentProfilePicture = loadImageFromFile(filePath);            // the global variable is used to draw the picture in WM_PAINT 
+    HBITMAP bitmapHandle;
+    RedrawWindow(guiWindows.opponentProfilePictureHandle, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
+}
+
+void loadOpponentProfilePictureFromPNGFileAndRedraw(LPCTSTR filePath) { // this function works for png, jpg and gif
+    CImage image;                                                       // but the quality is sometimes bad for jpg (because of the conversion to bmp)
+    image.Load(filePath);
+    HBITMAP bitmapHandle = image.Detach();
+    sendMessage(guiWindows.opponentProfilePictureHandle, STM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)bitmapHandle);
+}
+
+void clearOpponentProfilePicture() {
+    opponentProfilePicture = NULL;
+    sendMessage(guiWindows.opponentProfilePictureHandle, STM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)NULL);
+    RECT rect;
+    GetClientRect(guiWindows.opponentProfilePictureHandle, &rect);
+    MapWindowPoints(guiWindows.opponentProfilePictureHandle, guiWindows.mainWindowHandle, (LPPOINT)&rect, 2);
+    RedrawWindow(guiWindows.mainWindowHandle, &rect, NULL, RDW_ERASE | RDW_INVALIDATE);
 }
 
 void updateAllGuiMessages(char* newOpponentName, char* characterName, char* playerlistComment) {
-	sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)stringToWString(newOpponentName));
+	sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(newOpponentName).c_str());
 	if (characterName == NULL) {
 		sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
 	} else {
-		sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETTEXT, 0, (LPARAM)stringToWString(characterName));
+		sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(characterName).c_str());
 	}
-	sendMessage(guiWindows.commentValueTextHandle, WM_SETTEXT, 0, (LPARAM)stringToWString(playerlistComment));
+	sendMessage(guiWindows.commentValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(playerlistComment).c_str());
+    displayOpponentProfilePictureFromWeb();
 }
 
 void cleanAllGuiMessages() {
 	sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
 	sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
 	sendMessage(guiWindows.commentValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
+    clearOpponentProfilePicture();
 }

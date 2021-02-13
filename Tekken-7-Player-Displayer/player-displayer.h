@@ -10,6 +10,8 @@
 #include <vector>
 #include <process.h> // _beginthread
 #include <urlmon.h>  // to download a website
+#include <olectl.h> // to load jpg images
+#include <atlimage.h> // to load png images
 #include "resource.h" 
 
 #pragma comment(linker,"/manifestdependency:\"type='win32' "\
@@ -37,7 +39,7 @@
 
 #define WINDOW_OPACITY 90
 
-#define TEXT_INFORMATION " ALT + F : Set Tekken in Fullscreen Mode\n ALT + W : Set Tekken in Windowed Mode\n ALT + C : Add a Comment in the Player List\n ALT + O : Open the Player List"//\n ALT + T : Show Program Console"
+#define TEXT_INFORMATION " ALT + F : Set Tekken in Fullscreen Mode\n ALT + W : Set Tekken in Windowed Mode\n ALT + C : Add a Comment in the Player List\n ALT + O : Open the Player List"//\n ALT + S : Silent Mode"//\n ALT + T : Show Program Console"
 #define TEXT_COMMENTWINDOW "(Last fought player not found, maybe you didn't fight a player yet)"
 
 #define FONT_SIZE 16
@@ -68,6 +70,7 @@ typedef struct GuiWindows {
     HWND playerNameValueTextHandle;
     HWND opponentNameValueTextHandle;
     HWND opponentCharacterValueTextHandle;
+    HWND opponentProfilePictureHandle;
     HWND commentValueTextHandle;
     HWND commentWindowHandle;
     HWND commentEditboxHandle;
@@ -122,7 +125,7 @@ extern GuiWindows guiWindows;
 extern GuiFonts guiFonts;
 extern HBRUSH solidBrush;
 extern WNDPROC defaultEditProc;
-
+extern LPPICTURE opponentProfilePicture;
 extern Hotkey* hotkeys[NR_OF_HOTKEYS];
 
 //mainThreads.cpp
@@ -159,8 +162,10 @@ bool isNewOpponentLoaded();
 void cleanAllProcessMessages();
 char* getNewCurrentLoadedOpponent(char* currentLoadedOpponentName);
 bool isNewNameReceived(char* playerName, char* lastReceivedName); // no longer needed (now name obtained from web)
+void displayOpponentInfoFromWeb();
 void displayOpponentName(); // no longer needed
 void displayOpponentNameFromWeb();
+void displayOpponentProfilePictureFromWeb();
 
 //guiInput.cpp
 void handleHotkeyInput(WPARAM hotkey);
@@ -196,6 +201,7 @@ int bruteForceFindIndexAfterIndex(char* text, char* pattern, int startIndex);
 void replaceCommentInLastLineInFile(char* path, char* comment);
 long writeAfterLastOccurenceOfCharInFile(char* path, char* text, char charToWriteAfter);
 void setEndOfFileAtIndex(char* path, long position);
+LPPICTURE loadImageFromFile(LPCTSTR filePath);
 
 //targetMemory.cpp
 HANDLE getProcessHandle(DWORD pid);
@@ -249,12 +255,16 @@ void printToStandardOutput(std::string text);
 void printToTextboxOutput(std::string text);
 void waitForWindowToBeCreated(HWND& windowHandle);
 void printTextToEditControl(std::string text, HWND& editControlHandle);
-wchar_t* stringToWString(std::string text);
+std::wstring charPtrToWString(char* text);
+std::string wcharPtrToString(wchar_t* text);
 void closeAllWindows();
 void closeCommentWindow();
 void deleteFontObjects();
 void setPlayerNameInGui(char* playerName);
 void setOpponentNameInGui(char* opponentName);
+void loadOpponentProfilePictureFromFileAndRedraw(LPCTSTR filePath);
+void loadOpponentProfilePictureFromPNGFileAndRedraw(LPCTSTR filePath);
+void clearOpponentProfilePicture();
 void updateAllGuiMessages(char* newOpponentName, char* characterName, char* playerlistComment);
 void cleanAllGuiMessages();
 
@@ -269,15 +279,16 @@ BOOL isWindowVisible(HWND windowHandle);
 void setForegroundWindow(HWND windowHandle);
 void setFocus(HWND windowHandle);
 void destroyWindow(HWND windowHandle);
+void drawPictureOnWindow(LPPICTURE picture, HWND hWnd);
 
 //steamURL.cpp
 std::string urlToString(LPCTSTR url);
 std::wstring urlToWString(LPCTSTR url);
 void urlToFile(LPCTSTR url, LPCTSTR filePath);
 std::string extractNameFromSteamHtmlString(std::string htmlString);
-std::wstring extractProfilePictureUrlFromSteamHtmlString(std::wstring htmlString);
+std::string extractProfilePictureUrlFromSteamHtmlString(std::string htmlString);
 std::string getOnlineNameUsingSteamId(QWORD steamId);
-std::wstring getOnlineProfilePictureUrlUsingSteamId(QWORD steamId);
+std::string getOnlineProfilePictureUrlUsingSteamId(QWORD steamId);
 
 #endif
 
