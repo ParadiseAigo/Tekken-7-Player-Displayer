@@ -11,6 +11,8 @@ QWORD lastFoundSteamId;
 bool isSteamIdFound; // helps keep track of  lastFoundSteamId
 QWORD userSteamId;
 char* lastNameInPlayerlist;
+bool silentMode;
+bool isTekkenLoaded;
 
 void* fightThisPlayerMessagePointer;
 void* secondsRemainingMessagePointer;
@@ -55,6 +57,7 @@ void closeThreads() {
 
 unsigned __stdcall mainThread(void* arguments) {
 	initPlayerlist();
+	initVariables();
 	loadTargetProcess();
 	editTargetProcessLoop();
 	endThread();
@@ -73,11 +76,17 @@ void initPlayerlist() {
 	}
 }
 
+void initVariables() {
+	silentMode = true; // global variable
+	isTekkenLoaded = false;  // global variable
+}
+
 void loadTargetProcess() {
 	initTekkenHandle();
 	initTekkenWindowHandle();
 	initPointers();
 	cleanAllProcessMessages();
+	isTekkenLoaded = true;
 	myGuiTerminalPrint(std::string("Program ready!\r\n"));
 }
 
@@ -170,7 +179,7 @@ void editTargetProcessLoop() {
 	while (true) {
 		Sleep(delayInSearch);
 		if (isNewOpponentReceived()) {
-			cleanAllProcessMessages();  // aigo: inside it put an "if" silent mode
+			cleanAllProcessMessages();
 			cleanAllGuiMessages();
 			handleNewReceivedOpponent();
 			displayOpponentInfoFromWeb(lastFoundSteamId);

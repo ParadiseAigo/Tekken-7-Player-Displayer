@@ -252,15 +252,21 @@ void updateMessagesWithoutSteamId() {
 }
 
 void updateOpponentFoundMessage(char* message) {
-	writeStringUnlimitedToMemory(tekkenHandle, opponentFoundMessagePointer, message);
+	if (silentMode == false) {
+		writeStringUnlimitedToMemory(tekkenHandle, opponentFoundMessagePointer, message);
+	}
 }
 
 void updateFightThisPlayerMessage(char* message) {
-	writeStringUnlimitedToMemory(tekkenHandle, fightThisPlayerMessagePointer, message);
+	if (silentMode == false) {
+		writeStringUnlimitedToMemory(tekkenHandle, fightThisPlayerMessagePointer, message);
+	}
 }
 
 void updateSecondsRemainingMessage(char* message) {
-	writeStringUnlimitedToMemory(tekkenHandle, secondsRemainingMessagePointer, message);
+	if (silentMode == false) {
+		writeStringUnlimitedToMemory(tekkenHandle, secondsRemainingMessagePointer, message);
+	}
 }
 
 bool isNewFightAccepted() {
@@ -306,9 +312,9 @@ bool isNewOpponentLoaded() {
 }
 
 void cleanAllProcessMessages() {
-	writeStringUnlimitedToMemory(tekkenHandle, fightThisPlayerMessagePointer, (char*) "Dont accept :)");
-	writeStringUnlimitedToMemory(tekkenHandle, secondsRemainingMessagePointer, (char*) "...");
-	writeStringUnlimitedToMemory(tekkenHandle, opponentFoundMessagePointer, (char*) "Failed to get any info.");
+	updateOpponentFoundMessage((char*)"Failed to get any info.");
+	updateFightThisPlayerMessage((char*)"Dont accept :)");
+	updateSecondsRemainingMessage((char*)"...");
 }
 
 char* getNewCurrentLoadedOpponent(char* currentLoadedOpponentName) {
@@ -375,3 +381,18 @@ void displayOpponentProfilePictureFromWeb(std::string pictureLink) {
 		loadOpponentProfilePictureFromFileAndRedraw(picturePath);
 	}
 }
+
+void turnOffSilentMode() {
+	if (isTekkenLoaded == false) {
+		myGuiTerminalPrint(std::string("Can't turn off silent mode: Tekken 7 not loaded yet.\r\n"));
+	}
+	else if (silentMode == false) { // if already turned off
+		myGuiTerminalPrint(std::string("Silent mode is already off. Restart Tekken 7 to turn it off.\r\n"));
+	}
+	else {
+		silentMode = false;
+		myGuiTerminalPrint(std::string("Silent mode turned off. Now feedback will be given in-game.\r\n"));
+		cleanAllProcessMessages();
+	}
+}
+

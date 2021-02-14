@@ -107,7 +107,7 @@ void createMainWindow() {
 
     HWND shortcutsTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_INFORMATION),
         WS_CHILD | WS_VISIBLE | WS_BORDER,
-        X_TEXTBOX, 50, 380, 18 * 4 + 5, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 50, 380, 18 * 5 + 5, guiWindows.mainWindowHandle);
 
     HWND playerNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Player Name"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,

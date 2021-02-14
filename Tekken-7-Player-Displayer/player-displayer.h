@@ -39,7 +39,7 @@
 
 #define WINDOW_OPACITY 90
 
-#define TEXT_INFORMATION " ALT + F : Set Tekken in Fullscreen Mode\n ALT + W : Set Tekken in Windowed Mode\n ALT + C : Add a Comment in the Player List\n ALT + O : Open the Player List"//\n ALT + S : Silent Mode"//\n ALT + T : Show Program Console"
+#define TEXT_INFORMATION " ALT + F : Set Tekken in Fullscreen Mode\n ALT + W : Set Tekken in Windowed Mode\n ALT + C : Add a Comment in the Player List\n ALT + O : Open the Player List\n ALT + S : Turn on in-game feedback"//\n ALT + T : Show Program Console"
 #define TEXT_COMMENTWINDOW "(Last fought player not found, maybe you didn't fight a player yet)"
 
 #define FONT_SIZE 16
@@ -54,13 +54,15 @@
 #define ALT_C 3
 #define ALT_O 4
 #define ALT_T 5
-#define NR_OF_HOTKEYS 5
+#define ALT_S 6
+#define NR_OF_HOTKEYS 6
 
 #define KEY_W 0x57
 #define KEY_F 0x46
 #define KEY_C 0x43
 #define KEY_O 0x4F
 #define KEY_T 0x54
+#define KEY_S 0x53
 
 typedef __int64 QWORD;
 
@@ -111,6 +113,8 @@ extern QWORD lastFoundSteamId;
 extern bool isSteamIdFound; // helps keep track of  lastFoundSteamId
 extern QWORD userSteamId;
 extern char* lastNameInPlayerlist;
+extern bool silentMode;
+extern bool isTekkenLoaded;
 
 extern void* fightThisPlayerMessagePointer;
 extern void* secondsRemainingMessagePointer;
@@ -136,6 +140,7 @@ void waitForThreadsToTerminate();
 void closeThreads();
 unsigned __stdcall mainThread(void* arguments);
 void initPlayerlist();
+void initVariables();
 void loadTargetProcess();
 void initTekkenHandle();
 void initTekkenWindowHandle();
@@ -166,6 +171,7 @@ void displayOpponentName(); // no longer needed
 void displayOpponentInfoFromWeb(QWORD steamId);
 void displayOpponentNameFromWeb(std::string name);
 void displayOpponentProfilePictureFromWeb(std::string pictureLink);
+void turnOffSilentMode();
 
 //guiInput.cpp
 void handleHotkeyInput(WPARAM hotkey);

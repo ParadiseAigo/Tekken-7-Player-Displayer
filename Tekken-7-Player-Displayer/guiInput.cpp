@@ -21,6 +21,9 @@ void handleHotkeyInput(WPARAM hotkey) {
     case ALT_T:
         showOrHideConsoleWindow();
         break;
+    case ALT_S:
+        turnOffSilentMode();
+        break;
     }
 }
 
@@ -30,6 +33,7 @@ void initHotkeys() {
     hotkeys[2] = new Hotkey(ALT_C, MOD_ALT, KEY_C);
     hotkeys[3] = new Hotkey(ALT_O, MOD_ALT, KEY_O);
     hotkeys[4] = new Hotkey(ALT_T, MOD_ALT, KEY_T);
+    hotkeys[5] = new Hotkey(ALT_S, MOD_ALT, KEY_S);
     registerHotKeys();
 }
 
