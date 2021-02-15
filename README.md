@@ -9,7 +9,7 @@ It will display them both in-game and in the console.
 ![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/2git.png)
 
 ## GUI
-Now also comes with a GUI!
+Now also comes with a GUI. The GUI, among other things, displays your opponents Steam profile picture.
 
 ![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/4git.png)
 
@@ -20,6 +20,7 @@ Now also comes with a GUI!
 * ALT+F  puts the game in full-screen mode
 * ALT+O  opens the list of all the players you played against
 * ALT+C  opens the comment window where you can write a comment after playing against an opponent
+* ALT+S  turn off silent mode, or in other words: turn on in-game feedback (program is in silent mode by default)
 
 ## Installation
 Download the latest release [here](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/releases) or you can build it yourself by loading the .sln file in Visual Studio.

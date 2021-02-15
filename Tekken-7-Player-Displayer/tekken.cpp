@@ -387,11 +387,11 @@ void turnOffSilentMode() {
 		myGuiTerminalPrint(std::string("Can't turn off silent mode: Tekken 7 not loaded yet.\r\n"));
 	}
 	else if (silentMode == false) { // if already turned off
-		myGuiTerminalPrint(std::string("Silent mode is already off. Restart Tekken 7 to turn it off.\r\n"));
+		myGuiTerminalPrint(std::string("Silent mode is already off. Restart Tekken 7 to turn it on.\r\n"));
 	}
 	else {
 		silentMode = false;
-		myGuiTerminalPrint(std::string("Silent mode turned off. Now feedback will be given in-game.\r\n"));
+		myGuiTerminalPrint(std::string("Silent mode turned off. Now feedback will also be given in-game.\r\n"));
 		cleanAllProcessMessages();
 	}
 }
