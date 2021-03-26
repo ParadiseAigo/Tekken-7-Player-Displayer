@@ -5,17 +5,17 @@ Hotkey* hotkeys[NR_OF_HOTKEYS];
 void handleHotkeyInput(WPARAM hotkey) {
     switch (hotkey) {
     case ALT_W:
-        setTekkenWindowed();
+        setTekkenWindowedAndResizeMainWindow();
         break;
     case ALT_F:
         setTekkenFullscreen();
         break;
     case ALT_O:
-        setTekkenWindowed();
+        setTekkenWindowedAndResizeMainWindow();
         openPlayerlist();
         break;
     case ALT_C:
-        setTekkenWindowed();
+        setTekkenWindowedAndResizeMainWindow();
         openCommentWindow();
         break;
     case ALT_T:

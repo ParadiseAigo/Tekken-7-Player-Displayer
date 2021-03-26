@@ -337,6 +337,11 @@ void writeCommentToFile(void* text) {
     free(comment);
 }
 
+void setTekkenWindowedAndResizeMainWindow() {
+    setTekkenWindowed();
+    resizeWindow(guiWindows.mainWindowHandle, WIDTH_MAINWINDOW, HEIGHT_MAINWINDOW);
+}
+
 void setTekkenWindowed() {
     setScreenMode(SCREEN_MODE_WINDOWED);
 }
