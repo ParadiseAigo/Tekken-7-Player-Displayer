@@ -213,7 +213,7 @@ LPPICTURE loadImageFromFile(LPCTSTR filePath);
 HANDLE getProcessHandle(DWORD pid);
 DWORD getProcessId(const std::wstring& nameProgramExe);
 uintptr_t getModuleBaseAddress(DWORD pid, const wchar_t* moduleName);
-QWORD getDynamicPointer(HANDLE processHandle, void* basePointer, std::vector<DWORD> offsets);
+QWORD getDynamicPointer(HANDLE processHandle, void* basePointer, std::vector<signed long> offsets);
 void writeDwordToMemory(HANDLE processHandle, void* address, DWORD newValue);
 void writeStringLimitedToMemory(HANDLE processHandle, void* address, char* newValue);
 void writeStringUnlimitedToMemory(HANDLE processHandle, void* address, char* newValue);
