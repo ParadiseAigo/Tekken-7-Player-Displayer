@@ -107,25 +107,25 @@ void createMainWindow() {
 
     HWND shortcutsTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_INFORMATION),
         WS_CHILD | WS_VISIBLE | WS_BORDER,
-        X_TEXTBOX, 50, 380, 18 * 5 + 5, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 50, 380, 18 * 4 + 5, guiWindows.mainWindowHandle);
 
-    HWND playerNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Player Name"),
+    HWND opponentNameOneTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent Name (main, from steam)"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        X_TEXTBOX, 170, 130, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
-    HWND opponentNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent Name"),
+        X_TEXTBOX, 170, 300, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+    HWND opponentNameTwoTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent Name 2 (extra, ignore)"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        X_TEXTBOX, 300, 130, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 300, 300, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
     HWND opponentCharacterTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Last Character"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        X_TEXTBOX, 430, 130, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 430, 300, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
     HWND commentNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Comment"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
         40, 550, 100, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
 
-    guiWindows.playerNameValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
+    guiWindows.opponentNameOneValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
         X_TEXTBOX, 200, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
-    guiWindows.opponentNameValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
+    guiWindows.opponentNameTwoValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
         X_TEXTBOX, 330, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
     guiWindows.opponentCharacterValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
@@ -139,12 +139,12 @@ void createMainWindow() {
     sendMessage(backgroundImageHandle, STM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)backgroundBitmapHandle);
     sendMessage(guiWindows.outputTextHandle, WM_SETFONT, (LPARAM)guiFonts.outputTextFont, true);
     sendMessage(shortcutsTextHandle, WM_SETFONT, (LPARAM)guiFonts.shortcutsTextFont, true);
-    sendMessage(playerNameTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
-    sendMessage(opponentNameTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
+    sendMessage(opponentNameOneTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
+    sendMessage(opponentNameTwoTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
     sendMessage(opponentCharacterTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
     sendMessage(commentNameTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
-    sendMessage(guiWindows.playerNameValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
-    sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
+    sendMessage(guiWindows.opponentNameOneValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
+    sendMessage(guiWindows.opponentNameTwoValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
     sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
     sendMessage(guiWindows.commentValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.commentTextFont, true);
     
@@ -425,12 +425,12 @@ void showOrHideConsoleWindow() {
     }
 }
 
-void setPlayerNameInGui(char* playerName) {
-	sendMessage(guiWindows.playerNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(playerName).c_str());
+void setOpponentNameOneInGui(char* opponentName) {
+	sendMessage(guiWindows.opponentNameOneValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(opponentName).c_str());
 }
 
-void setOpponentNameInGui(char* opponentName) {
-	sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(opponentName).c_str());
+void setOpponentNameTwoInGui(char* opponentName) {
+	sendMessage(guiWindows.opponentNameTwoValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(opponentName).c_str());
 }
 
 void loadOpponentProfilePictureFromFileAndRedraw(LPCTSTR filePath) { // this function only works for jpg, gif
@@ -458,7 +458,7 @@ void clearOpponentProfilePicture() {
 }
 
 void updateAllGuiMessages(char* newOpponentName, char* characterName, char* playerlistComment) {
-	sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(newOpponentName).c_str());
+	sendMessage(guiWindows.opponentNameOneValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(newOpponentName).c_str());
 	if (characterName == NULL) {
 		sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
 	} else {
@@ -468,7 +468,7 @@ void updateAllGuiMessages(char* newOpponentName, char* characterName, char* play
 }
 
 void cleanAllGuiMessages() {
-	sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
+	sendMessage(guiWindows.opponentNameOneValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
 	sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
 	sendMessage(guiWindows.commentValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
     clearOpponentProfilePicture();

@@ -11,12 +11,7 @@ QWORD lastFoundSteamId;
 bool isSteamIdFound; // helps keep track of  lastFoundSteamId
 QWORD userSteamId;
 char* lastNameInPlayerlist;
-bool silentMode;
-bool isTekkenLoaded;
 
-void* fightThisPlayerMessagePointer;
-void* secondsRemainingMessagePointer;
-void* opponentFoundMessagePointer;
 void* opponentNamePointer;
 void* screenModePointer;
 void* steamModulePointer;
@@ -77,16 +72,12 @@ void initPlayerlist() {
 }
 
 void initVariables() {
-	silentMode = true; // global variable
-	isTekkenLoaded = false;  // global variable
 }
 
 void loadTargetProcess() {
 	initTekkenHandle();
 	initTekkenWindowHandle();
 	initPointers();
-	cleanAllProcessMessages();
-	isTekkenLoaded = true;
 	myGuiTerminalPrint(std::string("Program ready!\r\n"));
 }
 
@@ -123,31 +114,9 @@ void initTekkenWindowHandle() {
 }
 
 void initPointers() {
-	DWORD secondsDelay;
-	secondsDelay = 2;
-	while (!isGameLoaded()) {
-		myGuiTerminalPrint(std::string("Game not loaded yet. Waiting ")
-			.append(std::to_string(secondsDelay))
-			.append(std::string(" seconds...\r\n"))
-		);
-		Sleep(secondsDelay * 1000); // milliseconds
-	}
-	opponentNamePointer = (void*)getDynamicPointer(tekkenHandle, (void*)OPPONENT_NAME_STATIC_POINTER, OPPONENT_NAME_POINTER_OFFSETS);
-	fightThisPlayerMessagePointer = (void*)getDynamicPointer(tekkenHandle, (void*)FIGHT_THIS_PLAYER_MESSAGE_STATIC_POINTER, FIGHT_THIS_PLAYER_MESSAGE_POINTER_OFFSETS);
-	secondsRemainingMessagePointer = (void*)getDynamicPointer(tekkenHandle, (void*)SECONDS_REMAINING_MESSAGE_STATIC_POINTER, SECONDS_REMAINING_MESSAGE_POINTER_OFFSETS);
-	opponentFoundMessagePointer = (void*)getDynamicPointer(tekkenHandle, (void*)OPPONENT_FOUND_MESSAGE_STATIC_POINTER, OPPONENT_FOUND_MESSAGE_POINTER_OFFSETS);
 	screenModePointer = (void*)getDynamicPointer(tekkenHandle, (void*)SCREEN_MODE_STATIC_POINTER, SCREEN_MODE_POINTER_OFFSETS);
 	initModuleAdresses();
-	char* playerName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	myGuiTerminalPrint(std::string("Pointers loaded.\r\nPlayer name (yours): ")
-		.append(std::string(playerName)).append(std::string("\r\n"))
-		.append(std::string("WARNING! If the above name is not your name, "))
-		.append(std::string("restart the program and when you do, make sure you are not "))
-		.append(std::string("in a match or you havent just declined an opponent "))
-		.append(std::string("or are in the process of accepting a match.\r\n"))
-	);
-	setPlayerNameInGui(playerName);
-	free(playerName);
+	myGuiTerminalPrint(std::string("Pointers loaded.\r\n"));
 }
 
 void initModuleAdresses() {
@@ -160,16 +129,10 @@ void initModuleAdresses() {
 }
 
 void editTargetProcessLoop() {
-	char* playerName;
-	//char* lastReceivedName;  // name obtained directly from web, this variable is not need anymore
-	char* currentOpponentName;
 	char* currentLoadedOpponentName;
 	bool areMessagesClean;
 	int delayInSearch = 1000/60; // "60fps"
 	int delayInFight = 2000; // 2 seconds
-	playerName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	//lastReceivedName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	currentOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
 	currentLoadedOpponentName = (char*) malloc(10 * sizeof(char)); // dummy value
 	currentLoadedOpponentName[0] = '\0'; // empty string
 	lastFoundSteamId = -1;  // global variable
@@ -178,26 +141,14 @@ void editTargetProcessLoop() {
 	lastNameInPlayerlist = getLastNameInPlayerlist((char*)PLAYERLIST_PATH); //global variable  // set equal to NULL if player list is empty
 	while (true) {
 		Sleep(delayInSearch);
+		updateOpponentNameTwo();
 		if (isNewOpponentReceived()) {
-			cleanAllProcessMessages();
 			cleanAllGuiMessages();
 			handleNewReceivedOpponent();
 			displayOpponentInfoFromWeb(lastFoundSteamId);
 			areMessagesClean = false;
 		}
-		// opponent name is obtained directly from steam using the steam id; no need to scan the process for the name
-		/*
-		else if (isNewNameReceived(playerName, lastReceivedName) && isSteamIdFound) {
-			if (lastReceivedName != NULL) {
-				free(lastReceivedName);
-			}
-			lastReceivedName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-			displayOpponentName();
-			areMessagesClean = false;
-		}
-		*/
 		else if ((!areMessagesClean) && (!isSteamIdFound)) {
-			cleanAllProcessMessages();
 			cleanAllGuiMessages();
 			areMessagesClean = true;
 		}
@@ -205,7 +156,7 @@ void editTargetProcessLoop() {
 			if ((lastNameInPlayerlist != NULL) && (lastNameInPlayerlist != currentLoadedOpponentName)) {
 				free(lastNameInPlayerlist);
 			}
-			currentLoadedOpponentName = saveNewOpponentInPlayerlist(playerName, currentOpponentName, currentLoadedOpponentName);
+			currentLoadedOpponentName = saveNewOpponentInPlayerlist(currentLoadedOpponentName);
 			lastNameInPlayerlist = currentLoadedOpponentName;
 		}
 		if (!isWindow(tekkenWindowHandle)) {

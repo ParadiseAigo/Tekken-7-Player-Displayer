@@ -1,20 +1,6 @@
 #include "player-displayer.h"
 #include "pointers.h"
 
-bool isGameLoaded() {
-	// will assume game is loaded if the opponent name address contains a (non-empty) string
-	opponentNamePointer = (void*)getDynamicPointer(tekkenHandle, (void*)OPPONENT_NAME_STATIC_POINTER, OPPONENT_NAME_POINTER_OFFSETS);
-	char * playerName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	if (playerName[0] == '\0') {
-		free(playerName);
-		return false;
-	}
-	else {
-		free(playerName);
-		return true;
-	}
-}
-
 bool isNewOpponentReceived() {
 	return isNewSteamIdReceived();
 }
@@ -127,10 +113,6 @@ void handleNewReceivedOpponent() {
 		characterName = NULL;
 		characterNameMessage = copyString((char*) "| Unknown character.");
 	}
-	//aigo make a function called  updateAllProcessMessages(.., .., ..);  // and inside it put an "if" silent mode ...
-	updateOpponentFoundMessage(newOpponentNameMessage);
-	updateFightThisPlayerMessage(playerlistComment);
-	updateSecondsRemainingMessage(characterNameMessage);
 	updateAllGuiMessages(newOpponentNameMessage, characterName, playerlistComment);
 	if (characterName != NULL) {
 		free(characterName);
@@ -148,125 +130,6 @@ void handleNewReceivedOpponent() {
 		free(newOpponentNameMessage);
 	}
 	free(steamIdBuffer);
-}
-
-char* updateMessagesWithoutOpponentName(char* currentOpponentName) {
-	std::string fileString;
-	char* line;
-	char* steamIdBuffer;
-	size_t steamIdBufferSize;
-	char* newOpponentNameMessage;
-	char* characterName;
-	char* characterNameMessage;
-	char* playerlistComment;
-
-	steamIdBufferSize = 100;
-	steamIdBuffer = (char*)malloc(steamIdBufferSize * sizeof(char));
-	sprintf_s(steamIdBuffer, steamIdBufferSize, "(%I64u)", lastFoundSteamId);
-	fileString = fileToString((char*)PLAYERLIST_PATH);
-	line = findLineInStringVector(stringToLines((char*) fileString.c_str()), steamIdBuffer);
-
-	if (line != NULL) {  // steam id found in player list!
-		myGuiTerminalPrint(std::string("Steam id found in player list!\r\n"));
-		if (currentOpponentName != NULL) {
-			free(currentOpponentName);
-		}
-		newOpponentNameMessage = currentOpponentName = extractPlayerNameFromPlayerlistLine(line);
-		playerlistComment = extractCommentFromPlayerlistLine(line);
-		characterName = extractCharacterFromPlayerlistLine(line);
-		characterNameMessage = myStringCat((char*)"| Last used: ", characterName);
-		myGuiTerminalPrint(std::string("New opponent found:  ").append(std::string(currentOpponentName)).append(std::string("\r\n")));
-		myGuiTerminalPrint(std::string("Last used character: ").append(std::string(characterName)).append(std::string("\r\n")));
-		myGuiTerminalPrint(std::string("Comment:             ").append(std::string(playerlistComment)).append(std::string("\r\n")));
-	}
-	else {  // steam id NOT found in player list!
-		myGuiTerminalPrint(std::string("Steam id NOT found in player list!\r\n"));
-		newOpponentNameMessage = copyString((char*) "New (not in list)");
-		playerlistComment = copyString((char*) "Brand new opponent!");
-		characterName = NULL;
-		characterNameMessage = copyString((char*) "| Unknown character.");
-	}
-	updateOpponentFoundMessage(newOpponentNameMessage);
-	updateFightThisPlayerMessage(playerlistComment);
-	updateSecondsRemainingMessage(characterNameMessage);
-	updateAllGuiMessages(newOpponentNameMessage, characterName, playerlistComment);
-	if (characterName != NULL) {
-		free(characterName);
-	}
-	if (characterNameMessage != NULL) {
-		free(characterNameMessage);
-	}
-	if (playerlistComment != NULL) {
-		free(playerlistComment);
-	}
-	if (line != NULL) {
-		free(line);
-	}
-	if ((newOpponentNameMessage != NULL) && (newOpponentNameMessage != currentOpponentName)) {
-		free(newOpponentNameMessage);
-	}
-	free(steamIdBuffer);
-	return currentOpponentName;
-}
-
-void updateMessagesWithoutSteamId() {
-	char* newOpponentName;
-	std::string fileString;
-	char* line;
-	char* playerlistComment;
-	char* characterNameMessage;
-	char* characterName;
-	newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	fileString = fileToString((char*)PLAYERLIST_PATH);
-	// without the steam id: search the playerlist by name instead of by steam id
-	line = findLineInStringVector(stringToLines((char*) fileString.c_str()), newOpponentName);
-	if (line != NULL) {
-		playerlistComment = extractCommentFromPlayerlistLine(line);
-		characterName = extractCharacterFromPlayerlistLine(line);
-		characterNameMessage = myStringCat((char*)"| Last used: ", characterName);
-	}
-	else {
-		playerlistComment = copyString((char*) "Brand new opponent!");
-		characterName = NULL;
-		characterNameMessage = copyString((char*) "| Unknown character.");
-	}
-	updateOpponentFoundMessage(newOpponentName);
-	updateFightThisPlayerMessage(playerlistComment);
-	updateSecondsRemainingMessage(characterNameMessage);
-	updateAllGuiMessages(newOpponentName, characterName, playerlistComment);
-	if (characterName != NULL) {
-		free(characterName);
-	}
-	if (characterNameMessage != NULL) {
-		free(characterNameMessage);
-	}
-	if (playerlistComment != NULL) {
-		free(playerlistComment);
-	}
-	if (line != NULL) {
-		free(line);
-	}
-	if (newOpponentName != NULL) {
-		free(newOpponentName);
-	}
-}
-
-void updateOpponentFoundMessage(char* message) {
-	if (silentMode == false) {
-		writeStringUnlimitedToMemory(tekkenHandle, opponentFoundMessagePointer, message);
-	}
-}
-
-void updateFightThisPlayerMessage(char* message) {
-	if (silentMode == false) {
-		writeStringUnlimitedToMemory(tekkenHandle, fightThisPlayerMessagePointer, message);
-	}
-}
-
-void updateSecondsRemainingMessage(char* message) {
-	if (silentMode == false) {
-		writeStringUnlimitedToMemory(tekkenHandle, secondsRemainingMessagePointer, message);
-	}
 }
 
 bool isNewFightAccepted() {
@@ -311,12 +174,6 @@ bool isNewOpponentLoaded() {
 	}
 }
 
-void cleanAllProcessMessages() {
-	updateOpponentFoundMessage((char*)"Failed to get any info.");
-	updateFightThisPlayerMessage((char*)"Dont accept :)");
-	updateSecondsRemainingMessage((char*)"...");
-}
-
 char* getNewCurrentLoadedOpponent(char* currentLoadedOpponentName) {
 	void* opponentStructNamePointer;
 	char* newOpponentStructName;
@@ -324,28 +181,6 @@ char* getNewCurrentLoadedOpponent(char* currentLoadedOpponentName) {
 	newOpponentStructName = readStringFromMemory(tekkenHandle, opponentStructNamePointer);
 	free(currentLoadedOpponentName);
 	return newOpponentStructName;
-}
-
-bool isNewNameReceived(char* playerName, char* lastReceivedName) {
-	char* newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	if (strcmp(newOpponentName, lastReceivedName) == 0) { // if equal; still same opponent
-		free(newOpponentName);
-		return false;
-	}
-	if (strcmp(newOpponentName, playerName) == 0) { // if equal; failed to retreive data, or there is no new opponent
-		free(newOpponentName);
-		return false;
-	}
-	free(newOpponentName);
-	return true;
-}
-
-void displayOpponentName() {
-	char* newOpponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	myGuiTerminalPrint(std::string("New opponent found:  ").append(std::string(newOpponentName)).append(std::string("\r\n")));
-	updateOpponentFoundMessage(newOpponentName);
-	setOpponentNameInGui(newOpponentName);
-	free(newOpponentName);
 }
 
 void displayOpponentInfoFromWeb(QWORD steamId) {
@@ -362,8 +197,7 @@ void displayOpponentInfoFromWeb(QWORD steamId) {
 void displayOpponentNameFromWeb(std::string name) {
 	char* opponentName = (char*)name.c_str();
 	myGuiTerminalPrint(std::string("Steam id's name:  ").append(std::string(opponentName)).append(std::string("\r\n")));
-	updateOpponentFoundMessage(opponentName);
-	setOpponentNameInGui(opponentName);
+	setOpponentNameOneInGui(opponentName);
 }
 
 void displayOpponentProfilePictureFromWeb(std::string pictureLink) {
@@ -382,17 +216,10 @@ void displayOpponentProfilePictureFromWeb(std::string pictureLink) {
 	}
 }
 
-void turnOffSilentMode() {
-	if (isTekkenLoaded == false) {
-		myGuiTerminalPrint(std::string("Can't turn off silent mode: Tekken 7 not loaded yet.\r\n"));
-	}
-	else if (silentMode == false) { // if already turned off
-		myGuiTerminalPrint(std::string("Silent mode is already off. Restart Tekken 7 to turn it on.\r\n"));
-	}
-	else {
-		silentMode = false;
-		myGuiTerminalPrint(std::string("Silent mode turned off. Now feedback will also be given in-game.\r\n"));
-		cleanAllProcessMessages();
-	}
+void updateOpponentNameTwo() {
+	opponentNamePointer = (void*)getDynamicPointer(tekkenHandle, (void*)OPPONENT_NAME_STATIC_POINTER, OPPONENT_NAME_POINTER_OFFSETS);
+	char* opponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
+	setOpponentNameTwoInGui(opponentName);
+	free(opponentName);
 }
 

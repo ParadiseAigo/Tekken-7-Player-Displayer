@@ -141,7 +141,7 @@ void createFile(char* filePath) {
 	}
 }
 
-char* saveNewOpponentInPlayerlist(char* playerName, char* currentOpponentName, char* currentLoadedOpponentName) {
+char* saveNewOpponentInPlayerlist(char* currentLoadedOpponentName) {
 	currentLoadedOpponentName = getNewCurrentLoadedOpponent(currentLoadedOpponentName);
 	saveNewPlayerlistEntry(currentLoadedOpponentName);
 	return currentLoadedOpponentName;
