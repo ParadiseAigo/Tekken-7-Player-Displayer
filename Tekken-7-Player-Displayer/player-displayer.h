@@ -104,7 +104,7 @@ typedef struct ProgramThreads {
     HANDLE guiThread;
 } ProgramThreads;
 
-enum tekkenState {IN_FIGHT, IN_SEARCH};
+enum tekkenState {IN_FIGHT, IN_SEARCH}; // not used
 
 extern HANDLE tekkenHandle;
 extern HWND tekkenWindowHandle;
@@ -113,6 +113,7 @@ extern QWORD lastFoundSteamId;
 extern bool isSteamIdFound; // helps keep track of  lastFoundSteamId
 extern QWORD userSteamId;
 extern char* lastNameInPlayerlist;
+extern char* lastFoundName;
 
 extern void* opponentNamePointer;
 extern void* screenModePointer;

@@ -13,14 +13,17 @@ bool isNewSteamIdReceived() {
 	if (!isSteamApiLoaded(steamIdPointer)) {								// if steam api not loaded
 		resetSteamApiBaseModuleAddress();
 		isSteamIdFound = false;
+		lastFoundSteamId = -1;
 		return false;
 	}
 	else if ((!readAndIsSteamIdValid(steamIdPointer, &newFoundSteamId))) { 	// if steam id not valid
 		isSteamIdFound = false;
+		lastFoundSteamId = -1;
 		return false;
 	}
 	else if (userSteamId == newFoundSteamId) {								// if equal to user
 		isSteamIdFound = false;
+		lastFoundSteamId = -1;
 		return false;
 	}
 	else if (newFoundSteamId == lastFoundSteamId) {							// if unchanged
@@ -110,7 +113,7 @@ void handleNewReceivedOpponent() {
 		myGuiTerminalPrint(std::string("Steam id NOT found in player list!\r\n"));
 		newOpponentNameMessage = copyString((char*) "New (not in list)");
 		playerlistComment = copyString((char*) "Brand new opponent!");
-		characterName = NULL;
+		characterName = copyString((char*) "?");
 		characterNameMessage = copyString((char*) "| Unknown character.");
 	}
 	updateAllGuiMessages(newOpponentNameMessage, characterName, playerlistComment);
@@ -219,7 +222,11 @@ void displayOpponentProfilePictureFromWeb(std::string pictureLink) {
 void updateOpponentNameTwo() {
 	opponentNamePointer = (void*)getDynamicPointer(tekkenHandle, (void*)OPPONENT_NAME_STATIC_POINTER, OPPONENT_NAME_POINTER_OFFSETS);
 	char* opponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	setOpponentNameTwoInGui(opponentName);
+	if (strcmp(lastFoundName, opponentName) != 0) {
+		setOpponentNameTwoInGui(opponentName);
+		free(lastFoundName);
+		lastFoundName = copyString(opponentName);
+	}
 	free(opponentName);
 }
 

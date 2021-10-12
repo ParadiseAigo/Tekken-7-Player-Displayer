@@ -11,6 +11,7 @@ QWORD lastFoundSteamId;
 bool isSteamIdFound; // helps keep track of  lastFoundSteamId
 QWORD userSteamId;
 char* lastNameInPlayerlist;
+char* lastFoundName;
 
 void* opponentNamePointer;
 void* screenModePointer;
@@ -131,16 +132,18 @@ void initModuleAdresses() {
 void editTargetProcessLoop() {
 	char* currentLoadedOpponentName;
 	bool areMessagesClean;
-	int delayInSearch = 1000/60; // "60fps"
-	int delayInFight = 2000; // 2 seconds
+	int delayWhileSearching = 1000/60; // "60fps"
+	int delayWhileFighting = 2000; // 2 seconds, unused variable :( it always updates 60 times per s
 	currentLoadedOpponentName = (char*) malloc(10 * sizeof(char)); // dummy value
 	currentLoadedOpponentName[0] = '\0'; // empty string
 	lastFoundSteamId = -1;  // global variable
 	isSteamIdFound = false; // global variable
+	lastFoundName = (char*) malloc(10 * sizeof(char)); // dummy value	// global variable
+	lastFoundName[0] = '\0'; // empty string
 	areMessagesClean = true;
 	lastNameInPlayerlist = getLastNameInPlayerlist((char*)PLAYERLIST_PATH); //global variable  // set equal to NULL if player list is empty
 	while (true) {
-		Sleep(delayInSearch);
+		Sleep(delayWhileSearching);
 		updateOpponentNameTwo();
 		if (isNewOpponentReceived()) {
 			cleanAllGuiMessages();
