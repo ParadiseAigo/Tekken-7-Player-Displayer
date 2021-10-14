@@ -67,7 +67,7 @@ void getScreenResolution() {
 void initFontsAndBrushes() {
     guiFonts.informationNameTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_NORMAL, TRUE, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
-    guiFonts.informationValueTextFont = CreateFont(50, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    guiFonts.informationValueTextFont = CreateFont(FONT_SIZE_INFO, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
     guiFonts.outputTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
@@ -107,26 +107,26 @@ void createMainWindow() {
 
     HWND shortcutsTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_INFORMATION),
         WS_CHILD | WS_VISIBLE | WS_BORDER,
-        X_TEXTBOX, 50, 380, 18 * 5 + 5, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 50, 380, 18 * 4 + 5, guiWindows.mainWindowHandle);
 
-    HWND playerNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Player Name"),
+    HWND opponentNameOneTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent Name (main, from steam)"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        X_TEXTBOX, 170, 130, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
-    HWND opponentNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent Name"),
+        X_TEXTBOX, 170, 300, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+    HWND opponentNameTwoTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent Name 2 (extra, ignore)"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        X_TEXTBOX, 300, 130, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 300, 300, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
     HWND opponentCharacterTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Last Character"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        X_TEXTBOX, 430, 130, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 430, 300, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
     HWND commentNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Comment"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
         40, 550, 100, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
 
-    guiWindows.playerNameValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
-        WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
+    guiWindows.opponentNameOneValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
+        WS_CHILD | WS_VISIBLE | WS_BORDER | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
         X_TEXTBOX, 200, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
-    guiWindows.opponentNameValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
-        WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
+    guiWindows.opponentNameTwoValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
+        WS_CHILD | WS_VISIBLE | WS_BORDER | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
         X_TEXTBOX, 330, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
     guiWindows.opponentCharacterValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
@@ -139,12 +139,12 @@ void createMainWindow() {
     sendMessage(backgroundImageHandle, STM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)backgroundBitmapHandle);
     sendMessage(guiWindows.outputTextHandle, WM_SETFONT, (LPARAM)guiFonts.outputTextFont, true);
     sendMessage(shortcutsTextHandle, WM_SETFONT, (LPARAM)guiFonts.shortcutsTextFont, true);
-    sendMessage(playerNameTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
-    sendMessage(opponentNameTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
+    sendMessage(opponentNameOneTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
+    sendMessage(opponentNameTwoTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
     sendMessage(opponentCharacterTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
     sendMessage(commentNameTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
-    sendMessage(guiWindows.playerNameValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
-    sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
+    sendMessage(guiWindows.opponentNameOneValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
+    sendMessage(guiWindows.opponentNameTwoValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
     sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
     sendMessage(guiWindows.commentValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.commentTextFont, true);
     
@@ -213,7 +213,7 @@ LRESULT CALLBACK mainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpara
         break;
     case WM_CHAR:
         if (wparam == VK_ESCAPE) {
-            closeAllWindows();
+            //closeAllWindows();
         }
         break;
     case WM_CLOSE:  // when the [X] is pressed of the gui window
@@ -425,12 +425,54 @@ void showOrHideConsoleWindow() {
     }
 }
 
-void setPlayerNameInGui(char* playerName) {
-	sendMessage(guiWindows.playerNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(playerName).c_str());
+void setOpponentNameOneInGui(char* opponentName) {
+    setTextAndResizeToFitInWindow(opponentName, guiWindows.opponentNameOneValueTextHandle);
 }
 
-void setOpponentNameInGui(char* opponentName) {
-	sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(opponentName).c_str());
+void setOpponentNameTwoInGui(char* opponentName) {
+    setTextAndResizeToFitInWindow(opponentName, guiWindows.opponentNameTwoValueTextHandle);
+}
+
+void setTextAndResizeToFitInWindow(char* text, HWND hwnd) {
+    int fontSize = FONT_SIZE_INFO;
+    HFONT fontHandle = guiFonts.informationValueTextFont;
+    HDC hdc = GetDC(hwnd);
+
+    sendMessage(hwnd, WM_SETFONT, (LPARAM)fontHandle, true);
+    while (isTextLargerThanWindow(text, hwnd) && fontSize > 0) {
+        fontSize--;
+        fontHandle = CreateFont(fontSize, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+                     CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
+        sendMessage(hwnd, WM_SETFONT, (LPARAM)fontHandle, true);
+
+        // clean up previous font object (the first font in guiFonts is not cleaned up here)
+        HFONT oldFontHandle = (HFONT)SelectObject(hdc, fontHandle);
+        DeleteObject(oldFontHandle);
+    }
+    ReleaseDC(hwnd, hdc);
+    sendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(text).c_str());
+}
+
+bool isTextLargerThanWindow(char* text, HWND hwnd) {
+    RECT windowRect = { 0, 0, 0, 0 };
+    GetClientRect(hwnd, &windowRect);
+
+    RECT textRect = { 0, 0, 0, 0 };
+    HDC hdc = GetDC(hwnd);
+    HFONT currentFont = (HFONT)SendMessage(hwnd, WM_GETFONT, 0, 0);
+    HFONT oldFont = (HFONT)SelectObject(hdc, currentFont);
+    DrawTextA(hdc, (const char*)text, strlen(text), &textRect, DT_CALCRECT | DT_NOPREFIX | DT_SINGLELINE);
+    // clean up
+    SelectObject(hdc, oldFont);
+    ReleaseDC(hwnd, hdc);
+
+    long windowMargin = 10;
+    long windowWidth = abs(windowRect.right - windowRect.left - windowMargin);
+    long windowHeight = abs(windowRect.bottom - windowRect.top);
+    long textWidth = abs(textRect.right - textRect.left);
+    long textHeight = abs(textRect.bottom - textRect.top);
+
+    return textWidth > windowWidth || textHeight > windowHeight;
 }
 
 void loadOpponentProfilePictureFromFileAndRedraw(LPCTSTR filePath) { // this function only works for jpg, gif
@@ -458,7 +500,7 @@ void clearOpponentProfilePicture() {
 }
 
 void updateAllGuiMessages(char* newOpponentName, char* characterName, char* playerlistComment) {
-	sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(newOpponentName).c_str());
+    setOpponentNameOneInGui(newOpponentName);
 	if (characterName == NULL) {
 		sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
 	} else {
@@ -468,7 +510,7 @@ void updateAllGuiMessages(char* newOpponentName, char* characterName, char* play
 }
 
 void cleanAllGuiMessages() {
-	sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
+	sendMessage(guiWindows.opponentNameOneValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
 	sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
 	sendMessage(guiWindows.commentValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
     clearOpponentProfilePicture();
