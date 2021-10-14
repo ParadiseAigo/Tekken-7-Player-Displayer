@@ -3,7 +3,7 @@
 
 Displays your opponents name, the character they last used against you and a comment that you can write about them.
 
-![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/temporarybranch10october2021/6git.png)
+![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/6git.png)
 
 ![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/2git.png)
 
