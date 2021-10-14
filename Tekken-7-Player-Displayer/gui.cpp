@@ -213,7 +213,7 @@ LRESULT CALLBACK mainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpara
         break;
     case WM_CHAR:
         if (wparam == VK_ESCAPE) {
-            closeAllWindows();
+            //closeAllWindows();
         }
         break;
     case WM_CLOSE:  // when the [X] is pressed of the gui window
