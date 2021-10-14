@@ -67,7 +67,7 @@ void getScreenResolution() {
 void initFontsAndBrushes() {
     guiFonts.informationNameTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_NORMAL, TRUE, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
-    guiFonts.informationValueTextFont = CreateFont(50, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    guiFonts.informationValueTextFont = CreateFont(FONT_SIZE_INFO, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
     guiFonts.outputTextFont = CreateFont(FONT_SIZE, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
@@ -123,10 +123,10 @@ void createMainWindow() {
         40, 550, 100, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
 
     guiWindows.opponentNameOneValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
-        WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
+        WS_CHILD | WS_VISIBLE | WS_BORDER | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
         X_TEXTBOX, 200, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
     guiWindows.opponentNameTwoValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
-        WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
+        WS_CHILD | WS_VISIBLE | WS_BORDER | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
         X_TEXTBOX, 330, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
     guiWindows.opponentCharacterValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
@@ -426,11 +426,53 @@ void showOrHideConsoleWindow() {
 }
 
 void setOpponentNameOneInGui(char* opponentName) {
-	sendMessage(guiWindows.opponentNameOneValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(opponentName).c_str());
+    setTextAndResizeToFitInWindow(opponentName, guiWindows.opponentNameOneValueTextHandle);
 }
 
 void setOpponentNameTwoInGui(char* opponentName) {
-	sendMessage(guiWindows.opponentNameTwoValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(opponentName).c_str());
+    setTextAndResizeToFitInWindow(opponentName, guiWindows.opponentNameTwoValueTextHandle);
+}
+
+void setTextAndResizeToFitInWindow(char* text, HWND hwnd) {
+    int fontSize = FONT_SIZE_INFO;
+    HFONT fontHandle = guiFonts.informationValueTextFont;
+    HDC hdc = GetDC(hwnd);
+
+    sendMessage(hwnd, WM_SETFONT, (LPARAM)fontHandle, true);
+    while (isTextLargerThanWindow(text, hwnd) && fontSize > 0) {
+        fontSize--;
+        fontHandle = CreateFont(fontSize, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+                     CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
+        sendMessage(hwnd, WM_SETFONT, (LPARAM)fontHandle, true);
+
+        // clean up previous font object (the first font in guiFonts is not cleaned up here)
+        HFONT oldFontHandle = (HFONT)SelectObject(hdc, fontHandle);
+        DeleteObject(oldFontHandle);
+    }
+    ReleaseDC(hwnd, hdc);
+    sendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(text).c_str());
+}
+
+bool isTextLargerThanWindow(char* text, HWND hwnd) {
+    RECT windowRect = { 0, 0, 0, 0 };
+    GetClientRect(hwnd, &windowRect);
+
+    RECT textRect = { 0, 0, 0, 0 };
+    HDC hdc = GetDC(hwnd);
+    HFONT currentFont = (HFONT)SendMessage(hwnd, WM_GETFONT, 0, 0);
+    HFONT oldFont = (HFONT)SelectObject(hdc, currentFont);
+    DrawTextA(hdc, (const char*)text, strlen(text), &textRect, DT_CALCRECT | DT_NOPREFIX | DT_SINGLELINE);
+    // clean up
+    SelectObject(hdc, oldFont);
+    ReleaseDC(hwnd, hdc);
+
+    long windowMargin = 10;
+    long windowWidth = abs(windowRect.right - windowRect.left - windowMargin);
+    long windowHeight = abs(windowRect.bottom - windowRect.top);
+    long textWidth = abs(textRect.right - textRect.left);
+    long textHeight = abs(textRect.bottom - textRect.top);
+
+    return textWidth > windowWidth || textHeight > windowHeight;
 }
 
 void loadOpponentProfilePictureFromFileAndRedraw(LPCTSTR filePath) { // this function only works for jpg, gif
