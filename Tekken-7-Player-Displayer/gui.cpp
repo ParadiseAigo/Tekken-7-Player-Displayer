@@ -500,7 +500,7 @@ void clearOpponentProfilePicture() {
 }
 
 void updateAllGuiMessages(char* newOpponentName, char* characterName, char* playerlistComment) {
-	sendMessage(guiWindows.opponentNameOneValueTextHandle, WM_SETTEXT, 0, (LPARAM)(wchar_t*)charPtrToWString(newOpponentName).c_str());
+    setOpponentNameOneInGui(newOpponentName);
 	if (characterName == NULL) {
 		sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
 	} else {
