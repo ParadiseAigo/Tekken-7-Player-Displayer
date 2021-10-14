@@ -43,6 +43,7 @@
 #define TEXT_COMMENTWINDOW "(Last fought player not found, maybe you didn't fight a player yet)"
 
 #define FONT_SIZE 16
+#define FONT_SIZE_INFO 50
 #define EDITBOX_TEXT_MAX_LENGTH 256
 
 #define COLOR_BLACK RGB(0, 0, 0)
@@ -255,6 +256,8 @@ void closeCommentWindow();
 void deleteFontObjects();
 void setOpponentNameOneInGui(char* opponentName);
 void setOpponentNameTwoInGui(char* opponentName);
+void setTextAndResizeToFitInWindow(char* text, HWND hwnd);
+bool isTextLargerThanWindow(char* text, HWND hwnd);
 void loadOpponentProfilePictureFromFileAndRedraw(LPCTSTR filePath);
 void loadOpponentProfilePictureFromPNGFileAndRedraw(LPCTSTR filePath);
 void clearOpponentProfilePicture();
