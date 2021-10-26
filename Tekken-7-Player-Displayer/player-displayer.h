@@ -119,6 +119,7 @@ extern char* lastFoundName;
 extern void* opponentNamePointer;
 extern void* screenModePointer;
 extern void* steamModulePointer;
+extern void* tekkenModulePointer;
 
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;

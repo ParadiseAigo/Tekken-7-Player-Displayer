@@ -16,6 +16,7 @@ char* lastFoundName;
 void* opponentNamePointer;
 void* screenModePointer;
 void* steamModulePointer;
+void* tekkenModulePointer;
 
 ProgramThreads programThreads;
 
@@ -115,8 +116,8 @@ void initTekkenWindowHandle() {
 }
 
 void initPointers() {
-	screenModePointer = (void*)getDynamicPointer(tekkenHandle, (void*)SCREEN_MODE_STATIC_POINTER, SCREEN_MODE_POINTER_OFFSETS);
 	initModuleAdresses();
+	screenModePointer = (void*)getDynamicPointer(tekkenHandle, (void*) ((QWORD)tekkenModulePointer + SCREEN_MODE_STATIC_POINTER), SCREEN_MODE_POINTER_OFFSETS);
 	myGuiTerminalPrint(std::string("Pointers loaded.\r\n"));
 }
 
@@ -127,6 +128,7 @@ void initModuleAdresses() {
 	}
 	void* userSteamIdPointer = (void*)getDynamicPointer(tekkenHandle, (void*) ((QWORD)steamModulePointer + STEAM_ID_USER_STATIC_POINTER), STEAM_ID_USER_POINTER_OFFSETS);
 	userSteamId = readQwordFromMemory(tekkenHandle, userSteamIdPointer);
+	tekkenModulePointer = (void*)getModuleBaseAddress(tekkenPid, TEKKEN_MODULE_NAME);
 }
 
 void editTargetProcessLoop() {

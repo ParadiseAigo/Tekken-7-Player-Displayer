@@ -220,7 +220,7 @@ void displayOpponentProfilePictureFromWeb(std::string pictureLink) {
 }
 
 void updateOpponentNameTwo() {
-	opponentNamePointer = (void*)getDynamicPointer(tekkenHandle, (void*)OPPONENT_NAME_STATIC_POINTER, OPPONENT_NAME_POINTER_OFFSETS);
+	opponentNamePointer = (void*)getDynamicPointer(tekkenHandle, (void*) ((QWORD)tekkenModulePointer + OPPONENT_NAME_STATIC_POINTER), OPPONENT_NAME_POINTER_OFFSETS);
 	char* opponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
 	if (strcmp(lastFoundName, opponentName) != 0) {
 		setOpponentNameTwoInGui(opponentName);
