@@ -16,16 +16,16 @@
 #define STEAM_ID_USER_STATIC_POINTER 0x2FF78  //to get the real static pointer: needs to be added to the module name, example: "steam_api64_o.dll"+2FC50
 #define STEAM_ID_USER_POINTER_OFFSETS {}
 
-#define OPPONENT_NAME_STATIC_POINTER 0x34CD240
+#define OPPONENT_NAME_STATIC_POINTER 0x34CD240  //to get the real static pointer: needs to be added to the module name
 #define OPPONENT_NAME_POINTER_OFFSETS {}
 
-#define OPPONENT_STRUCT_NAME_STATIC_POINTER 0x1434D24A0
+#define OPPONENT_STRUCT_NAME_STATIC_POINTER 0x34D24A0  //to get the real static pointer: needs to be added to the module name
 #define OPPONENT_STRUCT_NAME_POINTER_OFFSETS {0, 0x8, 0x11C}
 
-#define OPPONENT_STRUCT_CHARACTER_STATIC_POINTER 0x1434D24A0
+#define OPPONENT_STRUCT_CHARACTER_STATIC_POINTER 0x34D24A0  //to get the real static pointer: needs to be added to the module name
 #define OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS {0, 0x8, 0x10}
 
-#define SCREEN_MODE_STATIC_POINTER 0x347ADD8
+#define SCREEN_MODE_STATIC_POINTER 0x347ADD8  //to get the real static pointer: needs to be added to the module name
 #define SCREEN_MODE_POINTER_OFFSETS {}
 
 #define SCREEN_MODE_FULLSCREEN 0

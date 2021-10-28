@@ -153,7 +153,7 @@ void saveNewPlayerlistEntry(char* currentLoadedOpponentName) {
 	char* newPlayerlistLine;
 	QWORD steamId;
 	std::string allCharacters[] = ALL_CHARACTERS;
-	opponentStructCharacterPointer = (void*)getDynamicPointer(tekkenHandle, (void*) OPPONENT_STRUCT_CHARACTER_STATIC_POINTER, OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS);
+	opponentStructCharacterPointer = (void*)getDynamicPointer(tekkenHandle, (void*) ((QWORD)tekkenModulePointer + OPPONENT_STRUCT_CHARACTER_STATIC_POINTER), OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS);
 	newOpponentStructCharacter = readDwordFromMemory(tekkenHandle, opponentStructCharacterPointer);
 	steamId = lastFoundSteamId;
 	myGuiTerminalPrint(std::string("New opponent    : ").append(std::string(currentLoadedOpponentName)).append(std::string("\r\n")));
