@@ -129,6 +129,18 @@ void initModuleAdresses() {
 	void* userSteamIdPointer = (void*)getDynamicPointer(tekkenHandle, (void*) ((QWORD)steamModulePointer + STEAM_ID_USER_STATIC_POINTER), STEAM_ID_USER_POINTER_OFFSETS);
 	userSteamId = readQwordFromMemory(tekkenHandle, userSteamIdPointer);
 	tekkenModulePointer = (void*)getModuleBaseAddress(tekkenPid, TEKKEN_MODULE_NAME);
+	if (steamModulePointer == 0) {
+		myGuiTerminalPrint(std::string("Error: failed to get the module base address of the steam api.\r\n"));
+	}
+	if (tekkenModulePointer == 0) {
+		myGuiTerminalPrint(std::string("Error: failed to get the module base address of tekken.\r\n"));
+	}
+	if (tekkenModulePointer == 0 || steamModulePointer == 0) {
+		myGuiTerminalPrint(std::string("Impossible to continue....\r\n"));
+		while (1) { // let the program sleep.... forever
+			Sleep(10000);
+		}
+	}
 }
 
 void editTargetProcessLoop() {
@@ -164,11 +176,19 @@ void editTargetProcessLoop() {
 			currentLoadedOpponentName = saveNewOpponentInPlayerlist(currentLoadedOpponentName);
 			lastNameInPlayerlist = currentLoadedOpponentName;
 		}
-		if (!isWindow(tekkenWindowHandle)) {
-			Sleep(3000); // wait to make sure the tekken process has closed after the window was closed
-			loadTargetProcess();
+		if (didSomeoneCloseTekkenWindow()) {
+			restartProgram();
 		}
 	}
+}
+
+bool didSomeoneCloseTekkenWindow() {
+	return !isWindow(tekkenWindowHandle);
+}
+
+void restartProgram() {
+	Sleep(3000); // wait to make sure the tekken process has closed after the window was closed
+	loadTargetProcess();
 }
 
 void closeProgram() {

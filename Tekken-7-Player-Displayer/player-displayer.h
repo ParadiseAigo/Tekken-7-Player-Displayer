@@ -145,6 +145,8 @@ void initTekkenWindowHandle();
 void initPointers();
 void initModuleAdresses();
 void editTargetProcessLoop();
+bool didSomeoneCloseTekkenWindow();
+void restartProgram();
 void closeProgram();
 
 //tekken.cpp
