@@ -117,6 +117,7 @@ void handleNewReceivedOpponent() {
 		characterNameMessage = copyString((char*) "| Unknown character.");
 	}
 	updateAllGuiMessages(newOpponentNameMessage, characterName, playerlistComment);
+	updateAllInGameMessages(newOpponentNameMessage, characterName, playerlistComment);
 	if (characterName != NULL) {
 		free(characterName);
 	}
@@ -133,6 +134,28 @@ void handleNewReceivedOpponent() {
 		free(newOpponentNameMessage);
 	}
 	free(steamIdBuffer);
+}
+
+void updateAllInGameMessages(char* newOpponentNameMessage, char* characterName, char* playerlistComment) {
+	updateSecondsRemainingMessage(newOpponentNameMessage);
+}
+
+void updateOpponentFoundMessage(char* message) {
+	if (silentMode == false) {
+		writeStringUnlimitedToMemory(tekkenHandle, opponentFoundMessagePointer, message);
+	}
+}
+
+void updateFightThisPlayerMessage(char* message) {
+	if (silentMode == false) {
+		writeStringUnlimitedToMemory(tekkenHandle, fightThisPlayerMessagePointer, message);
+	}
+}
+
+void updateSecondsRemainingMessage(char* message) {
+	if (silentMode == false) {
+		writeStringUnlimitedToMemory(tekkenHandle, secondsRemainingMessagePointer, message);
+	}
 }
 
 bool isNewFightAccepted() {
@@ -177,6 +200,13 @@ bool isNewOpponentLoaded() {
 	}
 }
 
+void cleanAllProcessMessages() {
+	//updateOpponentFoundMessage((char*)"Failed to get any info.");
+	//updateFightThisPlayerMessage((char*)"Dont accept :)");
+	//updateSecondsRemainingMessage((char*)"...");
+	updateSecondsRemainingMessage((char*)"Failed to get the name.");
+}
+
 char* getNewCurrentLoadedOpponent(char* currentLoadedOpponentName) {
 	void* opponentStructNamePointer;
 	char* newOpponentStructName;
@@ -195,6 +225,7 @@ void displayOpponentInfoFromWeb(QWORD steamId) {
 	pictureLink = extractProfilePictureUrlFromSteamHtmlString(htmlString);
 	displayOpponentNameFromWeb(name);
 	displayOpponentProfilePictureFromWeb(pictureLink);
+	updateSecondsRemainingMessage((char*)name.c_str());
 }
 
 void displayOpponentNameFromWeb(std::string name) {
@@ -228,5 +259,16 @@ void updateOpponentNameTwo() {
 		lastFoundName = copyString(opponentName);
 	}
 	free(opponentName);
+}
+
+void turnOffSilentMode() {
+	if (silentMode == false) { // if already turned off
+		myGuiTerminalPrint(std::string("Silent mode is already off. Restart Tekken 7 to turn it on.\r\n"));
+	}
+	else {
+		silentMode = false;
+		myGuiTerminalPrint(std::string("Silent mode turned off. Now feedback will also be given in-game.\r\n"));
+		cleanAllProcessMessages();
+	}
 }
 

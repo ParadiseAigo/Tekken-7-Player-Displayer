@@ -21,6 +21,9 @@ void handleHotkeyInput(WPARAM hotkey) {
     case ALT_T:
         showOrHideConsoleWindow();
         break;
+    case ALT_S:
+        turnOffSilentMode();
+        break;
     }
 }
 

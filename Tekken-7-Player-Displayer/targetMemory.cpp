@@ -39,6 +39,16 @@ DWORD getProcessId(const std::wstring& programNameExe) {
 	return 0;
 }
 
+// alternative methods to pause a process:
+// https://stackoverflow.com/questions/11010165/how-to-suspend-resume-a-process-in-windows
+void pauseProcess(DWORD processId) {
+	DebugActiveProcess(processId);
+}
+
+void unpauseProcess(DWORD processId) {
+	DebugActiveProcessStop(processId);
+}
+
 // purpose: finding the base address of a module (example: "steam_api64.dll")
 uintptr_t getModuleBaseAddress(DWORD pid, const wchar_t* moduleName) {
     uintptr_t result = 0;

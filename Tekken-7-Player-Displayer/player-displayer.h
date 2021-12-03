@@ -39,7 +39,7 @@
 
 #define WINDOW_OPACITY 90
 
-#define TEXT_INFORMATION " ALT + F : Set Tekken in Fullscreen Mode\n ALT + W : Set Tekken in Windowed Mode\n ALT + C : Add a Comment in the Player List\n ALT + O : Open the Player List"//\n ALT + T : Show Program Console"
+#define TEXT_INFORMATION " ALT + F : Set Tekken in Fullscreen Mode\n ALT + W : Set Tekken in Windowed Mode\n ALT + C : Add a Comment in the Player List\n ALT + O : Open the Player List\n ALT + S : Turn on in-game feedback"//\n ALT + T : Show Program Console"
 #define TEXT_COMMENTWINDOW "(Last fought player not found, maybe you didn't fight a player yet)"
 
 #define FONT_SIZE 16
@@ -115,7 +115,11 @@ extern bool isSteamIdFound; // helps keep track of  lastFoundSteamId
 extern QWORD userSteamId;
 extern char* lastNameInPlayerlist;
 extern char* lastFoundName;
+extern bool silentMode;
 
+extern void* fightThisPlayerMessagePointer;
+extern void* secondsRemainingMessagePointer;
+extern void* opponentFoundMessagePointer;
 extern void* opponentNamePointer;
 extern void* screenModePointer;
 extern void* steamModulePointer;
@@ -156,13 +160,19 @@ bool isSteamApiLoaded(void* steamIdPointer);
 void resetSteamApiBaseModuleAddress();
 bool readAndIsSteamIdValid(void* steamIdPointer, QWORD* steamIdBuffer);
 void handleNewReceivedOpponent();
+void updateAllInGameMessages(char* newOpponentNameMessage, char* characterName, char* playerlistComment);
+void updateOpponentFoundMessage(char* message);
+void updateFightThisPlayerMessage(char* message);
+void updateSecondsRemainingMessage(char* message);
 bool isNewFightAccepted();
 bool isNewOpponentLoaded();
+void cleanAllProcessMessages();
 char* getNewCurrentLoadedOpponent(char* currentLoadedOpponentName);
 void displayOpponentInfoFromWeb(QWORD steamId);
 void displayOpponentNameFromWeb(std::string name);
 void displayOpponentProfilePictureFromWeb(std::string pictureLink);
 void updateOpponentNameTwo();
+void turnOffSilentMode();
 
 //guiInput.cpp
 void handleHotkeyInput(WPARAM hotkey);
@@ -203,6 +213,8 @@ LPPICTURE loadImageFromFile(LPCTSTR filePath);
 //targetMemory.cpp
 HANDLE getProcessHandle(DWORD pid);
 DWORD getProcessId(const std::wstring& nameProgramExe);
+void pauseProcess(DWORD processId);
+void unpauseProcess(DWORD processId);
 uintptr_t getModuleBaseAddress(DWORD pid, const wchar_t* moduleName);
 QWORD getDynamicPointer(HANDLE processHandle, void* basePointer, std::vector<signed long> offsets);
 void writeDwordToMemory(HANDLE processHandle, void* address, DWORD newValue);
