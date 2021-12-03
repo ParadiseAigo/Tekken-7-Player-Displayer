@@ -39,10 +39,11 @@
 
 #define WINDOW_OPACITY 90
 
-#define TEXT_INFORMATION " ALT + F : Set Tekken in Fullscreen Mode\n ALT + W : Set Tekken in Windowed Mode\n ALT + C : Add a Comment in the Player List\n ALT + O : Open the Player List\n ALT + S : Turn on in-game feedback"//\n ALT + T : Show Program Console"
+#define TEXT_INFORMATION " ALT + F : Set Tekken in Fullscreen Mode\n ALT + W : Set Tekken in Windowed Mode\n ALT + C : Add a Comment in the Player List\n ALT + O : Open the Player List"//\n ALT + T : Show Program Console"
 #define TEXT_COMMENTWINDOW "(Last fought player not found, maybe you didn't fight a player yet)"
 
 #define FONT_SIZE 16
+#define FONT_SIZE_INFO 50
 #define EDITBOX_TEXT_MAX_LENGTH 256
 
 #define COLOR_BLACK RGB(0, 0, 0)
@@ -69,8 +70,8 @@ typedef __int64 QWORD;
 typedef struct GuiWindows {
     HWND mainWindowHandle;
     HWND outputTextHandle;
-    HWND playerNameValueTextHandle;
-    HWND opponentNameValueTextHandle;
+    HWND opponentNameOneValueTextHandle;
+    HWND opponentNameTwoValueTextHandle;
     HWND opponentCharacterValueTextHandle;
     HWND opponentProfilePictureHandle;
     HWND commentValueTextHandle;
@@ -104,7 +105,7 @@ typedef struct ProgramThreads {
     HANDLE guiThread;
 } ProgramThreads;
 
-enum tekkenState {IN_FIGHT, IN_SEARCH};
+enum tekkenState {IN_FIGHT, IN_SEARCH}; // not used
 
 extern HANDLE tekkenHandle;
 extern HWND tekkenWindowHandle;
@@ -113,15 +114,12 @@ extern QWORD lastFoundSteamId;
 extern bool isSteamIdFound; // helps keep track of  lastFoundSteamId
 extern QWORD userSteamId;
 extern char* lastNameInPlayerlist;
-extern bool silentMode;
-extern bool isTekkenLoaded;
+extern char* lastFoundName;
 
-extern void* fightThisPlayerMessagePointer;
-extern void* secondsRemainingMessagePointer;
-extern void* opponentFoundMessagePointer;
 extern void* opponentNamePointer;
 extern void* screenModePointer;
 extern void* steamModulePointer;
+extern void* tekkenModulePointer;
 
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
@@ -147,31 +145,24 @@ void initTekkenWindowHandle();
 void initPointers();
 void initModuleAdresses();
 void editTargetProcessLoop();
+bool didSomeoneCloseTekkenWindow();
+void restartProgram();
 void closeProgram();
 
 //tekken.cpp
-bool isGameLoaded();
 bool isNewOpponentReceived();
 bool isNewSteamIdReceived();                                          
 bool isSteamApiLoaded(void* steamIdPointer);
 void resetSteamApiBaseModuleAddress();
 bool readAndIsSteamIdValid(void* steamIdPointer, QWORD* steamIdBuffer);
 void handleNewReceivedOpponent();
-char* updateMessagesWithoutOpponentName(char* currentOpponentName);
-void updateMessagesWithoutSteamId();
-void updateOpponentFoundMessage(char* message);
-void updateFightThisPlayerMessage(char* message);
-void updateSecondsRemainingMessage(char* message);
 bool isNewFightAccepted();
 bool isNewOpponentLoaded();
-void cleanAllProcessMessages();
 char* getNewCurrentLoadedOpponent(char* currentLoadedOpponentName);
-bool isNewNameReceived(char* playerName, char* lastReceivedName); // no longer needed (now name obtained from web)
-void displayOpponentName(); // no longer needed
 void displayOpponentInfoFromWeb(QWORD steamId);
 void displayOpponentNameFromWeb(std::string name);
 void displayOpponentProfilePictureFromWeb(std::string pictureLink);
-void turnOffSilentMode();
+void updateOpponentNameTwo();
 
 //guiInput.cpp
 void handleHotkeyInput(WPARAM hotkey);
@@ -191,7 +182,7 @@ char* copyString(char* s);
 void openPlayerlist();
 bool doesFileExist(char* filePath);
 void createFile(char* filePath);
-char* saveNewOpponentInPlayerlist(char* playerName, char* currentOpponentName, char* currentLoadedOpponentName);
+char* saveNewOpponentInPlayerlist(char* currentLoadedOpponentName);
 void saveNewPlayerlistEntry(char* currentLoadedOpponentName);
 char* makePlayerlistEntry(char* playerName, char* characterName, QWORD steamId);
 void writeLineToFile(char* path, char* line);
@@ -213,7 +204,7 @@ LPPICTURE loadImageFromFile(LPCTSTR filePath);
 HANDLE getProcessHandle(DWORD pid);
 DWORD getProcessId(const std::wstring& nameProgramExe);
 uintptr_t getModuleBaseAddress(DWORD pid, const wchar_t* moduleName);
-QWORD getDynamicPointer(HANDLE processHandle, void* basePointer, std::vector<DWORD> offsets);
+QWORD getDynamicPointer(HANDLE processHandle, void* basePointer, std::vector<signed long> offsets);
 void writeDwordToMemory(HANDLE processHandle, void* address, DWORD newValue);
 void writeStringLimitedToMemory(HANDLE processHandle, void* address, char* newValue);
 void writeStringUnlimitedToMemory(HANDLE processHandle, void* address, char* newValue);
@@ -267,8 +258,10 @@ std::string wcharPtrToString(wchar_t* text);
 void closeAllWindows();
 void closeCommentWindow();
 void deleteFontObjects();
-void setPlayerNameInGui(char* playerName);
-void setOpponentNameInGui(char* opponentName);
+void setOpponentNameOneInGui(char* opponentName);
+void setOpponentNameTwoInGui(char* opponentName);
+void setTextAndResizeToFitInWindow(char* text, HWND hwnd);
+bool isTextLargerThanWindow(char* text, HWND hwnd);
 void loadOpponentProfilePictureFromFileAndRedraw(LPCTSTR filePath);
 void loadOpponentProfilePictureFromPNGFileAndRedraw(LPCTSTR filePath);
 void clearOpponentProfilePicture();

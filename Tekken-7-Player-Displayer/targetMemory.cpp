@@ -59,7 +59,8 @@ uintptr_t getModuleBaseAddress(DWORD pid, const wchar_t* moduleName) {
     return result;
 }
 
-QWORD getDynamicPointer(HANDLE processHandle, void* basePointer, std::vector<DWORD> offsets) {
+// the offsets used to be a a vector of DWORD's (unsigned long) but now negative offsets are also possible
+QWORD getDynamicPointer(HANDLE processHandle, void* basePointer, std::vector<signed long> offsets) {
 	QWORD resultPointer = 0, prevPointer;
 	DWORD errorCode;
 	if (offsets.size() == 0) {
