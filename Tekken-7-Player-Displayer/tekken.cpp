@@ -140,19 +140,8 @@ void updateAllInGameMessages(char* newOpponentNameMessage, char* characterName, 
 	updateSecondsRemainingMessage(newOpponentNameMessage);
 }
 
-void updateOpponentFoundMessage(char* message) {
-	if (silentMode == false) {
-		writeStringUnlimitedToMemory(tekkenHandle, opponentFoundMessagePointer, message);
-	}
-}
-
-void updateFightThisPlayerMessage(char* message) {
-	if (silentMode == false) {
-		writeStringUnlimitedToMemory(tekkenHandle, fightThisPlayerMessagePointer, message);
-	}
-}
-
 void updateSecondsRemainingMessage(char* message) {
+	secondsRemainingMessagePointer = (void*)getDynamicPointer(tekkenHandle, (void*) ((QWORD) tekkenModulePointer + SECONDS_REMAINING_MESSAGE_STATIC_POINTER), SECONDS_REMAINING_MESSAGE_POINTER_OFFSETS);
 	if (silentMode == false) {
 		writeStringUnlimitedToMemory(tekkenHandle, secondsRemainingMessagePointer, message);
 	}
@@ -201,9 +190,6 @@ bool isNewOpponentLoaded() {
 }
 
 void cleanAllProcessMessages() {
-	//updateOpponentFoundMessage((char*)"Failed to get any info.");
-	//updateFightThisPlayerMessage((char*)"Dont accept :)");
-	//updateSecondsRemainingMessage((char*)"...");
 	updateSecondsRemainingMessage((char*)"Failed to get the name.");
 }
 

@@ -117,9 +117,7 @@ extern char* lastNameInPlayerlist;
 extern char* lastFoundName;
 extern bool silentMode;
 
-extern void* fightThisPlayerMessagePointer;
 extern void* secondsRemainingMessagePointer;
-extern void* opponentFoundMessagePointer;
 extern void* opponentNamePointer;
 extern void* screenModePointer;
 extern void* steamModulePointer;
@@ -161,8 +159,6 @@ void resetSteamApiBaseModuleAddress();
 bool readAndIsSteamIdValid(void* steamIdPointer, QWORD* steamIdBuffer);
 void handleNewReceivedOpponent();
 void updateAllInGameMessages(char* newOpponentNameMessage, char* characterName, char* playerlistComment);
-void updateOpponentFoundMessage(char* message);
-void updateFightThisPlayerMessage(char* message);
 void updateSecondsRemainingMessage(char* message);
 bool isNewFightAccepted();
 bool isNewOpponentLoaded();

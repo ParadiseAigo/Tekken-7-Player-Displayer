@@ -14,9 +14,7 @@ char* lastNameInPlayerlist;
 char* lastFoundName;
 bool silentMode;
 
-void* fightThisPlayerMessagePointer;
 void* secondsRemainingMessagePointer;
-void* opponentFoundMessagePointer;
 void* opponentNamePointer;
 void* screenModePointer;
 void* steamModulePointer;
@@ -123,9 +121,6 @@ void initTekkenWindowHandle() {
 
 void initPointers() {
 	initModuleAdresses();
-	fightThisPlayerMessagePointer = (void*)getDynamicPointer(tekkenHandle, (void*) ((QWORD) tekkenModulePointer + FIGHT_THIS_PLAYER_MESSAGE_STATIC_POINTER), FIGHT_THIS_PLAYER_MESSAGE_POINTER_OFFSETS);
-	secondsRemainingMessagePointer = (void*)getDynamicPointer(tekkenHandle, (void*) ((QWORD) tekkenModulePointer + SECONDS_REMAINING_MESSAGE_STATIC_POINTER), SECONDS_REMAINING_MESSAGE_POINTER_OFFSETS);
-	opponentFoundMessagePointer = (void*)getDynamicPointer(tekkenHandle, (void*) ((QWORD) tekkenModulePointer + OPPONENT_FOUND_MESSAGE_STATIC_POINTER), OPPONENT_FOUND_MESSAGE_POINTER_OFFSETS);
 	screenModePointer = (void*)getDynamicPointer(tekkenHandle, (void*) ((QWORD)tekkenModulePointer + SCREEN_MODE_STATIC_POINTER), SCREEN_MODE_POINTER_OFFSETS);
 	myGuiTerminalPrint(std::string("Pointers loaded.\r\n"));
 }
