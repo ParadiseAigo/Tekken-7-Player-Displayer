@@ -26,7 +26,7 @@ Extra information: The second "Opponent name" window always displays your name, 
 * ALT+F  puts the game in full-screen mode
 * ALT+C  opens the comment window where you can write a comment after playing against an opponent
 * ALT+O  opens the list of all the players you played against
-* ALT+S  turn on in-game feedback
+* ALT+S  turn off silent mode, or in other words: turn on in-game feedback (program is in silent mode by default)
 
 ## Dependencies
 It is possible (usually on new computers) that when trying to run the .exe for the first time you might get an error that looks something like this: "VCRUNTIME140_1.dll was not found". To fix this error you can download the 64-bit version of the package called "Visual C++ Redistributable for Visual Studio 2019" (from [here](https://www.sts-tutorial.com/download/credistributable2019) for example). Or alternatively if you want a quicker (but generally not recommended) way you can also manually download the dll (from [here](https://www.dll-files.com/vcruntime140_1.dll.html)) and place it in the following folder: "C:\Windows\System32".
@@ -34,3 +34,4 @@ It is possible (usually on new computers) that when trying to run the .exe for t
 ## Issues
 * The program is sometimes unable to get the name of the opponent. You can just decline those match requests.
 * It is also possible that the program gets the name wrong. But from my (limited) experience this tends to be rare.
+* Your game language has to be in English, if it isn't the in-game display will not work, but the program window will still display the correct information.
