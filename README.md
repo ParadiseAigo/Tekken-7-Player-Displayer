@@ -9,7 +9,7 @@ Displays your opponents name, the character they last used against you and a com
 
 ![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/5git.png)
 
-![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/7git.png)
+![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/8git.png)
 
 ## Installation
 Download the latest release [here](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/releases) and leave it in any folder on your computer. If you want to build it yourself: clone it via Visual Studio. :)
