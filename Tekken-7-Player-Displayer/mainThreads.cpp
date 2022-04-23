@@ -12,7 +12,9 @@ bool isSteamIdFound; // helps keep track of  lastFoundSteamId
 QWORD userSteamId;
 char* lastNameInPlayerlist;
 char* lastFoundName;
+bool silentMode;
 
+void* secondsRemainingMessagePointer;
 void* opponentNamePointer;
 void* screenModePointer;
 void* steamModulePointer;
@@ -74,12 +76,14 @@ void initPlayerlist() {
 }
 
 void initVariables() {
+	silentMode = true; // global variable
 }
 
 void loadTargetProcess() {
 	initTekkenHandle();
 	initTekkenWindowHandle();
 	initPointers();
+	cleanAllProcessMessages();
 	myGuiTerminalPrint(std::string("Program ready!\r\n"));
 }
 
@@ -160,12 +164,14 @@ void editTargetProcessLoop() {
 		Sleep(delayWhileSearching);
 		updateOpponentNameTwo();
 		if (isNewOpponentReceived()) {
+			cleanAllProcessMessages();
 			cleanAllGuiMessages();
 			handleNewReceivedOpponent();
 			displayOpponentInfoFromWeb(lastFoundSteamId);
 			areMessagesClean = false;
 		}
 		else if ((!areMessagesClean) && (!isSteamIdFound)) {
+			cleanAllProcessMessages();
 			cleanAllGuiMessages();
 			areMessagesClean = true;
 		}
