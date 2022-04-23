@@ -33,10 +33,6 @@ void setForegroundWindow(HWND windowHandle) {
     SetForegroundWindow(windowHandle);
 }
 
-void resizeWindow(HWND windowHandle, int width, int height) {
-    SetWindowPos(windowHandle, 0, 0, 0, width, height, SWP_NOZORDER | SWP_NOMOVE | SWP_NOOWNERZORDER);
-}
-
 void setFocus(HWND windowHandle) {
     SetFocus(windowHandle);
 }

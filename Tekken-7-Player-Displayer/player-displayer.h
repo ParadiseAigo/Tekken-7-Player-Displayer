@@ -252,7 +252,6 @@ void saveCommentAndCloseCommentWindow();
 void saveComment();
 char* getTextFromCommentEditbox();
 void writeCommentToFile(void* text);
-void setTekkenWindowedAndResizeMainWindow();
 void setTekkenWindowed();
 void setTekkenFullscreen();
 void showOrHideConsoleWindow();
@@ -286,7 +285,6 @@ bool isWindow(HWND windowHandle);
 BOOL isWindowVisible(HWND windowHandle); 
 void setForegroundWindow(HWND windowHandle);
 void setFocus(HWND windowHandle);
-void resizeWindow(HWND windowHandle, int width, int height);
 void destroyWindow(HWND windowHandle);
 void drawPictureOnWindow(LPPICTURE picture, HWND hWnd);
 
