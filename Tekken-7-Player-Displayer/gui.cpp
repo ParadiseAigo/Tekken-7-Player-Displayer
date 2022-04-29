@@ -88,6 +88,10 @@ void createMainWindow() {
     int Y_MAINWINDOW = SCREEN_HEIGHT / 2 - HEIGHT_MAINWINDOW / 2;
     int X_TEXTBOX = 650;
 
+    if (doesWindowPositionFileExist()) {
+        getWindowSavedPosition(&X_MAINWINDOW, &Y_MAINWINDOW);
+    }
+
     guiWindows.mainWindowHandle = createWindow(WS_EX_DLGMODALFRAME,
         TEXT(CLASSNAME_MAINWINDOW), TEXT(TITLE_MAINWINDOW),
         WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX,
@@ -346,8 +350,10 @@ void setTekkenFullscreen() {
 }
 
 void myGuiTerminalPrint(std::string text) {
-    printToStandardOutput(text);
-    printToTextboxOutput(text);
+    //if (guiWindows.mainWindowHandle != NULL) {
+        printToStandardOutput(text);
+        printToTextboxOutput(text);
+    //}
 }
 
 void printToStandardOutput(std::string text) {
@@ -397,6 +403,10 @@ std::string wcharPtrToString(wchar_t* text) {
 }
 
 void closeAllWindows() {
+    if (!doesWindowPositionFileExist()) {
+		createWindowPositionFile();
+    }
+	saveWindowPositionInFile();
     destroyWindow(guiWindows.mainWindowHandle);
     if (isWindow(guiWindows.commentWindowHandle)) {
         destroyWindow(guiWindows.commentWindowHandle);
