@@ -12,6 +12,8 @@
 #include <urlmon.h>  // to download a website
 #include <olectl.h> // to load jpg images
 #include <atlimage.h> // to load png images
+#include <winuser.h>    // getWindowRect()
+#include <windef.h>     // RECT struct
 #include "resource.h" 
 
 #pragma comment(linker,"/manifestdependency:\"type='win32' "\
@@ -205,6 +207,11 @@ void replaceCommentInLastLineInFile(char* path, char* comment);
 long writeAfterLastOccurenceOfCharInFile(char* path, char* text, char charToWriteAfter);
 void setEndOfFileAtIndex(char* path, long position);
 LPPICTURE loadImageFromFile(LPCTSTR filePath);
+bool doesWindowPositionFileExist();
+void getWindowSavedPosition(int* xOut, int* yOut);
+void createWindowPositionFile();
+void createWindowPositionFile();
+void saveWindowPositionInFile();
 
 //targetMemory.cpp
 HANDLE getProcessHandle(DWORD pid);
