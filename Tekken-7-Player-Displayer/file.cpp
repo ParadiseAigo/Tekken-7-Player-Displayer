@@ -462,10 +462,17 @@ void getWindowSavedPosition(int* xOut, int* yOut) {
 	windowPositionFilePath = myStringCat(appdataPath, (char*) "\\Player-Displayer-Window-Position.txt");
 	data = fileToString(windowPositionFilePath);
 	if (data != "") {
-		int firstNewlinePosition = bruteForceFindIndex((char*) data.c_str(), (char*) "\n");
-		int secondNewlinePosition = bruteForceFindIndexAfterIndex((char*) data.c_str(), (char*) "\n", firstNewlinePosition);
-		*xOut = stoi(data.substr(0, firstNewlinePosition));
-		*yOut = stoi(data.substr(firstNewlinePosition, secondNewlinePosition + 1));
+		int firstPipePosition = bruteForceFindIndex((char*) data.c_str(), (char*) "|");
+		int secondPipePosition = bruteForceFindIndexAfterIndex((char*) data.c_str(), (char*) "|", firstPipePosition + 1);
+		if (firstPipePosition != -1 && secondPipePosition != -1) {
+			try {
+				*xOut = stoi(data.substr(0, firstPipePosition));
+				*yOut = stoi(data.substr(firstPipePosition + 1, secondPipePosition + 1));
+			} 
+			catch (const std::logic_error &e) {   
+				//ignore exception
+			}
+		}
 	}
 	free(windowPositionFilePath);
 	free(appdataPath);
@@ -491,19 +498,17 @@ void saveWindowPositionInFile() {
 	_dupenv_s(&appdataPath, NULL, "APPDATA");
 	windowPositionFilePath = myStringCat(appdataPath, (char*) "\\Player-Displayer-Window-Position.txt");
 	if (0 != (errorCode = fopen_s(&file, windowPositionFilePath, "r+"))) {
-		/*
 		myGuiTerminalPrint(std::string("Error opening the window position file, error code = ")
 			.append(std::to_string(errorCode))
 			.append(std::string("\r\n"))
 		);
-		*/
 		free(windowPositionFilePath);
 		free(appdataPath);
 		return;
 	}
 	if (GetWindowRect(guiWindows.mainWindowHandle, &rect)) {
 		fseek(file, 0L, SEEK_SET);
-		fprintf(file, "%d\n%d\n", rect.left, rect.top);
+		fprintf(file, "%d|%d|", rect.left, rect.top);
 	}
 	fclose(file);
 	free(windowPositionFilePath);
