@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace Tekken_7_Player_Displayer_csharp
+namespace Tekken_7_Player_Displayer
 {
     /// <summary>
     /// Interaction logic for CommentWindow.xaml
@@ -82,7 +82,7 @@ namespace Tekken_7_Player_Displayer_csharp
         private void WriteCommentToFile(string comment)
         {
             PlayerList.ReplaceCommentInLastLineInFile(Pointers.PLAYERLIST_PATH, comment);
-            Gui.PrintToGuiConsole($"Saved comment for player \"{MainWindow.lastNameInPlayerlist}\": {comment}\r\n");
+            Gui.PrintLineToGuiConsole($"Saved comment for player \"{MainWindow.lastNameInPlayerlist}\": {comment}");
         }
 
         private void CloseCommentWindow()

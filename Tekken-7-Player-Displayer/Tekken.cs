@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 
-namespace Tekken_7_Player_Displayer_csharp
+namespace Tekken_7_Player_Displayer
 {
     class Tekken
     {
@@ -17,7 +17,7 @@ namespace Tekken_7_Player_Displayer_csharp
         public static bool IsNewSteamIdReceived()
         {
             long steamIdPointer = ProcessMemory.GetDynamicAddress(MainWindow.steamModulePointer + Pointers.STEAM_ID_BETTER_STATIC_POINTER, Pointers.STEAM_ID_BETTER_POINTER_OFFSETS);
-            if (!IsSteamApiLoaded(steamIdPointer))								// if steam api not loaded
+            if (!IsSteamApiLoaded(steamIdPointer))							   // if steam api not loaded
             {
                 ResetSteamApiBaseModuleAddress();
                 MainWindow.isSteamIdFound = false;
@@ -31,20 +31,20 @@ namespace Tekken_7_Player_Displayer_csharp
                 MainWindow.lastFoundSteamId = -1;
                 return false;
             }
-            else if (MainWindow.userSteamId == newFoundSteamId)                            // if equal to user
+            else if (MainWindow.userSteamId == newFoundSteamId)                // if equal to user
             {
                 MainWindow.isSteamIdFound = false;
                 MainWindow.lastFoundSteamId = -1;
                 return false;
             }
-            else if (newFoundSteamId == MainWindow.lastFoundSteamId)                       // if unchanged
+            else if (newFoundSteamId == MainWindow.lastFoundSteamId)           // if unchanged
             {
                 MainWindow.isSteamIdFound = true;
                 return false;
             }
-            else                                                                // new steam id received!
+            else                                                               // new steam id received!
             {
-                Gui.PrintToGuiConsole($"New Steam id found: {newFoundSteamId}\r\n");
+                Gui.PrintLineToGuiConsole($"New Steam id found: {newFoundSteamId}");
                 MainWindow.isSteamIdFound = true;
                 MainWindow.lastFoundSteamId = newFoundSteamId;
                 return true;
@@ -58,7 +58,7 @@ namespace Tekken_7_Player_Displayer_csharp
 
         private static void ResetSteamApiBaseModuleAddress()
         {
-            Gui.PrintToGuiConsole("Resetting Steam api module base address.\r\n");
+            Gui.PrintLineToGuiConsole("Resetting Steam api module base address.");
             MainWindow.main.InitModuleAdresses();
         }
 
@@ -67,14 +67,14 @@ namespace Tekken_7_Player_Displayer_csharp
             if (!ProcessMemory.IsMemoryReadable(steamIdAddress))
             {
                 // aigo debugging
-                //PrintToGuiConsole("Steam Id (memory) not readable (probably late).\r\n");
+                //PrintLineToGuiConsole("Steam Id (memory) not readable (probably late).");
                 return -1;
             }
             long steamId = ProcessMemory.ReadMemory<long>(steamIdAddress);
             if (steamId < 0x0110000100000000 || steamId > 0x0110000200000000)
             {
                 // aigo debugging
-                //		PrintToGuiConsole($"Steam Id is bad!: {steamIdBuffer}\r\n");
+                //		PrintLineToGuiConsole($"Steam Id is bad!: {steamIdBuffer}");
                 // steam id is 64 bits (8 bytes) long: 0x FF FF FF FF FF FF FF FF
                 // first 8 bits represent the "universe" and its always equal to 1 for normal accounts
                 // next 4 bits represent the "type" and its also always equal to 1 for normal accounts
@@ -95,17 +95,17 @@ namespace Tekken_7_Player_Displayer_csharp
             string line = File.ReadAllLines(Pointers.PLAYERLIST_PATH).Where(i => i.Contains(MainWindow.lastFoundSteamId.ToString())).ToList().FirstOrDefault();
             if (line != null)
             {  // steam id found in player list!
-                Gui.PrintToGuiConsole("Steam id found in player list!\r\n");
+                Gui.PrintLineToGuiConsole("Steam id found in player list!");
                 newOpponentNameMessage = PlayerList.ExtractPlayerNameFromPlayerlistLine(line);
                 playerlistComment = PlayerList.ExtractCommentFromPlayerlistLine(line);
                 characterName = PlayerList.ExtractCharacterFromPlayerlistLine(line);
-                Gui.PrintToGuiConsole($"New opponent found:  {newOpponentNameMessage}\r\n");
-                Gui.PrintToGuiConsole($"Last used character: {characterName}\r\n");
-                Gui.PrintToGuiConsole($"Comment:             {playerlistComment}\r\n");
+                Gui.PrintLineToGuiConsole($"New opponent found:  {newOpponentNameMessage}");
+                Gui.PrintLineToGuiConsole($"Last used character: {characterName}");
+                Gui.PrintLineToGuiConsole($"Comment:             {playerlistComment}");
             }
             else
             {  // steam id NOT found in player list!
-                Gui.PrintToGuiConsole("Steam id NOT found in player list!\r\n");
+                Gui.PrintLineToGuiConsole("Steam id NOT found in player list!");
                 newOpponentNameMessage = "New (not in list)";
                 playerlistComment = "Brand new opponent!";
                 characterName = "?";
@@ -124,7 +124,7 @@ namespace Tekken_7_Player_Displayer_csharp
             MainWindow.secondsRemainingMessagePointer = ProcessMemory.GetDynamicAddress(MainWindow.tekkenModulePointer + Pointers.SECONDS_REMAINING_MESSAGE_STATIC_POINTER, Pointers.SECONDS_REMAINING_MESSAGE_POINTER_OFFSETS);
             if (!MainWindow.silentMode)
             {
-                ProcessMemory.WriteMemory<string>(MainWindow.secondsRemainingMessagePointer, message);
+                ProcessMemory.WriteMemory<string>(MainWindow.secondsRemainingMessagePointer, message.ToCharArray());
             }
         }
 
@@ -146,7 +146,7 @@ namespace Tekken_7_Player_Displayer_csharp
             string opponentStructName = ProcessMemory.ReadString(opponentStructNameAddress);
             int opponentStructCharacter = ProcessMemory.ReadMemory<int>(opponentStructCharacterAddress);
             // aigo debugging (delete this)
-            //	PrintToGuiConsole($"opponentstructcharacter = {opponentStructCharacter} , opponentstructname = {opponentStructName}\r\n";
+            //	PrintLineToGuiConsole($"opponentstructcharacter = {opponentStructCharacter} , opponentstructname = {opponentStructName}\r\n";
             if (opponentStructName != "NOT_LOGGED_IN" &&
                 (opponentStructName[0] != '\0') &&
                 (MainWindow.isSteamIdFound == true) &&
@@ -179,34 +179,83 @@ namespace Tekken_7_Player_Displayer_csharp
             string name = SteamURL.ExtractNameFromSteamHtmlString(htmlString);
             string pictureLink = SteamURL.ExtractProfilePictureUrlFromSteamHtmlString(htmlString);
             DisplayOpponentNameFromWeb(name);
+            UpdateSecondsRemainingMessage(name);
             DisplayOpponentProfilePictureFromWeb(pictureLink);
-            Tekken.UpdateSecondsRemainingMessage(name);
+            DisplayOpponentLocationFromWeb(steamId);
         }
 
         public static void DisplayOpponentNameFromWeb(string opponentName)
         {
-            Gui.PrintToGuiConsole($"Steam id's name:  {opponentName}\r\n");
+            Gui.PrintLineToGuiConsole($"Steam id's name:  {opponentName}");
             Gui.SetOpponentNameInGui(opponentName);
         }
 
         public static void DisplayOpponentProfilePictureFromWeb(string pictureLink)
         {
-            string picturePath = System.IO.Path.GetTempPath() + "\\opponent.jpg";
-            using WebClient web = new WebClient();
-            web.DownloadFile(pictureLink, picturePath);
-            Gui.SetProfilePictureInGui(picturePath);
+            try
+            {
+                string picturePath = Path.GetTempPath() + "\\opponent.jpg";
+                using WebClient web = new WebClient();
+                web.DownloadFile(pictureLink, picturePath);
+                Gui.SetProfilePictureInGui(picturePath);
+            }
+            catch (Exception ex)
+            {
+                Gui.PrintLineToGuiConsole($"Error in DisplayOpponentProfilePictureFromWeb: {ex.Message}");
+            }
         }
+
+        private static void DisplayOpponentLocationFromWeb(long steamId)
+        {
+            string ip = SteamworksAPI.GetIPAddressForSteamId(steamId);
+            string location = IPLocation.GetLocation(ip);
+            if (location == "") location = "?";
+            Gui.PrintLineToGuiConsole($"Opponent location: {location}");
+            Gui.SetLocationInGui(location);
+        }
+
         public static void TurnOffSilentMode()
         {
             if (MainWindow.silentMode == false)
             { // if already turned off
-                Gui.PrintToGuiConsole("Silent mode is already off. Restart Tekken 7 to turn it on.\r\n");
+                Gui.PrintLineToGuiConsole("Silent mode is already off. Restart Tekken 7 to turn it on.");
             }
             else
             {
                 MainWindow.silentMode = false;
-                Gui.PrintToGuiConsole("Silent mode turned off. Now feedback will also be given in-game.\r\n");
-                CleanAllProcessMessages();
+                Gui.PrintLineToGuiConsole("Silent mode turned off. Now feedback will also be given in-game.");
+                if (MainWindow.tekkenWindowHandle != IntPtr.Zero)  CleanAllProcessMessages();
+            }
+        }
+
+        public static void SetScreenMode(int newScreenMode)
+        {
+            if (MainWindow.tekkenWindowHandle != IntPtr.Zero)
+            {
+                int screenMode;
+                string screenModeInEnglish;
+                switch (newScreenMode)
+                {
+                    case var value when value == Pointers.SCREEN_MODE_FULLSCREEN:
+                        screenModeInEnglish = "fullscreen";
+                        break;
+                    case var value when value == Pointers.SCREEN_MODE_BORDERLESS:
+                        screenModeInEnglish = "borderless";
+                        break;
+                    case var value when value == Pointers.SCREEN_MODE_WINDOWED:
+                        screenModeInEnglish = "windowed";
+                        break;
+                    default:
+                        screenModeInEnglish = "unknown";
+                        break;
+                }
+                screenMode = ProcessMemory.ReadMemory<int>(MainWindow.screenModePointer);
+                if (screenMode != newScreenMode)
+                {
+                    ProcessMemory.WriteMemory<int>(MainWindow.screenModePointer, newScreenMode);
+                    ProcessWindow.MinimizeAndRestoreWindow(MainWindow.tekkenWindowHandle);
+                    Gui.PrintLineToGuiConsole($"Screen mode set to {screenModeInEnglish}");
+                }
             }
         }
     }

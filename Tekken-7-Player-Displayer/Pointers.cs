@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tekken_7_Player_Displayer_csharp
+namespace Tekken_7_Player_Displayer
 {
     class Pointers
     {
-        public static readonly string TEKKEN_WINDOW_NAME = "TEKKEN 7 ";
-        public static readonly string TEKKEN_EXE_NAME = "TekkenGame-Win64-Shipping";
-        public static readonly string PLAYERLIST_PATH = "Tekken Player List.txt";
+        public const string TEKKEN_WINDOW_NAME = "TEKKEN 7 ";
+        public const string TEKKEN_EXE_NAME = "TekkenGame-Win64-Shipping";
+        public const string PLAYERLIST_PATH = "Tekken Player List.txt";
+        public const string TEKKEN_STEAM_APP_ID = "389730";
 
-        public static readonly string STEAM_API_MODULE_NAME = "steam_api64.dll";
-        public static readonly string STEAM_API_MODULE_EDITED_NAME = "steam_api64_o.dll";
-        public static readonly string TEKKEN_MODULE_NAME = "TekkenGame-Win64-Shipping.exe";
+        public const string STEAM_API_MODULE_NAME = "steam_api64.dll";
+        public const string STEAM_API_MODULE_EDITED_NAME = "steam_api64_o.dll";
+        public const string TEKKEN_MODULE_NAME = "TekkenGame-Win64-Shipping.exe";
+
+        public const int SCREEN_MODE_FULLSCREEN = 0;
+        public const int SCREEN_MODE_BORDERLESS = 1;
+        public const int SCREEN_MODE_WINDOWED = 2;
 
         public static readonly string[] ALL_CHARACTERS = { "Paul", "Law", "King", "Yoshimitsu", "Hwoarang", "Xiaoyu", "Jin", "Bryan", "Heihachi", "Kazuya", "Steve", "Jack-7", "Asuka", "Devil Jin", "Feng", "Lili", "Dragunov", "Leo", "Lars", "Alisa", "Claudio", "Katarina", "Lucky Chloe", "Shaheen", "Josie", "Gigas", "Kazumi", "Devil Kazumi", "Nina", "Master Raven", "Lee", "Bob", "Akuma", "Kuma", "Panda", "Eddy", "Eliza", "Miguel", "Soldier", "Kid Kazuya", "Jack-#", "Young Heihachi", "Dummy A", "Geese", "Noctis", "Anna", "Lei", "Marduk", "Armor King", "Julia", "Negan", "Zafina", "Ganryu", "Leroy Smith", "Fahkumram", "Kunimitsu", "Lidia" };
 
@@ -33,9 +38,5 @@ namespace Tekken_7_Player_Displayer_csharp
 
         public static readonly long OPPONENT_STRUCT_CHARACTER_STATIC_POINTER = 0x34D24A0;  //to get the real static pointer: needs to be added to the module name
         public static readonly int[] OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS = { 0, 0x8, 0x10 };
-
-        public static readonly int SCREEN_MODE_FULLSCREEN = 0;
-        public static readonly int SCREEN_MODE_BORDERLESS = 1;
-        public static readonly int SCREEN_MODE_WINDOWED = 2;
     }
 }

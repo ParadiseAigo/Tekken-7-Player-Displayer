@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Tekken_7_Player_Displayer_csharp
+namespace Tekken_7_Player_Displayer
 {
     class PlayerList
     {
@@ -123,14 +123,14 @@ namespace Tekken_7_Player_Displayer_csharp
             long opponentStructCharacterAddress = ProcessMemory.GetDynamicAddress(MainWindow.tekkenModulePointer + Pointers.OPPONENT_STRUCT_CHARACTER_STATIC_POINTER, Pointers.OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS);
             long newOpponentStructCharacter = ProcessMemory.ReadMemory<long>(opponentStructCharacterAddress);
             long steamId = MainWindow.lastFoundSteamId;
-            Gui.PrintToGuiConsole($"New opponent    : {currentLoadedOpponentName}\r\n");
-            Gui.PrintToGuiConsole($"Character id    : {newOpponentStructCharacter}\r\n");
-            Gui.PrintToGuiConsole($"Steam id        : {steamId}\r\n");
+            Gui.PrintLineToGuiConsole($"New opponent    : {currentLoadedOpponentName}");
+            Gui.PrintLineToGuiConsole($"Character id    : {newOpponentStructCharacter}");
+            Gui.PrintLineToGuiConsole($"Steam id        : {steamId}");
             if (newOpponentStructCharacter != 255)
             {
-                Gui.PrintToGuiConsole($"Character name:   {Pointers.ALL_CHARACTERS[newOpponentStructCharacter]}\r\n");
+                Gui.PrintLineToGuiConsole($"Character name:   {Pointers.ALL_CHARACTERS[newOpponentStructCharacter]}");
                 string newPlayerlistLine = PlayerList.MakePlayerlistEntry(currentLoadedOpponentName, Pointers.ALL_CHARACTERS[newOpponentStructCharacter], steamId);
-                Gui.PrintToGuiConsole($"Playerlist entry: {newPlayerlistLine}\r\n");
+                Gui.PrintLineToGuiConsole($"Playerlist entry: {newPlayerlistLine}");
                 PlayerList.WriteLineToFile(Pointers.PLAYERLIST_PATH, newPlayerlistLine);
             }
         }
@@ -200,17 +200,17 @@ namespace Tekken_7_Player_Displayer_csharp
 
         public static void OpenPlayerlist()
         {
-            Gui.PrintToGuiConsole("Opening playerlist...\r\n");
+            Gui.PrintLineToGuiConsole("Opening playerlist...");
             if (File.Exists(Pointers.PLAYERLIST_PATH))
             {
-                ProcessWindow.SetScreenMode(Pointers.SCREEN_MODE_WINDOWED);
+                Tekken.SetScreenMode(Pointers.SCREEN_MODE_WINDOWED);
                 new Process { 
                     StartInfo = new ProcessStartInfo(Pointers.PLAYERLIST_PATH) { UseShellExecute = true } 
                 }.Start();
             }
             else
             {
-                Gui.PrintToGuiConsole("Playerlist is not found, creating a new one...\r\n");
+                Gui.PrintLineToGuiConsole("Playerlist is not found, creating a new one...");
                 CreateFile(Pointers.PLAYERLIST_PATH);
             }
         }
@@ -220,14 +220,13 @@ namespace Tekken_7_Player_Displayer_csharp
             try
             {
                 using (File.Create(filePath)) {}
-                Gui.PrintToGuiConsole($"File \"{filePath}\" created.\r\n");
+                Gui.PrintLineToGuiConsole($"File \"{filePath}\" created.");
             }
             catch (Exception ex)
             {
-                Gui.PrintToGuiConsole($"Error in CreateFile: Error creating the file \"{filePath}\": {ex.Message}\r\n");
+                Gui.PrintLineToGuiConsole($"Error in CreateFile: Error creating the file \"{filePath}\": {ex.Message}");
             }
         }
-
 
         public static string GetLastCharacterInPlayerlist(string filePath)
         {

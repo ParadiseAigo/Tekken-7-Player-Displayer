@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Tekken_7_Player_Displayer_csharp
+namespace Tekken_7_Player_Displayer
 {
     class ProcessWindow
     {
@@ -20,46 +20,15 @@ namespace Tekken_7_Player_Displayer_csharp
         public const int SW_MINIMIZE = 6;
         public const int SW_RESTORE = 9;
 
-
         public static IntPtr GetWindowHandle(string windowName)
         {
             return FindWindow(null, windowName);
         }
-        public static void SetScreenMode(int newScreenMode)
-        {
-            if (MainWindow.tekkenWindowHandle != IntPtr.Zero)
-            {
-                int screenMode;
-                string screenModeInEnglish;
-                switch (newScreenMode)
-                {
-                    case var value when value == Pointers.SCREEN_MODE_FULLSCREEN:
-                        screenModeInEnglish = "fullscreen";
-                        break;
-                    case var value when value == Pointers.SCREEN_MODE_BORDERLESS:
-                        screenModeInEnglish = "borderless";
-                        break;
-                    case var value when value == Pointers.SCREEN_MODE_WINDOWED:
-                        screenModeInEnglish = "windowed";
-                        break;
-                    default:
-                        screenModeInEnglish = "unknown";
-                        break;
-                }
-                screenMode = ProcessMemory.ReadMemory<int>(MainWindow.screenModePointer);
-                if (screenMode != newScreenMode)
-                {
-                    ProcessMemory.WriteMemory<int>(MainWindow.screenModePointer, newScreenMode);
-                    MinimizeAndRestoreTekkenWindow();
-                    Gui.PrintToGuiConsole($"Screen mode set to {screenModeInEnglish}\r\n");
-                }
-            }
-        }
 
-        private static void MinimizeAndRestoreTekkenWindow()
+        public static void MinimizeAndRestoreWindow(IntPtr windowHandle)
         {
-            ShowWindow(MainWindow.tekkenWindowHandle, SW_MINIMIZE);
-            ShowWindow(MainWindow.tekkenWindowHandle, SW_RESTORE);
+            ShowWindow(windowHandle, SW_MINIMIZE);
+            ShowWindow(windowHandle, SW_RESTORE);
         }
     }
 }

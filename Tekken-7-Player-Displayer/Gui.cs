@@ -2,20 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 
-namespace Tekken_7_Player_Displayer_csharp
+namespace Tekken_7_Player_Displayer
 {
     class Gui
     {
+        public static void PrintLineToGuiConsole(string text)
+        {
+            PrintToGuiConsole($"{text}\r\n");
+        }
+
         public static void PrintToGuiConsole(string text)
         {
             MainWindow.main.Dispatcher.BeginInvoke(new Action(() =>
@@ -41,6 +39,7 @@ namespace Tekken_7_Player_Displayer_csharp
             MainWindow.main.Dispatcher.BeginInvoke(new Action(() =>
             {
                 MainWindow.main.guiOpponentName.Text = "";
+                MainWindow.main.guiLocation.Text = "";
                 MainWindow.main.guiLastCharacter.Text = "";
                 MainWindow.main.guiComment.Text = "";
                 MainWindow.main.guiProfilePicture.Source = null;
@@ -55,6 +54,14 @@ namespace Tekken_7_Player_Displayer_csharp
             }));
         }
 
+        public static void SetLocationInGui(string location)
+        {
+            MainWindow.main.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                MainWindow.main.guiLocation.Text = location;
+            }));
+        }
+
         public static void SetProfilePictureInGui(string picturePath)
         {
             MainWindow.main.Dispatcher.BeginInvoke(new Action(() =>
@@ -64,10 +71,8 @@ namespace Tekken_7_Player_Displayer_csharp
         }
 
         /// <summary>
-        /// Allows different processes or threads to read the same picture
+        /// Reads an image and allows different processes or threads to read the same picture
         /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
         private static BitmapImage InitImage(string filePath)
         {
             BitmapImage bitmapImage;
@@ -77,26 +82,33 @@ namespace Tekken_7_Player_Displayer_csharp
                 byte[] bytes = reader.ReadBytes((int)fi.Length);
                 reader.Close();
 
-                //image = new Image();
                 bitmapImage = new BitmapImage();
                 bitmapImage.BeginInit();
                 bitmapImage.StreamSource = new MemoryStream(bytes);
                 bitmapImage.EndInit();
                 bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                //image.Source = bitmapImage;
                 reader.Dispose();
             }
             return bitmapImage;
         }
 
+        internal static void ShowErrorMessageBoxAndClose(string message, string caption)
+        {
+            MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+            MainWindow.main.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                MainWindow.main.Close();
+            }));
+        }
+
         public static void SetTekkenWindowed()
         {
-            ProcessWindow.SetScreenMode(Pointers.SCREEN_MODE_WINDOWED);
+            Tekken.SetScreenMode(Pointers.SCREEN_MODE_WINDOWED);
         }
 
         public static void SetTekkenFullscreen()
         {
-            ProcessWindow.SetScreenMode(Pointers.SCREEN_MODE_FULLSCREEN);
+            Tekken.SetScreenMode(Pointers.SCREEN_MODE_FULLSCREEN);
         }
 
         public static void OpenCommentWindow()

@@ -1,18 +1,20 @@
-﻿<Window x:Class="Tekken_7_Player_Displayer_csharp.MainWindow"
+﻿<Window x:Class="Tekken_7_Player_Displayer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Tekken_7_Player_Displayer_csharp"
+        xmlns:local="clr-namespace:Tekken_7_Player_Displayer"
         mc:Ignorable="d"
-        Title="Tekken 7 - Player Displayer" Height="600" Width="800">
+        Title="Tekken 7 - Player Displayer" Height="700" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3.5*"/>
+            <RowDefinition Height="3.3*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="1*"/>
@@ -21,27 +23,33 @@
             <RowDefinition Height="2*"/>
             <RowDefinition Height="4*"/>
         </Grid.RowDefinitions>
-        <TextBox x:Name="guiConsole" TextWrapping="Wrap" Margin="20,20,20,20" Grid.RowSpan="8" FontFamily="Consolas" VerticalScrollBarVisibility="Auto"/>
-        <Label Grid.Column="1" Margin="0,20,20,10" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" FontFamily="Consolas" VerticalAlignment="Center" Content=" ALT + F : Set Tekken in Fullscreen Mode&#x0a; ALT + W : Set Tekken in Windowed Mode&#x0a; ALT + C : Add a Comment in the Player List&#x0a; ALT + O : Open the Player List&#x0a; ALT + S : Turn on in-game feedback"/>
+        <TextBox x:Name="guiConsole" TextWrapping="Wrap" Margin="20,20,20,20" Grid.RowSpan="10" FontFamily="Consolas" VerticalScrollBarVisibility="Auto"/>
+        <Label Grid.Column="1" Margin="0,20,20,10" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" FontFamily="Consolas" Content=" ALT + F : Set Tekken in Fullscreen Mode&#x0a; ALT + W : Set Tekken in Windowed Mode&#x0a; ALT + C : Add a Comment in the Player List&#x0a; ALT + O : Open the Player List&#x0a; ALT + S : Turn on in-game feedback"/>
         <Label Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" Content="Opponent Name" FontStyle="Italic"/>
         <Border Grid.Column="1" Grid.Row="2" Margin="0,10,20,10" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5">
             <Viewbox>
                 <TextBlock x:Name="guiOpponentName" FontSize="24"/>
             </Viewbox>
         </Border>
-        <Label Grid.Column="1" Grid.Row="3" VerticalAlignment="Bottom" HorizontalAlignment="Left" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" Content="Last Character" FontStyle="Italic"/>
+        <Label Grid.Column="1" Grid.Row="3" VerticalAlignment="Bottom" HorizontalAlignment="Left" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" Content="IP Location" FontStyle="Italic"/>
         <Border Grid.Column="1" Grid.Row="4" Margin="0,10,20,10" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5">
+            <Viewbox>
+                <TextBlock x:Name="guiLocation" FontSize="24"/>
+            </Viewbox>
+        </Border>
+        <Label Grid.Column="1" Grid.Row="5" VerticalAlignment="Bottom" HorizontalAlignment="Left" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" Content="Last Character" FontStyle="Italic"/>
+        <Border Grid.Column="1" Grid.Row="6" Margin="0,10,20,10" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5">
             <Viewbox>
                 <TextBlock x:Name="guiLastCharacter" FontSize="24"/>
             </Viewbox>
         </Border>
-        <Label Grid.Column="1" Grid.Row="5" VerticalAlignment="Bottom" HorizontalAlignment="Left" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" Content="Comment" FontStyle="Italic"/>
-        <Border Grid.Column="1" Grid.Row="6" Margin="0,10,20,10" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5">
+        <Label Grid.Column="1" Grid.Row="7" VerticalAlignment="Bottom" HorizontalAlignment="Left" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" Content="Comment" FontStyle="Italic"/>
+        <Border Grid.Column="1" Grid.Row="8" Margin="0,10,20,10" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5">
             <Viewbox>
                 <TextBlock x:Name="guiComment" FontSize="24"/>
             </Viewbox>
         </Border>
-        <Border Grid.Column="1" Grid.Row="7" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" Width="100" Height="100" Margin="0,10,0,20">
+        <Border Grid.Column="1" Grid.Row="9" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" Width="100" Height="100" Margin="0,10,0,20">
             <Image x:Name="guiProfilePicture"/>
         </Border>
     </Grid>

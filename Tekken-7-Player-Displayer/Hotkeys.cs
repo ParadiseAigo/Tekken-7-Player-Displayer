@@ -5,18 +5,14 @@ using System.Text;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace Tekken_7_Player_Displayer_csharp
+namespace Tekken_7_Player_Displayer
 {
     public static class Hotkeys
     {
         public delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-
         public static extern IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hmod, int dwThreadId);
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
@@ -33,21 +29,6 @@ namespace Tekken_7_Player_Displayer_csharp
         [DllImport("user32.dll")]
         private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
-        private const int WH_KEYBOARD_LL = 13;
-        public const int ALT = 0x0001;
-        public const int KEY_W = 0x57;
-        public const int KEY_F = 0x46;
-        public const int KEY_C = 0x43;
-        public const int KEY_O = 0x4F;
-        public const int KEY_S = 0x53;
-
-        private class Hotkey
-        {
-            public int Modifier;
-            public int Key;
-            public Action handler;
-        }
-
         public struct KBDLLHOOKSTRUCT
         {
             public int vkCode;
@@ -56,6 +37,21 @@ namespace Tekken_7_Player_Displayer_csharp
             public uint time;
             public IntPtr dwExtraInfo;
         }
+
+        private class Hotkey
+        {
+            public int Modifier;
+            public int Key;
+            public Action handler;
+        }
+
+        private const int WH_KEYBOARD_LL = 13;
+        private const int ALT = 0x0001;
+        private const int KEY_W = 0x57;
+        private const int KEY_F = 0x46;
+        private const int KEY_C = 0x43;
+        private const int KEY_O = 0x4F;
+        private const int KEY_S = 0x53;
 
         private static IntPtr hHook;
         private static HookProc hookProc;

@@ -1,7 +1,7 @@
-﻿<Application x:Class="Tekken_7_Player_Displayer_csharp.App"
+﻿<Application x:Class="Tekken_7_Player_Displayer.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Tekken_7_Player_Displayer_csharp"
+             xmlns:local="clr-namespace:Tekken_7_Player_Displayer"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

@@ -16,7 +16,7 @@ using System.Windows.Media;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Tekken_7_Player_Displayer_csharp
+namespace Tekken_7_Player_Displayer
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -44,15 +44,15 @@ namespace Tekken_7_Player_Displayer_csharp
         {
             InitializeComponent();
 
-            InitWindows();
-            InitHotkeys();
+            InitMainWindow();
             StartMainThread();
         }
 
-        private void InitWindows()
+        private void InitMainWindow()
         {
             main = this;
             Closed += MainWindow_Closed;
+            InitHotkeys();
         }
 
         private void InitHotkeys()
@@ -71,21 +71,30 @@ namespace Tekken_7_Player_Displayer_csharp
         private void RunMainThread()
         {
             InitPlayerlist();
+            InitSteamworksAPI();
             LoadTargetProcess();
             EditTargetProcessLoop();
         }
 
         private void InitPlayerlist()
         {
-            Gui.PrintToGuiConsole("Checking your list  \"Tekken Player List.txt\"  ...\r\n");
+            Gui.PrintLineToGuiConsole("Checking your list  \"Tekken Player List.txt\"  ...");
             if (!File.Exists(Pointers.PLAYERLIST_PATH))
             {
-                Gui.PrintToGuiConsole("\"Tekken Player List.txt\" not found.\r\nAttempting to create a new one.\r\n");
+                Gui.PrintLineToGuiConsole("\"Tekken Player List.txt\" not found.\r\nAttempting to create a new one.");
                 PlayerList.CreateExamplePlayerlist();
             }
             else
             {
-                Gui.PrintToGuiConsole("Good  \"Tekken Player List.txt\"  is OK.\r\n");
+                Gui.PrintLineToGuiConsole("Good  \"Tekken Player List.txt\"  is OK.");
+            }
+        }
+
+        private void InitSteamworksAPI()
+        {
+            if (!SteamworksAPI.Init(Pointers.TEKKEN_STEAM_APP_ID))
+            {
+                Gui.ShowErrorMessageBoxAndClose("Could not initialize Steam API", "Steam API Error");
             }
         }
 
@@ -95,7 +104,7 @@ namespace Tekken_7_Player_Displayer_csharp
             InitTekkenWindowHandle();
             InitPointers();
             Tekken.CleanAllProcessMessages();
-            Gui.PrintToGuiConsole("Program ready!\r\n");
+            Gui.PrintLineToGuiConsole("Program ready!");
         }
 
         private void InitTekkenHandle()
@@ -103,10 +112,10 @@ namespace Tekken_7_Player_Displayer_csharp
             int secondsDelay = 2;
             while (!ProcessMemory.Attach(Pointers.TEKKEN_EXE_NAME))
             {
-                Gui.PrintToGuiConsole($"Tekken not found. Trying again in {secondsDelay} seconds...\r\n");
+                Gui.PrintLineToGuiConsole($"Tekken not found. Trying again in {secondsDelay} seconds...");
                 Thread.Sleep(secondsDelay * 1000);
             }
-            Gui.PrintToGuiConsole($"Tekken found! pid = ({ProcessMemory.Process.Id})\r\n");
+            Gui.PrintLineToGuiConsole($"Tekken found! pid = ({ProcessMemory.Process.Id})");
         }
 
         private void InitTekkenWindowHandle()
@@ -114,16 +123,16 @@ namespace Tekken_7_Player_Displayer_csharp
             int secondsDelay = 2;
             while (null == (tekkenWindowHandle = ProcessWindow.GetWindowHandle(Pointers.TEKKEN_WINDOW_NAME)))
             {
-                Gui.PrintToGuiConsole($"Searching for Tekken window. Trying again in {secondsDelay} seconds...\r\n");
+                Gui.PrintLineToGuiConsole($"Searching for Tekken window. Trying again in {secondsDelay} seconds...");
                 Thread.Sleep(secondsDelay * 1000); // milliseconds
             }
-            Gui.PrintToGuiConsole("Tekken window found!\r\n");
+            Gui.PrintLineToGuiConsole("Tekken window found!");
         }
 
         private void InitPointers()
         {
             InitModuleAdresses();
-            Gui.PrintToGuiConsole("Pointers loaded.\r\n");
+            Gui.PrintLineToGuiConsole("Pointers loaded.");
         }
 
         public void InitModuleAdresses()
@@ -136,19 +145,15 @@ namespace Tekken_7_Player_Displayer_csharp
             tekkenModulePointer = ProcessMemory.GetModuleAddress(Pointers.TEKKEN_MODULE_NAME);
             if (steamModulePointer == 0)
             {
-                Gui.PrintToGuiConsole("Error: failed to get the module base address of the steam api.\r\n");
+                Gui.PrintLineToGuiConsole("Error: failed to get the module base address of the steam api.");
             }
             if (tekkenModulePointer == 0)
             {
-                Gui.PrintToGuiConsole("Error: failed to get the module base address of tekken.\r\n");
+                Gui.PrintLineToGuiConsole("Error: failed to get the module base address of tekken.");
             }
             if (tekkenModulePointer == 0 || steamModulePointer == 0)
             {
-                Gui.PrintToGuiConsole("Impossible to continue... please restart this program.\r\n");
-                while (true)
-                { // let the program sleep.... forever
-                    Thread.Sleep(10000);
-                }
+                Gui.ShowErrorMessageBoxAndClose("Failed to get module address...", "Error");
             }
             long userSteamIdAddress = ProcessMemory.GetDynamicAddress(steamModulePointer + Pointers.STEAM_ID_USER_STATIC_POINTER, Pointers.STEAM_ID_USER_POINTER_OFFSETS);
             userSteamId = ProcessMemory.ReadMemory<long>(userSteamIdAddress);
@@ -168,7 +173,6 @@ namespace Tekken_7_Player_Displayer_csharp
             while (true)
             {
                 Thread.Sleep(delayWhileSearching);
-                //UpdateOpponentNameTwo(); // todo remove
                 if (Tekken.IsNewOpponentReceived())
                 {
                     Tekken.CleanAllProcessMessages();
@@ -209,6 +213,7 @@ namespace Tekken_7_Player_Displayer_csharp
         {
             Hotkeys.Disable();
             if (Gui.IsWindowInstantiated<CommentWindow>()) commentWindow.Close();
+            SteamworksAPI.Shutdown();
         }
     }
 }
