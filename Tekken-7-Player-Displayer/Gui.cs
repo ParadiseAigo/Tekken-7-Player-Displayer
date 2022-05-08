@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
@@ -14,7 +15,7 @@ namespace Tekken_7_Player_Displayer
             PrintToGuiConsole($"{text}\r\n");
         }
 
-        public static void PrintToGuiConsole(string text)
+        private static void PrintToGuiConsole(string text)
         {
             MainWindow.main.Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -92,15 +93,6 @@ namespace Tekken_7_Player_Displayer
             return bitmapImage;
         }
 
-        internal static void ShowErrorMessageBoxAndClose(string message, string caption)
-        {
-            MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
-            MainWindow.main.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                MainWindow.main.Close();
-            }));
-        }
-
         public static void SetTekkenWindowed()
         {
             Tekken.SetScreenMode(Pointers.SCREEN_MODE_WINDOWED);
@@ -135,6 +127,20 @@ namespace Tekken_7_Player_Displayer
             window.Activate();
             window.Topmost = true;
             window.Topmost = false;
+        }
+
+        public static void PrintCannotContinueAndSleepForever()
+        {
+            PrintLineToGuiConsole("Impossible to continue....");
+            SleepForever();
+        }
+
+        public static void SleepForever()
+        {
+            while (true)
+            { // let the program sleep.... forever
+                Thread.Sleep(10000);
+            }
         }
     }
 }

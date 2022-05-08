@@ -148,6 +148,7 @@ namespace Tekken_7_Player_Displayer
             // aigo debugging (delete this)
             //	PrintLineToGuiConsole($"opponentstructcharacter = {opponentStructCharacter} , opponentstructname = {opponentStructName}\r\n";
             if (opponentStructName != "NOT_LOGGED_IN" &&
+                (opponentStructName != "") &&
                 (opponentStructName[0] != '\0') &&
                 (MainWindow.isSteamIdFound == true) &&
                 (opponentStructCharacter < numberOfCharacters) &&

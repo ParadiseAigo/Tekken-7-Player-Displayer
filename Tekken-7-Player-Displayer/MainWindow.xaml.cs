@@ -71,7 +71,6 @@ namespace Tekken_7_Player_Displayer
         private void RunMainThread()
         {
             InitPlayerlist();
-            InitSteamworksAPI();
             LoadTargetProcess();
             EditTargetProcessLoop();
         }
@@ -90,19 +89,12 @@ namespace Tekken_7_Player_Displayer
             }
         }
 
-        private void InitSteamworksAPI()
-        {
-            if (!SteamworksAPI.Init(Pointers.TEKKEN_STEAM_APP_ID))
-            {
-                Gui.ShowErrorMessageBoxAndClose("Could not initialize Steam API", "Steam API Error");
-            }
-        }
-
         private void LoadTargetProcess()
         {
             InitTekkenHandle();
             InitTekkenWindowHandle();
             InitPointers();
+            InitSteamworksAPI();
             Tekken.CleanAllProcessMessages();
             Gui.PrintLineToGuiConsole("Program ready!");
         }
@@ -121,7 +113,8 @@ namespace Tekken_7_Player_Displayer
         private void InitTekkenWindowHandle()
         {
             int secondsDelay = 2;
-            while (null == (tekkenWindowHandle = ProcessWindow.GetWindowHandle(Pointers.TEKKEN_WINDOW_NAME)))
+            while (null == (tekkenWindowHandle = ProcessWindow.GetWindowHandle(Pointers.TEKKEN_WINDOW_NAME))
+                    && !ProcessWindow.IsWindow(tekkenWindowHandle))
             {
                 Gui.PrintLineToGuiConsole($"Searching for Tekken window. Trying again in {secondsDelay} seconds...");
                 Thread.Sleep(secondsDelay * 1000); // milliseconds
@@ -153,13 +146,22 @@ namespace Tekken_7_Player_Displayer
             }
             if (tekkenModulePointer == 0 || steamModulePointer == 0)
             {
-                Gui.ShowErrorMessageBoxAndClose("Failed to get module address...", "Error");
+                Gui.PrintCannotContinueAndSleepForever();
             }
             long userSteamIdAddress = ProcessMemory.GetDynamicAddress(steamModulePointer + Pointers.STEAM_ID_USER_STATIC_POINTER, Pointers.STEAM_ID_USER_POINTER_OFFSETS);
             userSteamId = ProcessMemory.ReadMemory<long>(userSteamIdAddress);
             screenModePointer = ProcessMemory.GetDynamicAddress(tekkenModulePointer + Pointers.SCREEN_MODE_STATIC_POINTER, Pointers.SCREEN_MODE_POINTER_OFFSETS);
         }
-        
+
+        private void InitSteamworksAPI()
+        {
+            if (!SteamworksAPI.Init(Pointers.TEKKEN_STEAM_APP_ID))
+            {
+                Gui.PrintLineToGuiConsole("Error: failed to initialize steap api.");
+                Gui.PrintCannotContinueAndSleepForever();
+            }
+        }
+
         private void EditTargetProcessLoop()
         {
             bool areMessagesClean;
@@ -193,7 +195,8 @@ namespace Tekken_7_Player_Displayer
                 }
                 if (DidSomeoneCloseTekkenWindow())
                 {
-                    RestartProgram();
+                    Gui.PrintLineToGuiConsole("Tekken window not found.");
+                    Gui.PrintCannotContinueAndSleepForever();
                 }
             }
         }
@@ -201,12 +204,6 @@ namespace Tekken_7_Player_Displayer
         private bool DidSomeoneCloseTekkenWindow()
         {
             return !ProcessWindow.IsWindow(tekkenWindowHandle);
-        }
-
-        private void RestartProgram()
-        {
-            Thread.Sleep(3000); // wait to make sure the tekken process has closed after the window was closed
-            LoadTargetProcess();
         }
 
         void MainWindow_Closed(object sender, EventArgs e)
