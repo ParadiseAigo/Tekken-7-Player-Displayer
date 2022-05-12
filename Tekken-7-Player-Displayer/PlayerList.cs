@@ -48,10 +48,11 @@ namespace Tekken_7_Player_Displayer
         public static string ExtractCommentFromPlayerlistLine(string line)
         {
             int lineIndex = 0;
-            int lineSize = line.Length;
+            int lineSize;
             int tabsCount = 0;
             if (line != null)
             {
+                lineSize = line.Length;
                 while (tabsCount < 3 && (lineIndex + 2) < lineSize)
                 {
                     if (line[lineIndex] == '\t')
@@ -60,15 +61,16 @@ namespace Tekken_7_Player_Displayer
                         {
                             tabsCount++;
                         }
+                        else
+                        {
+                            // ignore mutliple tabs
+                        }
                     }
-                    else
-                    {
-                        // ignore mutliple tabs
-                    }
+                    lineIndex++;
                 }
-                lineIndex++;
+                return line.Substring(lineIndex, lineSize - lineIndex);
             }
-            return line.Substring(lineIndex, lineSize);
+            return ""; // aigo bookmark, remember this?!
         }
 
         public static string ExtractCharacterFromPlayerlistLine(string line)
