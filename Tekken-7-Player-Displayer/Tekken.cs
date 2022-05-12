@@ -146,7 +146,7 @@ namespace Tekken_7_Player_Displayer
             string opponentStructName = ProcessMemory.ReadString(opponentStructNameAddress);
             int opponentStructCharacter = ProcessMemory.ReadMemory<int>(opponentStructCharacterAddress);
             // aigo debugging (delete this)
-            //	PrintLineToGuiConsole($"opponentstructcharacter = {opponentStructCharacter} , opponentstructname = {opponentStructName}\r\n";
+            // Gui.PrintLineToGuiConsole($"opponentstructcharacter = {opponentStructCharacter} , opponentstructname = {opponentStructName}");
             if (opponentStructName != "NOT_LOGGED_IN" &&
                 (opponentStructName != "") &&
                 (opponentStructName[0] != '\0') &&

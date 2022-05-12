@@ -121,7 +121,7 @@ namespace Tekken_7_Player_Displayer
         public static void SaveNewPlayerlistEntry(string currentLoadedOpponentName)
         {
             long opponentStructCharacterAddress = ProcessMemory.GetDynamicAddress(MainWindow.tekkenModulePointer + Pointers.OPPONENT_STRUCT_CHARACTER_STATIC_POINTER, Pointers.OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS);
-            long newOpponentStructCharacter = ProcessMemory.ReadMemory<long>(opponentStructCharacterAddress);
+            int newOpponentStructCharacter = ProcessMemory.ReadMemory<int>(opponentStructCharacterAddress);
             long steamId = MainWindow.lastFoundSteamId;
             Gui.PrintLineToGuiConsole($"New opponent    : {currentLoadedOpponentName}");
             Gui.PrintLineToGuiConsole($"Character id    : {newOpponentStructCharacter}");
