@@ -59,7 +59,7 @@ namespace Tekken_7_Player_Displayer
         private static void ResetSteamApiBaseModuleAddress()
         {
             Gui.PrintLineToGuiConsole("Resetting Steam api module base address.");
-            MainWindow.main.InitModuleAdresses();
+            MainWindow.mainWindow.InitModuleAdresses();
         }
 
         private static long ReadSteamIdIfValid(long steamIdAddress)

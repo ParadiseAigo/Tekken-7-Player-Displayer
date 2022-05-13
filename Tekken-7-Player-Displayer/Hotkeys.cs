@@ -65,7 +65,7 @@ namespace Tekken_7_Player_Displayer
             hHook = IntPtr.Zero;
             hotkeys = new Dictionary<int, Hotkey>();
             hookProc = new HookProc(EvtDispatcher);
-            windowHandle = new WindowInteropHelper(MainWindow.main).Handle;
+            windowHandle = new WindowInteropHelper(MainWindow.mainWindow).Handle;
         }
 
         public static void Init()

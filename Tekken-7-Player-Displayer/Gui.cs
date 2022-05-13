@@ -17,57 +17,57 @@ namespace Tekken_7_Player_Displayer
 
         private static void PrintToGuiConsole(string text)
         {
-            MainWindow.main.Dispatcher.BeginInvoke(new Action(() =>
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
-                MainWindow.main.guiConsole.Text += text;
-                MainWindow.main.guiConsole.ScrollToEnd();
+                MainWindow.mainWindow.guiConsole.Text += text;
+                MainWindow.mainWindow.guiConsole.ScrollToEnd();
             }));
             Console.Write(text);
         }
 
         public static void UpdateAllGuiMessages(string newOpponentName, string characterName, string playerlistComment)
         {
-            MainWindow.main.Dispatcher.BeginInvoke(new Action(() =>
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
-                MainWindow.main.guiOpponentName.Text = newOpponentName;
-                MainWindow.main.guiLastCharacter.Text = characterName;
-                MainWindow.main.guiComment.Text = playerlistComment;
+                MainWindow.mainWindow.guiOpponentName.Text = newOpponentName;
+                MainWindow.mainWindow.guiLastCharacter.Text = characterName;
+                MainWindow.mainWindow.guiComment.Text = playerlistComment;
             }));
         }
 
         public static void CleanAllGuiMessages()
         {
-            MainWindow.main.Dispatcher.BeginInvoke(new Action(() =>
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
-                MainWindow.main.guiOpponentName.Text = "";
-                MainWindow.main.guiLocation.Text = "";
-                MainWindow.main.guiLastCharacter.Text = "";
-                MainWindow.main.guiComment.Text = "";
-                MainWindow.main.guiProfilePicture.Source = null;
+                MainWindow.mainWindow.guiOpponentName.Text = "";
+                MainWindow.mainWindow.guiLocation.Text = "";
+                MainWindow.mainWindow.guiLastCharacter.Text = "";
+                MainWindow.mainWindow.guiComment.Text = "";
+                MainWindow.mainWindow.guiProfilePicture.Source = null;
             }));
         }
 
         public static void SetOpponentNameInGui(string opponentName)
         {
-            MainWindow.main.Dispatcher.BeginInvoke(new Action(() =>
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
-                MainWindow.main.guiOpponentName.Text = opponentName;
+                MainWindow.mainWindow.guiOpponentName.Text = opponentName;
             }));
         }
 
         public static void SetLocationInGui(string location)
         {
-            MainWindow.main.Dispatcher.BeginInvoke(new Action(() =>
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
-                MainWindow.main.guiLocation.Text = location;
+                MainWindow.mainWindow.guiLocation.Text = location;
             }));
         }
 
         public static void SetProfilePictureInGui(string picturePath)
         {
-            MainWindow.main.Dispatcher.BeginInvoke(new Action(() =>
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
-                MainWindow.main.guiProfilePicture.Source = InitImage(picturePath);
+                MainWindow.mainWindow.guiProfilePicture.Source = InitImage(picturePath);
             }));
         }
 
@@ -131,7 +131,7 @@ namespace Tekken_7_Player_Displayer
 
         public static void PrintCannotContinueAndSleepForever()
         {
-            PrintLineToGuiConsole("Impossible to continue....");
+            PrintLineToGuiConsole("Impossible to continue.... (Please restart the program.)");
             SleepForever();
         }
 
