@@ -26,7 +26,7 @@
             <RowDefinition Height="2*"/>
             <RowDefinition Height="3.9*"/>
         </Grid.RowDefinitions>
-        <TextBox x:Name="guiConsole" FontSize="15" Background="#FF3A3732" Foreground="White" BorderBrush="Black" TextWrapping="Wrap" Margin="20,20,20,20" Grid.RowSpan="10" FontFamily="Consolas" VerticalScrollBarVisibility="Auto"/>
+        <TextBox x:Name="guiConsole" FontSize="15" Background="#FF3A3732" Foreground="White" BorderBrush="Black" TextWrapping="Wrap" Margin="20,20,20,20" Grid.RowSpan="10" FontFamily="Consolas" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
         <Label Grid.Column="1" FontSize="16" Background="#FFC6C6C6" Margin="0,20,20,10" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" FontFamily="Consolas" Content=" ALT + F : Set Tekken in Fullscreen Mode&#x0a; ALT + W : Set Tekken in Windowed Mode&#x0a; ALT + C : Add a Comment in the Player List&#x0a; ALT + O : Open the Player List&#x0a; ALT + S : Turn on in-game feedback"/>
         <Label Grid.Column="1" Grid.Row="1" Background="#FFC6C6C6" VerticalAlignment="Bottom" HorizontalAlignment="Left" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" Content="Opponent Name" FontStyle="Italic"/>
         <Border Grid.Column="1" Grid.Row="2" Background="#FFC6C6C6" Margin="0,10,20,10" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5">
