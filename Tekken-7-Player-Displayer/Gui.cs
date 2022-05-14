@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -133,6 +134,16 @@ namespace Tekken_7_Player_Displayer
         {
             PrintLineToGuiConsole("Impossible to continue.... (Please restart the program.)");
             SleepForever();
+        }
+
+        public static void PrintCannotContinueAndRestartProgram()
+        {
+            PrintLineToGuiConsole("Impossible to continue.... (Restarting the program.)");
+            Process.Start(Process.GetCurrentProcess().MainModule.FileName);
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                Application.Current.Shutdown();
+            }));
         }
 
         public static void SleepForever()

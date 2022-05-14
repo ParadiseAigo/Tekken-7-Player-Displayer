@@ -15,16 +15,16 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3.3*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="2*"/>
             <RowDefinition Height="4*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="3.9*"/>
         </Grid.RowDefinitions>
         <TextBox x:Name="guiConsole" FontSize="15" Background="#FF3A3732" Foreground="White" BorderBrush="Black" TextWrapping="Wrap" Margin="20,20,20,20" Grid.RowSpan="10" FontFamily="Consolas" VerticalScrollBarVisibility="Auto"/>
         <Label Grid.Column="1" FontSize="16" Background="#FFC6C6C6" Margin="0,20,20,10" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" FontFamily="Consolas" Content=" ALT + F : Set Tekken in Fullscreen Mode&#x0a; ALT + W : Set Tekken in Windowed Mode&#x0a; ALT + C : Add a Comment in the Player List&#x0a; ALT + O : Open the Player List&#x0a; ALT + S : Turn on in-game feedback"/>
