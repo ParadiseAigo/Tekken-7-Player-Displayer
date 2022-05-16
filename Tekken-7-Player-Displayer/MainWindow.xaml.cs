@@ -189,7 +189,7 @@ namespace Tekken_7_Player_Displayer
                 if (DidSomeoneCloseTekkenWindow())
                 {
                     Gui.PrintLineToGuiConsole("Tekken window closed. (Can't find it anymore.)");
-                    Gui.PrintCannotContinueAndRestartProgram();
+                    Gui.PrintCannotContinueAndCloseProgram();
                 }
             }
         }

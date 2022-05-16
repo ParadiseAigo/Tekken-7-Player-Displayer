@@ -136,10 +136,9 @@ namespace Tekken_7_Player_Displayer
             SleepForever();
         }
 
-        public static void PrintCannotContinueAndRestartProgram()
+        public static void PrintCannotContinueAndCloseProgram()
         {
-            PrintLineToGuiConsole("Impossible to continue.... (Restarting the program.)");
-            Process.Start(Process.GetCurrentProcess().MainModule.FileName);
+            PrintLineToGuiConsole("Impossible to continue.... (Closing the program.)");
             MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
                 Application.Current.Shutdown();
