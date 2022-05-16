@@ -28,9 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="lib\steam_api64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="lib\steam_api64.dll" CopyToOutputDirectory="PreserveNewest" Link="%(Filename)%(Extension)" />
   </ItemGroup>
-
+  
 </Project>
