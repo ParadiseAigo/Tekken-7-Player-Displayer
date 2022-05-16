@@ -21,6 +21,7 @@ namespace Tekken_7_Player_Displayer
             MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
                 MainWindow.mainWindow.guiConsole.Text += text;
+                MainWindow.mainWindow.guiConsole.CaretIndex = MainWindow.mainWindow.guiConsole.Text.Length;
                 MainWindow.mainWindow.guiConsole.ScrollToEnd();
             }));
             Console.Write(text);
