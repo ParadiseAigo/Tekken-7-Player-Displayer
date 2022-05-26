@@ -40,8 +40,24 @@ namespace Tekken_7_Player_Displayer
         private void InitMainWindow()
         {
             mainWindow = this;
+            SetWindowPosition();
             Closed += MainWindow_Closed;
             InitHotkeys();
+        }
+
+        private void SetWindowPosition()
+        {
+            if (Double.TryParse(Settings.Default.WindowPositionX, out double windowPositionX) && 
+                Double.TryParse(Settings.Default.WindowPositionY, out double windowPositionY))
+            {
+                this.Left = windowPositionX;
+                this.Top = windowPositionY;
+            }
+        }
+
+        private bool DoesWindowPositionFileExist()
+        {
+            throw new NotImplementedException();
         }
 
         private void InitHotkeys()
@@ -207,9 +223,17 @@ namespace Tekken_7_Player_Displayer
 
         void MainWindow_Closed(object sender, EventArgs e)
         {
+            SaveWindowPosition();
             Hotkeys.Disable();
             if (Gui.IsWindowInstantiated<CommentWindow>()) commentWindow.Close();
             SteamworksAPI.Shutdown();
+        }
+
+        private void SaveWindowPosition()
+        {
+            Settings.Default.WindowPositionX = this.Left.ToString();
+            Settings.Default.WindowPositionY = this.Top.ToString();
+            Settings.Default.Save();
         }
     }
 }
