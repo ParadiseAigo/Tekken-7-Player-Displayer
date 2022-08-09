@@ -151,7 +151,7 @@ void editTargetProcessLoop() {
 	char* currentLoadedOpponentName;
 	bool areMessagesClean;
 	int delayWhileSearching = 1000/10; // "10fps" (updates 10 times a sec)
-	int delayWhileFighting = 2000; // 2 seconds, unused variable :(
+	int delayWhileFighting = 2000; // 2 seconds, unused variable
 	currentLoadedOpponentName = (char*) malloc(10 * sizeof(char)); // dummy value
 	currentLoadedOpponentName[0] = '\0'; // empty string
 	lastFoundSteamId = -1;  // global variable
