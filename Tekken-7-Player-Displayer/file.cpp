@@ -129,15 +129,17 @@ bool doesFileExist(char* filePath) {
 	}
 }
 
-void createFile(char* filePath) {
+bool createFile(char* filePath) {
 	FILE* file;
 	errno_t errorCode;
 	if (0 != (errorCode = fopen_s(&file, filePath, "a"))) {
 		myGuiTerminalPrint(std::string("Error in createFile: Error creating the file ").append(std::string(filePath)).append(std::string("\r\n")));
+		return false;
 	}
 	else {
 		myGuiTerminalPrint(std::string("File \"").append(std::string(filePath)).append(std::string("\" created.\r\n")));
 		fclose(file);
+		return true;
 	}
 }
 
@@ -513,6 +515,31 @@ void saveWindowPositionInFile() {
 	fclose(file);
 	free(windowPositionFilePath);
 	free(appdataPath);
+}
+
+void createSteamappidFile() {
+	FILE* file;
+	errno_t errorCode;
+	if (!doesFileExist((char*)"steam_appid.txt")) {
+		createFile((char*)"steam_appid.txt");
+	}
+	/*
+	if (0 != (errorCode = fopen_s(&file, path, "r+"))) {
+		myGuiTerminalPrint(std::string("Error opening a file in writeLineToFile, error code = ")
+			.append(std::to_string(errorCode))
+			.append(std::string("\r\n"))
+		);
+		if (!doesFileExist((char*)PLAYERLIST_PATH)) {
+			myGuiTerminalPrint(std::string("Playerlist is not found, creating a new one...\r\n"));
+			createFile((char*) PLAYERLIST_PATH);
+		}
+		return;
+	}
+	fseek(file, 0L, SEEK_END);
+	fprintf(file, "%s\n", line);
+	fclose(file);
+	*/
+	//File.WriteAllText("steam_appid.txt", steamAppId);
 }
 
 

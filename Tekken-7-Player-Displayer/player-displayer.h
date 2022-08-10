@@ -189,7 +189,7 @@ char* myStringCat(char* s1, char* s2);
 char* copyString(char* s);
 void openPlayerlist();
 bool doesFileExist(char* filePath);
-void createFile(char* filePath);
+bool createFile(char* filePath);
 char* saveNewOpponentInPlayerlist(char* currentLoadedOpponentName);
 void saveNewPlayerlistEntry(char* currentLoadedOpponentName);
 char* makePlayerlistEntry(char* playerName, char* characterName, QWORD steamId);
@@ -212,6 +212,7 @@ void getWindowSavedPosition(int* xOut, int* yOut);
 void createWindowPositionFile();
 void createWindowPositionFile();
 void saveWindowPositionInFile();
+void createSteamappidFile();
 
 //targetMemory.cpp
 HANDLE getProcessHandle(DWORD pid);
@@ -306,6 +307,7 @@ std::string getOnlineNameUsingSteamId(QWORD steamId);
 std::string getOnlineProfilePictureUrlUsingSteamId(QWORD steamId);
 
 //steamworks.cpp
+bool initSteamworks();
 
 #endif
 
