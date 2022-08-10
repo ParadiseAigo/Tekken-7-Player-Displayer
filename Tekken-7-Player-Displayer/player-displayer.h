@@ -305,5 +305,7 @@ std::string getSteamPageHtml(QWORD steamId);
 std::string getOnlineNameUsingSteamId(QWORD steamId);
 std::string getOnlineProfilePictureUrlUsingSteamId(QWORD steamId);
 
+//steamworks.cpp
+
 #endif
 

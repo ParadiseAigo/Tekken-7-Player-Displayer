@@ -128,7 +128,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -145,6 +145,7 @@
     <ClCompile Include="guiInput.cpp" />
     <ClCompile Include="mainThreads.cpp" />
     <ClCompile Include="steamURL.cpp" />
+    <ClCompile Include="steamworks.cpp" />
     <ClCompile Include="targetMemory.cpp" />
     <ClCompile Include="tekken.cpp" />
     <ClCompile Include="targetWindow.cpp" />
@@ -153,6 +154,51 @@
     <ClInclude Include="player-displayer.h" />
     <ClInclude Include="pointers.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Steamworks\Headers\isteamapplist.h" />
+    <ClInclude Include="Steamworks\Headers\isteamapps.h" />
+    <ClInclude Include="Steamworks\Headers\isteamappticket.h" />
+    <ClInclude Include="Steamworks\Headers\isteamclient.h" />
+    <ClInclude Include="Steamworks\Headers\isteamcontroller.h" />
+    <ClInclude Include="Steamworks\Headers\isteamdualsense.h" />
+    <ClInclude Include="Steamworks\Headers\isteamfriends.h" />
+    <ClInclude Include="Steamworks\Headers\isteamgamecoordinator.h" />
+    <ClInclude Include="Steamworks\Headers\isteamgameserver.h" />
+    <ClInclude Include="Steamworks\Headers\isteamgameserverstats.h" />
+    <ClInclude Include="Steamworks\Headers\isteamhtmlsurface.h" />
+    <ClInclude Include="Steamworks\Headers\isteamhttp.h" />
+    <ClInclude Include="Steamworks\Headers\isteaminput.h" />
+    <ClInclude Include="Steamworks\Headers\isteaminventory.h" />
+    <ClInclude Include="Steamworks\Headers\isteammatchmaking.h" />
+    <ClInclude Include="Steamworks\Headers\isteammusic.h" />
+    <ClInclude Include="Steamworks\Headers\isteammusicremote.h" />
+    <ClInclude Include="Steamworks\Headers\isteamnetworking.h" />
+    <ClInclude Include="Steamworks\Headers\isteamnetworkingmessages.h" />
+    <ClInclude Include="Steamworks\Headers\isteamnetworkingsockets.h" />
+    <ClInclude Include="Steamworks\Headers\isteamnetworkingutils.h" />
+    <ClInclude Include="Steamworks\Headers\isteamparentalsettings.h" />
+    <ClInclude Include="Steamworks\Headers\isteamps3overlayrenderer.h" />
+    <ClInclude Include="Steamworks\Headers\isteamremoteplay.h" />
+    <ClInclude Include="Steamworks\Headers\isteamremotestorage.h" />
+    <ClInclude Include="Steamworks\Headers\isteamscreenshots.h" />
+    <ClInclude Include="Steamworks\Headers\isteamugc.h" />
+    <ClInclude Include="Steamworks\Headers\isteamuser.h" />
+    <ClInclude Include="Steamworks\Headers\isteamuserstats.h" />
+    <ClInclude Include="Steamworks\Headers\isteamutils.h" />
+    <ClInclude Include="Steamworks\Headers\isteamvideo.h" />
+    <ClInclude Include="Steamworks\Headers\matchmakingtypes.h" />
+    <ClInclude Include="Steamworks\Headers\steamclientpublic.h" />
+    <ClInclude Include="Steamworks\Headers\steamencryptedappticket.h" />
+    <ClInclude Include="Steamworks\Headers\steamhttpenums.h" />
+    <ClInclude Include="Steamworks\Headers\steamnetworkingfakeip.h" />
+    <ClInclude Include="Steamworks\Headers\steamnetworkingtypes.h" />
+    <ClInclude Include="Steamworks\Headers\steamps3params.h" />
+    <ClInclude Include="Steamworks\Headers\steamtypes.h" />
+    <ClInclude Include="Steamworks\Headers\steamuniverse.h" />
+    <ClInclude Include="Steamworks\Headers\steam_api.h" />
+    <ClInclude Include="Steamworks\Headers\steam_api_common.h" />
+    <ClInclude Include="Steamworks\Headers\steam_api_flat.h" />
+    <ClInclude Include="Steamworks\Headers\steam_api_internal.h" />
+    <ClInclude Include="Steamworks\Headers\steam_gameserver.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Tekken-7-Player-Displayer.rc" />
@@ -160,6 +206,13 @@
   <ItemGroup>
     <Image Include="images\application.ico" />
     <Image Include="images\background.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Steamworks\DLLs\steam_api64.dll" />
+    <None Include="Steamworks\Headers\steam_api.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Steamworks\DLLs\steam_api64.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Steamworks">
+      <UniqueIdentifier>{63669817-98c0-4098-8c5a-43d90229152d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Steamworks\Headers">
+      <UniqueIdentifier>{cbdef4c6-b11c-4794-a726-3e4fd9383c13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Steamworks\DLLs">
+      <UniqueIdentifier>{1e897121-cc4d-4f23-8888-bd08cda913f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pointers.h">
@@ -23,6 +32,141 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamapplist.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamapps.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamappticket.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamclient.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamcontroller.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamdualsense.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamfriends.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamgamecoordinator.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamgameserver.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamgameserverstats.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamhtmlsurface.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamhttp.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteaminput.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteaminventory.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteammatchmaking.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteammusic.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteammusicremote.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamnetworking.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamnetworkingmessages.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamnetworkingsockets.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamnetworkingutils.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamparentalsettings.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamps3overlayrenderer.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamremoteplay.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamremotestorage.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamscreenshots.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamugc.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamuser.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamuserstats.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamutils.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\isteamvideo.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\matchmakingtypes.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\steam_api.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\steam_api_common.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\steam_api_flat.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\steam_api_internal.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\steam_gameserver.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\steamclientpublic.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\steamencryptedappticket.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\steamhttpenums.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\steamnetworkingfakeip.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\steamnetworkingtypes.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\steamps3params.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\steamtypes.h">
+      <Filter>Steamworks\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Steamworks\Headers\steamuniverse.h">
+      <Filter>Steamworks\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +197,9 @@
     <ClCompile Include="steamURL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="steamworks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Tekken-7-Player-Displayer.rc">
@@ -66,5 +213,18 @@
     <Image Include="images\background.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Steamworks\DLLs\steam_api64.dll">
+      <Filter>Steamworks\DLLs</Filter>
+    </None>
+    <None Include="Steamworks\Headers\steam_api.json">
+      <Filter>Steamworks\Headers</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Steamworks\DLLs\steam_api64.lib">
+      <Filter>Steamworks\DLLs</Filter>
+    </Library>
   </ItemGroup>
 </Project>
