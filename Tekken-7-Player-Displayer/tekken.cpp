@@ -210,8 +210,9 @@ void displayOpponentInfoFromWeb(QWORD steamId) {
 	name = extractNameFromSteamHtmlString(htmlString);
 	pictureLink = extractProfilePictureUrlFromSteamHtmlString(htmlString);
 	displayOpponentNameFromWeb(name);
-	displayOpponentProfilePictureFromWeb(pictureLink);
 	updateSecondsRemainingMessage((char*)name.c_str());
+	displayOpponentProfilePictureFromWeb(pictureLink);
+	displayOpponentLocationFromWeb(steamId);
 }
 
 void displayOpponentNameFromWeb(std::string name) {
@@ -234,6 +235,14 @@ void displayOpponentProfilePictureFromWeb(std::string pictureLink) {
 	} else {
 		loadOpponentProfilePictureFromFileAndRedraw(picturePath);
 	}
+}
+
+void displayOpponentLocationFromWeb(QWORD steamId) {
+	std::string ip = getIPAddressForSteamId(steamId);
+	/*std::string location = IPLocation.GetLocation(ip);
+	if (location == "") location = "?";
+	myGuiTerminalPrint("Opponent location: " + location);
+	Gui.SetLocationInGui(location);*/ // this
 }
 
 void updateOpponentNameTwo() {
