@@ -517,29 +517,11 @@ void saveWindowPositionInFile() {
 	free(appdataPath);
 }
 
-void createSteamappidFile() {
-	FILE* file;
-	errno_t errorCode;
-	if (!doesFileExist((char*)"steam_appid.txt")) {
-		createFile((char*)"steam_appid.txt");
+void createSteamappidFile(char* steamAppId) {
+	if (!doesFileExist((char*)STEAMAPPID_PATH)) {
+		createFile((char*)STEAMAPPID_PATH);
+		writeLineToFile((char*)STEAMAPPID_PATH, (char*) steamAppId);
 	}
-	/*
-	if (0 != (errorCode = fopen_s(&file, path, "r+"))) {
-		myGuiTerminalPrint(std::string("Error opening a file in writeLineToFile, error code = ")
-			.append(std::to_string(errorCode))
-			.append(std::string("\r\n"))
-		);
-		if (!doesFileExist((char*)PLAYERLIST_PATH)) {
-			myGuiTerminalPrint(std::string("Playerlist is not found, creating a new one...\r\n"));
-			createFile((char*) PLAYERLIST_PATH);
-		}
-		return;
-	}
-	fseek(file, 0L, SEEK_END);
-	fprintf(file, "%s\n", line);
-	fclose(file);
-	*/
-	//File.WriteAllText("steam_appid.txt", steamAppId);
 }
 
 

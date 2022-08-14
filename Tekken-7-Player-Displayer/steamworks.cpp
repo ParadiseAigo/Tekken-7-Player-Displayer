@@ -1,27 +1,23 @@
 #include "player-displayer.h"
 #include "Steamworks/Headers/steam_api.h"
 
-bool initSteamworks() {
-	createSteamappidFile();									// now writing this function
-	//bool success = SteamAPI.Init();                     // this function and class
-	//return success;
+bool initSteamworks(char* steamAppId) {
+	createSteamappidFile(steamAppId);
+	bool success = SteamAPI_Init();
+	return success;
 }
 
-/*
-public static void Shutdown() {
-	SteamAPI.Shutdown();
-}*/
+void shutdownSteamWorks() {
+	SteamAPI_Shutdown();
+}
 
-/*
-public static string GetIPAddressForSteamId(long steamId) {             // steam id of an account
-	string ip = "";
-	CSteamID id = new CSteamID((ulong)steamId);                         // this
-	P2PSessionState_t sessionState = new P2PSessionState_t();           // this
-	if (SteamNetworking.GetP2PSessionState(id, out sessionState))       // this
+std::string getIPAddressForSteamId(QWORD steamId) {
+	std::string ip = "";
+	CSteamID id = CSteamID((uint64) steamId);
+	P2PSessionState_t sessionState;
+	if (SteamNetworking()->GetP2PSessionState(id, &sessionState))
 	{
-		byte[] ipBytes = BitConverter.GetBytes(sessionState.m_nRemoteIP).Reverse().ToArray();   // this
-		ip = new IPAddress(ipBytes).ToString();
+		ip = ipAddressToString(sessionState.m_nRemoteIP);
 	}
 	return ip;
 }
-*/

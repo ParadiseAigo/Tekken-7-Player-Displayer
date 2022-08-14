@@ -57,6 +57,7 @@ void closeThreads() {
 unsigned __stdcall mainThread(void* arguments) {
 	initPlayerlist();
 	initVariables();
+	initLibraries();
 	loadTargetProcess();
 	editTargetProcessLoop();
 	endThread();
@@ -79,10 +80,15 @@ void initVariables() {
 	silentMode = true; // global variable
 }
 
+void initLibraries() {
+	initWindowsSocketsAPI();
+}
+
 void loadTargetProcess() {
 	initTekkenHandle();
 	initTekkenWindowHandle();
 	initPointers();
+	initSteamworksAPI();
 	cleanAllProcessMessages();
 	myGuiTerminalPrint(std::string("Program ready!\r\n"));
 }
@@ -147,6 +153,18 @@ void initModuleAdresses() {
 	}
 }
 
+void initSteamworksAPI()
+{
+	if (!initSteamworks((char*) TEKKEN_STEAM_APP_ID))
+	{
+		myGuiTerminalPrint("Error: failed to initialize steam api.\r\n");
+		myGuiTerminalPrint("Impossible to continue....\r\n");
+		while (1) { // let the program sleep.... forever
+			Sleep(10000);
+		}
+	}
+}
+
 void editTargetProcessLoop() {
 	char* currentLoadedOpponentName;
 	bool areMessagesClean;
@@ -199,4 +217,5 @@ void restartProgram() {
 
 void closeProgram() {
 	CloseHandle(tekkenHandle);
+	shutdownSteamWorks();
 }
