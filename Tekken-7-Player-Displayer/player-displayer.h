@@ -2,7 +2,6 @@
 #define TEKKEN7_PLAYERDISPLAYER_H
 
 #include <iostream>
-#include <winsock2.h> // to convert an ip to a string, must be included before windows.h
 #include <windows.h>
 #include <string>
 #include <sstream>
@@ -26,7 +25,6 @@
                    "\"") 
 
 #pragma comment(lib, "urlmon.lib") // to download a website
-#pragma comment(lib, "Ws2_32.lib") // to convert an ip to a string
 
 #define PLAYERLIST_PATH "Tekken Player List.txt"
 #define STEAMAPPID_PATH "steam_appid.txt"
@@ -146,7 +144,6 @@ void closeThreads();
 unsigned __stdcall mainThread(void* arguments);
 void initPlayerlist();
 void initVariables();
-void initLibraries();
 void loadTargetProcess();
 void initTekkenHandle();
 void initTekkenWindowHandle();
@@ -242,7 +239,6 @@ int getMaxSizeStringInMemory(HANDLE processHandle, void* address);
 HWND getWindowHandle(const wchar_t* programWindowName);
 void setScreenMode(DWORD screenMode);
 void minimizeAndRestoreTekkenWindow();
-void initWindowsSocketsAPI();
 std::string ipAddressToString(u_long ip);
 
 //gui.cpp

@@ -57,7 +57,6 @@ void closeThreads() {
 unsigned __stdcall mainThread(void* arguments) {
 	initPlayerlist();
 	initVariables();
-	initLibraries();
 	loadTargetProcess();
 	editTargetProcessLoop();
 	endThread();
@@ -78,10 +77,6 @@ void initPlayerlist() {
 
 void initVariables() {
 	silentMode = true; // global variable
-}
-
-void initLibraries() {
-	initWindowsSocketsAPI();
 }
 
 void loadTargetProcess() {

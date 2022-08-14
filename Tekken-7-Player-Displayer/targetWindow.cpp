@@ -44,26 +44,14 @@ void minimizeAndRestoreTekkenWindow() {
     showWindow(tekkenWindowHandle, SW_RESTORE);
 }
 
-void initWindowsSocketsAPI() {
-    WORD wVersionRequested = MAKEWORD(2, 2);
-    WSADATA wsaData;
-    long errorCode = WSAStartup(wVersionRequested, &wsaData);
-    if (errorCode != 0) {
-        myGuiTerminalPrint(std::string("Error finding a usable WinSock DLL, error code = ").append(std::to_string(GetLastError())).append(std::string("\r\n")));
-    }
-}
-
 std::string ipAddressToString(u_long ip) {  
-    struct sockaddr_in ipAddress = {};
-    ipAddress.sin_family = AF_INET;
-    u_long ipReversed = htonl(ip);
-    memcpy(&ipAddress.sin_addr, &ipReversed, sizeof(struct in_addr));
-
-    const int maxBytesIpAddress = 16;
-    wchar_t ipString[maxBytesIpAddress];
-    long errorCode = WSAAddressToString((struct sockaddr*)&ipAddress, sizeof(struct sockaddr_in), 0, ipString, (LPDWORD)&maxBytesIpAddress);
-    if (errorCode != 0) {
-        myGuiTerminalPrint(std::string("Error in ipAddressToString, error code = ").append(std::to_string(WSAGetLastError())).append(std::string("\r\n")));
-    }
-    return wcharPtrToString(ipString);
+    // the ip address is a hex number with 8 digits: 2 digits for each number in the ip address
+    u_long ip4thNumber = ip % 0x100;
+    u_long ip3rdNumber = (ip / 0x100) % 0x100;
+    u_long ip2ndNumber = (ip / 0x10000) % 0x100;
+    u_long ip1stNumber = (ip / 0x1000000) % 0x100;
+    return std::to_string(ip1stNumber).append(".")
+        .append(std::to_string(ip2ndNumber)).append(".")
+        .append(std::to_string(ip3rdNumber)).append(".")
+        .append(std::to_string(ip4thNumber));
 }
