@@ -200,6 +200,9 @@
     <ClCompile Include="steamworks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="locatingIP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Tekken-7-Player-Displayer.rc">

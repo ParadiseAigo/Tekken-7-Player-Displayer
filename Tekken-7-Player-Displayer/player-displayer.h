@@ -309,5 +309,10 @@ std::string getOnlineProfilePictureUrlUsingSteamId(QWORD steamId);
 //steamworks.cpp
 bool initSteamworks();
 
+//locatingIP.cpp
+std::string getIpLocation(std::wstring ipAddress);
+std::string extractLocationFromHtmlString(std::string htmlString);
+std::string findXmlTagValue(std::string xmlString, std::string tag);
+
 #endif
 
