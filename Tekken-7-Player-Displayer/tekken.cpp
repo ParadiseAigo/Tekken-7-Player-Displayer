@@ -218,7 +218,7 @@ void displayOpponentInfoFromWeb(QWORD steamId) {
 void displayOpponentNameFromWeb(std::string name) {
 	char* opponentName = (char*)name.c_str();
 	myGuiTerminalPrint(std::string("Steam id's name:  ").append(std::string(opponentName)).append(std::string("\r\n")));
-	setOpponentNameOneInGui(opponentName);
+	setOpponentNameInGui(opponentName);
 }
 
 void displayOpponentProfilePictureFromWeb(std::string pictureLink) {
@@ -238,22 +238,11 @@ void displayOpponentProfilePictureFromWeb(std::string pictureLink) {
 }
 
 void displayOpponentLocationFromWeb(QWORD steamId) {
-	std::string ip = getIPAddressForSteamId(steamId);
-	/*std::string location = IPLocation.GetLocation(ip);
+	std::string ip = getIpAddressForSteamId(steamId);
+	std::string location = getIpLocation(charPtrToWString((char*) ip.c_str()));
 	if (location == "") location = "?";
-	myGuiTerminalPrint("Opponent location: " + location);
-	Gui.SetLocationInGui(location);*/ // this
-}
-
-void updateOpponentNameTwo() {
-	opponentNamePointer = (void*)getDynamicPointer(tekkenHandle, (void*) ((QWORD)tekkenModulePointer + OPPONENT_NAME_STATIC_POINTER), OPPONENT_NAME_POINTER_OFFSETS);
-	char* opponentName = readStringFromMemory(tekkenHandle, opponentNamePointer);
-	if (strcmp(lastFoundName, opponentName) != 0) {
-		setOpponentNameTwoInGui(opponentName);
-		free(lastFoundName);
-		lastFoundName = copyString(opponentName);
-	}
-	free(opponentName);
+	myGuiTerminalPrint("Opponent location: " + location + "\r\n");
+	setOpponentLocationInGui((char*) location.c_str());
 }
 
 void turnOffSilentMode() {
