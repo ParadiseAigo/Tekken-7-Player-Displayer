@@ -87,6 +87,8 @@ void createMainWindow() {
     int X_MAINWINDOW = SCREEN_WIDTH / 2 - WIDTH_MAINWINDOW / 2;
     int Y_MAINWINDOW = SCREEN_HEIGHT / 2 - HEIGHT_MAINWINDOW / 2;
     int X_TEXTBOX = 650;
+    int WIDTH_TEXTBOX = 380;
+    int WIDTH_OUTPUTTEXTBOX = 580;
 
     if (doesWindowPositionFileExist()) {
         getWindowSavedPosition(&X_MAINWINDOW, &Y_MAINWINDOW);
@@ -103,15 +105,15 @@ void createMainWindow() {
 
     guiWindows.opponentProfilePictureHandle = createWindow(0, TEXT("STATIC"), NULL,
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_BITMAP | SS_REALSIZECONTROL,
-        910, 545, 100, 100, guiWindows.mainWindowHandle);
+        X_TEXTBOX + WIDTH_TEXTBOX/2 - 50, 545, 100, 100, guiWindows.mainWindowHandle);
 
     guiWindows.outputTextHandle = createWindow(WS_EX_PALETTEWINDOW, TEXT("Edit"), NULL,
         WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL | ES_READONLY,
-        40, 40, 580, FONT_SIZE * 30 + 10, guiWindows.mainWindowHandle);
+        40, 40, WIDTH_OUTPUTTEXTBOX, FONT_SIZE * 30 + 10, guiWindows.mainWindowHandle);
 
     HWND shortcutsTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_INFORMATION),
         WS_CHILD | WS_VISIBLE | WS_BORDER,
-        X_TEXTBOX, 50, 380, 18 * 5 + 5, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 50, WIDTH_TEXTBOX, 18 * 5 + 5, guiWindows.mainWindowHandle);
 
     HWND opponentNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent Name"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
@@ -128,16 +130,16 @@ void createMainWindow() {
 
     guiWindows.opponentNameValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
-        X_TEXTBOX, 200, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 200, WIDTH_TEXTBOX, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
     guiWindows.opponentLocationValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
-        X_TEXTBOX, 330, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 330, WIDTH_TEXTBOX, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
     guiWindows.opponentCharacterValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
-        X_TEXTBOX, 460, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 460, WIDTH_TEXTBOX, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
     guiWindows.commentValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL | ES_READONLY,
-        40, 580, 845, 20 * 2 + 10, guiWindows.mainWindowHandle);
+        40, 580, WIDTH_OUTPUTTEXTBOX, 20 * 2 + 10, guiWindows.mainWindowHandle);
 
     HBITMAP backgroundBitmapHandle = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(BACKGROUND));
     sendMessage(backgroundImageHandle, STM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)backgroundBitmapHandle);
