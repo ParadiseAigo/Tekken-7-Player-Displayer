@@ -148,10 +148,8 @@ void initModuleAdresses() {
 	}
 }
 
-void initSteamworksAPI()
-{
-	if (!initSteamworks((char*) TEKKEN_STEAM_APP_ID))
-	{
+void initSteamworksAPI() {
+	if (!initSteamworks((char*) TEKKEN_STEAM_APP_ID)) {
 		myGuiTerminalPrint("Error: failed to initialize steam api.\r\n");
 		myGuiTerminalPrint("Impossible to continue.... Restarting this program might fix this problem.\r\n");
 		while (1) { // let the program sleep.... forever

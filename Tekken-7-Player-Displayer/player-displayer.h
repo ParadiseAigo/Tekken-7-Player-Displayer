@@ -238,7 +238,6 @@ int getMaxSizeStringInMemory(HANDLE processHandle, void* address);
 HWND getWindowHandle(const wchar_t* programWindowName);
 void setScreenMode(DWORD screenMode);
 void minimizeAndRestoreTekkenWindow();
-std::string ipAddressToString(u_long ip);
 
 //gui.cpp
 unsigned __stdcall guiThread(void* arguments);
@@ -312,7 +311,8 @@ std::string getOnlineProfilePictureUrlUsingSteamId(QWORD steamId);
 //steamworks.cpp
 bool initSteamworks(char* steamAppId);
 void shutdownSteamWorks();
-std::string getIpAddressForSteamId(QWORD steamId);
+std::string getIpAddressOfSteamId(QWORD steamId);
+std::string ipAddressToString(u_long ip);
 
 //locatingIP.cpp
 std::string getIpLocation(std::wstring ipAddress);

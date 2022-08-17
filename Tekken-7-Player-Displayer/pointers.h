@@ -19,10 +19,6 @@
 #define STEAM_ID_USER_STATIC_POINTER 0x2FF78  //to get the real static pointer: needs to be added to the module name, example: "steam_api64_o.dll"+2FC50
 #define STEAM_ID_USER_POINTER_OFFSETS {}
 
-// steam name of opponent (no longer needed: steam id is better and its address is more reliable)
-#define OPPONENT_NAME_STATIC_POINTER 0x34CD240  //to get the real static pointer: needs to be added to the module name
-#define OPPONENT_NAME_POINTER_OFFSETS {}
-
 // steam name of opponent after having accepted
 #define OPPONENT_STRUCT_NAME_STATIC_POINTER 0x34D24A0  //to get the real static pointer: needs to be added to the module name
 #define OPPONENT_STRUCT_NAME_POINTER_OFFSETS {0, 0x8, 0x11C}
@@ -42,6 +38,10 @@
 #define SCREEN_MODE_WINDOWED 2
 
 // old addresses:
+
+// steam name of opponent (no longer needed: steam id is better and its address is more reliable)
+//#define OPPONENT_NAME_STATIC_POINTER 0x34CD240  //to get the real static pointer: needs to be added to the module name
+//#define OPPONENT_NAME_POINTER_OFFSETS {}
 
 //#define FIGHT_THIS_PLAYER_MESSAGE_STATIC_POINTER 0x34CB8E0  //to get the real static pointer: needs to be added to the module name
 //#define FIGHT_THIS_PLAYER_MESSAGE_POINTER_OFFSETS {0x58, 0x330, 0x40, 0x30, 0x158, -0x14B609}

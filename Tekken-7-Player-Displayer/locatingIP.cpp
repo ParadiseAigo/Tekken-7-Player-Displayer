@@ -2,8 +2,6 @@
 
 // how to use:
 //getIpLocation(std::wstring(L"103.149.162.195"))
-//getIpLocation(std::wstring(L"175.45.176.0"))
-//myGuiTerminalPrint(getIpLocation(std::wstring(L"184.154.82.162")).append("\r\n")); // amreeeka
 std::string getIpLocation(std::wstring ipAddress) {
     std::wstring url;
 	std::string result;
@@ -23,8 +21,7 @@ std::string extractLocationFromHtmlString(std::string htmlString) {
     country = findXmlTagValue(htmlString, countryTagName);
     region = findXmlTagValue(htmlString, regionTagName);
     city = findXmlTagValue(htmlString, cityTagName);
-    result = country.append(region == "" ? "" : ", " + region)
-                    .append(city == "" ? "" : ", " + city);
+    result = country.append(", ").append(region).append(", ").append(city);
     return result;
 }
 

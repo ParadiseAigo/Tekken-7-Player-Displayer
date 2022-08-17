@@ -238,7 +238,7 @@ void displayOpponentProfilePictureFromWeb(std::string pictureLink) {
 }
 
 void displayOpponentLocationFromWeb(QWORD steamId) {
-	std::string ip = getIpAddressForSteamId(steamId);
+	std::string ip = getIpAddressOfSteamId(steamId);
 	std::string location = getIpLocation(charPtrToWString((char*) ip.c_str()));
 	if (location == "") location = "?";
 	myGuiTerminalPrint("Opponent location: " + location + "\r\n");
