@@ -115,18 +115,18 @@ void createMainWindow() {
         WS_CHILD | WS_VISIBLE | WS_BORDER,
         X_TEXTBOX, 50, WIDTH_TEXTBOX, 18 * 5 + 5, guiWindows.mainWindowHandle);
 
-    HWND opponentNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent Name"),
+    HWND opponentNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent's name"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        X_TEXTBOX, 170, 200, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
-    HWND opponentLocationTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent Location"),
+        X_TEXTBOX, 170, 250, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+    HWND opponentLocationTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent's location"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        X_TEXTBOX, 300, 200, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
-    HWND opponentCharacterTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Last Character"),
+        X_TEXTBOX, 300, 250, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+    HWND opponentCharacterTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Last used character"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        X_TEXTBOX, 430, 200, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
-    HWND commentNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Your Comment"),
+        X_TEXTBOX, 430, 250, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+    HWND commentNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Your comment"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        40, 550, 150, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+        40, 550, 200, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
 
     guiWindows.opponentNameValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
