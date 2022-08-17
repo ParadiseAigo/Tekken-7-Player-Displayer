@@ -211,6 +211,7 @@
   <ItemGroup>
     <None Include="Steamworks\DLLs\steam_api64.dll" />
     <None Include="Steamworks\Headers\steam_api.json" />
+    <None Include="steam_api64.dll" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Steamworks\DLLs\steam_api64.lib" />
