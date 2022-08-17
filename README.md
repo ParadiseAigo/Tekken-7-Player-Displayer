@@ -1,9 +1,9 @@
 # Tekken-7-Player-Displayer
 > See your opponents name before accepting the match and more...
 
-Displays your opponents name, their location (based on their ip address), the character they last used against you and a comment that you can write about them.
+Displays your opponents name, their location, the character they last used against you and a comment that you can write about them.
 
-![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/7git.png)
+![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/ip-17082022/7git.png)
 
 ![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/master/2git.png)
 
@@ -17,7 +17,7 @@ Download the latest release [here](https://github.com/ParadiseAigo/Tekken-7-Play
 ## Usage
 Simply run the executable before or after (doesn't matter) opening Tekken 7.
 
-If you restart Tekken 7 you must also restart Player-Displayer first (or at least close it). (If you don't, Steam might not let you start Tekken 7 again because it thinks Tekken 7 is still running, which happens because Steam thinks Player-Displayer is Tekken 7)
+If you restart Tekken 7 you must also restart Player-Displayer first (or at least close it). (If you don't, Steam might not let you start Tekken again because it thinks Tekken is still running, which happens because Steam thinks Player-Displayer is Tekken 7) 
 
 ## Commands
 * ALT+W  puts the game in windowed mode (so you don't have to worry about crashing the game by alt-tabbing)
