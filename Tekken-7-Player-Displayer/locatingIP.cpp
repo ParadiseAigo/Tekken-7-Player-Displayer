@@ -23,7 +23,8 @@ std::string extractLocationFromHtmlString(std::string htmlString) {
     country = findXmlTagValue(htmlString, countryTagName);
     region = findXmlTagValue(htmlString, regionTagName);
     city = findXmlTagValue(htmlString, cityTagName);
-    result = country.append(", ").append(region).append(", ").append(city);
+    result = country.append(region == "" ? "" : ", " + region)
+                    .append(city == "" ? "" : ", " + city);
     return result;
 }
 

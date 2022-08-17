@@ -2,7 +2,6 @@
 #define TEKKEN7_PLAYERDISPLAYER_H
 
 #include <iostream>
-#include <winsock2.h> // to convert an ip to a string, must be included before windows.h
 #include <windows.h>
 #include <string>
 #include <sstream>
@@ -26,7 +25,6 @@
                    "\"") 
 
 #pragma comment(lib, "urlmon.lib") // to download a website
-#pragma comment(lib, "Ws2_32.lib") // to convert an ip to a string
 
 #define PLAYERLIST_PATH "Tekken Player List.txt"
 #define STEAMAPPID_PATH "steam_appid.txt"
@@ -75,8 +73,8 @@ typedef __int64 QWORD;
 typedef struct GuiWindows {
     HWND mainWindowHandle;
     HWND outputTextHandle;
-    HWND opponentNameOneValueTextHandle;
-    HWND opponentNameTwoValueTextHandle;
+    HWND opponentNameValueTextHandle;
+    HWND opponentLocationValueTextHandle;
     HWND opponentCharacterValueTextHandle;
     HWND opponentProfilePictureHandle;
     HWND commentValueTextHandle;
@@ -146,7 +144,6 @@ void closeThreads();
 unsigned __stdcall mainThread(void* arguments);
 void initPlayerlist();
 void initVariables();
-void initLibraries();
 void loadTargetProcess();
 void initTekkenHandle();
 void initTekkenWindowHandle();
@@ -175,7 +172,6 @@ void displayOpponentInfoFromWeb(QWORD steamId);
 void displayOpponentNameFromWeb(std::string name);
 void displayOpponentProfilePictureFromWeb(std::string pictureLink);
 void displayOpponentLocationFromWeb(QWORD steamId);
-void updateOpponentNameTwo();
 void turnOffSilentMode();
 
 //guiInput.cpp
@@ -242,7 +238,6 @@ int getMaxSizeStringInMemory(HANDLE processHandle, void* address);
 HWND getWindowHandle(const wchar_t* programWindowName);
 void setScreenMode(DWORD screenMode);
 void minimizeAndRestoreTekkenWindow();
-void initWindowsSocketsAPI();
 std::string ipAddressToString(u_long ip);
 
 //gui.cpp
@@ -281,8 +276,8 @@ std::string wcharPtrToString(wchar_t* text);
 void closeAllWindows();
 void closeCommentWindow();
 void deleteFontObjects();
-void setOpponentNameOneInGui(char* opponentName);
-void setOpponentNameTwoInGui(char* opponentName);
+void setOpponentNameInGui(char* opponentName);
+void setOpponentLocationInGui(char* location);
 void setTextAndResizeToFitInWindow(char* text, HWND hwnd);
 bool isTextLargerThanWindow(char* text, HWND hwnd);
 void loadOpponentProfilePictureFromFileAndRedraw(LPCTSTR filePath);
@@ -317,7 +312,7 @@ std::string getOnlineProfilePictureUrlUsingSteamId(QWORD steamId);
 //steamworks.cpp
 bool initSteamworks(char* steamAppId);
 void shutdownSteamWorks();
-std::string getIPAddressForSteamId(QWORD steamId);
+std::string getIpAddressForSteamId(QWORD steamId);
 
 //locatingIP.cpp
 std::string getIpLocation(std::wstring ipAddress);

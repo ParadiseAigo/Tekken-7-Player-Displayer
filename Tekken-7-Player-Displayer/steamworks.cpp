@@ -11,7 +11,7 @@ void shutdownSteamWorks() {
 	SteamAPI_Shutdown();
 }
 
-std::string getIPAddressForSteamId(QWORD steamId) {
+std::string getIpAddressForSteamId(QWORD steamId) {
 	std::string ip = "";
 	CSteamID id = CSteamID((uint64) steamId);
 	P2PSessionState_t sessionState;

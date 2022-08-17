@@ -87,6 +87,8 @@ void createMainWindow() {
     int X_MAINWINDOW = SCREEN_WIDTH / 2 - WIDTH_MAINWINDOW / 2;
     int Y_MAINWINDOW = SCREEN_HEIGHT / 2 - HEIGHT_MAINWINDOW / 2;
     int X_TEXTBOX = 650;
+    int WIDTH_TEXTBOX = 380;
+    int WIDTH_OUTPUTTEXTBOX = 580;
 
     if (doesWindowPositionFileExist()) {
         getWindowSavedPosition(&X_MAINWINDOW, &Y_MAINWINDOW);
@@ -103,52 +105,52 @@ void createMainWindow() {
 
     guiWindows.opponentProfilePictureHandle = createWindow(0, TEXT("STATIC"), NULL,
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_BITMAP | SS_REALSIZECONTROL,
-        910, 545, 100, 100, guiWindows.mainWindowHandle);
+        X_TEXTBOX + WIDTH_TEXTBOX/2 - 50, 545, 100, 100, guiWindows.mainWindowHandle);
 
     guiWindows.outputTextHandle = createWindow(WS_EX_PALETTEWINDOW, TEXT("Edit"), NULL,
         WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL | ES_READONLY,
-        40, 40, 580, FONT_SIZE * 30 + 10, guiWindows.mainWindowHandle);
+        40, 40, WIDTH_OUTPUTTEXTBOX, FONT_SIZE * 30 + 10, guiWindows.mainWindowHandle);
 
     HWND shortcutsTextHandle = createWindow(0, TEXT("STATIC"), TEXT(TEXT_INFORMATION),
         WS_CHILD | WS_VISIBLE | WS_BORDER,
-        X_TEXTBOX, 50, 380, 18 * 5 + 5, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 50, WIDTH_TEXTBOX, 18 * 5 + 5, guiWindows.mainWindowHandle);
 
-    HWND opponentNameOneTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent Name (main, from steam)"),
+    HWND opponentNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent Name"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        X_TEXTBOX, 170, 300, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
-    HWND opponentNameTwoTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Opponent Name 2 (extra, ignore)"),
+        X_TEXTBOX, 170, 150, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+    HWND opponentLocationTextHandle = createWindow(0, TEXT("STATIC"), TEXT("IP Location"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        X_TEXTBOX, 300, 300, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 300, 150, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
     HWND opponentCharacterTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Last Character"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
-        X_TEXTBOX, 430, 300, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 430, 150, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
     HWND commentNameTextHandle = createWindow(0, TEXT("STATIC"), TEXT("Comment"),
         WS_CHILD | WS_VISIBLE | WS_BORDER | SS_CENTER,
         40, 550, 100, FONT_SIZE * 1 + 5, guiWindows.mainWindowHandle);
 
-    guiWindows.opponentNameOneValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
+    guiWindows.opponentNameValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
-        X_TEXTBOX, 200, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
-    guiWindows.opponentNameTwoValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
+        X_TEXTBOX, 200, WIDTH_TEXTBOX, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
+    guiWindows.opponentLocationValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
-        X_TEXTBOX, 330, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 330, WIDTH_TEXTBOX, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
     guiWindows.opponentCharacterValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_CENTER | ES_AUTOVSCROLL | ES_READONLY,
-        X_TEXTBOX, 460, 380, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
+        X_TEXTBOX, 460, WIDTH_TEXTBOX, FONT_SIZE * 1 + 40, guiWindows.mainWindowHandle);
     guiWindows.commentValueTextHandle = createWindow(0, TEXT("Edit"), TEXT(""),
         WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_LEFT | ES_AUTOVSCROLL | ES_READONLY,
-        40, 580, 845, 20 * 2 + 10, guiWindows.mainWindowHandle);
+        40, 580, WIDTH_OUTPUTTEXTBOX, 20 * 2 + 10, guiWindows.mainWindowHandle);
 
     HBITMAP backgroundBitmapHandle = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(BACKGROUND));
     sendMessage(backgroundImageHandle, STM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)backgroundBitmapHandle);
     sendMessage(guiWindows.outputTextHandle, WM_SETFONT, (LPARAM)guiFonts.outputTextFont, true);
     sendMessage(shortcutsTextHandle, WM_SETFONT, (LPARAM)guiFonts.shortcutsTextFont, true);
-    sendMessage(opponentNameOneTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
-    sendMessage(opponentNameTwoTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
+    sendMessage(opponentNameTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
+    sendMessage(opponentLocationTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
     sendMessage(opponentCharacterTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
     sendMessage(commentNameTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationNameTextFont, true);
-    sendMessage(guiWindows.opponentNameOneValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
-    sendMessage(guiWindows.opponentNameTwoValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
+    sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
+    sendMessage(guiWindows.opponentLocationValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
     sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.informationValueTextFont, true);
     sendMessage(guiWindows.commentValueTextHandle, WM_SETFONT, (LPARAM)guiFonts.commentTextFont, true);
     
@@ -435,12 +437,12 @@ void showOrHideConsoleWindow() {
     }
 }
 
-void setOpponentNameOneInGui(char* opponentName) {
-    setTextAndResizeToFitInWindow(opponentName, guiWindows.opponentNameOneValueTextHandle);
+void setOpponentNameInGui(char* opponentName) {
+    setTextAndResizeToFitInWindow(opponentName, guiWindows.opponentNameValueTextHandle);
 }
 
-void setOpponentNameTwoInGui(char* opponentName) {
-    setTextAndResizeToFitInWindow(opponentName, guiWindows.opponentNameTwoValueTextHandle);
+void setOpponentLocationInGui(char* location) {
+    setTextAndResizeToFitInWindow(location, guiWindows.opponentLocationValueTextHandle);
 }
 
 void setTextAndResizeToFitInWindow(char* text, HWND hwnd) {
@@ -510,7 +512,7 @@ void clearOpponentProfilePicture() {
 }
 
 void updateAllGuiMessages(char* newOpponentName, char* characterName, char* playerlistComment) {
-    setOpponentNameOneInGui(newOpponentName);
+    setOpponentNameInGui(newOpponentName);
 	if (characterName == NULL) {
 		sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
 	} else {
@@ -520,7 +522,8 @@ void updateAllGuiMessages(char* newOpponentName, char* characterName, char* play
 }
 
 void cleanAllGuiMessages() {
-	sendMessage(guiWindows.opponentNameOneValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
+    sendMessage(guiWindows.opponentNameValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
+    sendMessage(guiWindows.opponentLocationValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
 	sendMessage(guiWindows.opponentCharacterValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
 	sendMessage(guiWindows.commentValueTextHandle, WM_SETTEXT, 0, (LPARAM)TEXT(""));
     clearOpponentProfilePicture();
