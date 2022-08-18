@@ -27,6 +27,7 @@
 #pragma comment(lib, "urlmon.lib") // to download a website
 
 #define PLAYERLIST_PATH "Tekken Player List.txt"
+#define STEAMAPPID_PATH "steam_appid.txt"
 
 #define TITLE_MAINWINDOW "Tekken 7 - Player Displayer"
 #define TITLE_COMMENTWINDOW "Comment"
@@ -72,8 +73,8 @@ typedef __int64 QWORD;
 typedef struct GuiWindows {
     HWND mainWindowHandle;
     HWND outputTextHandle;
-    HWND opponentNameOneValueTextHandle;
-    HWND opponentNameTwoValueTextHandle;
+    HWND opponentNameValueTextHandle;
+    HWND opponentLocationValueTextHandle;
     HWND opponentCharacterValueTextHandle;
     HWND opponentProfilePictureHandle;
     HWND commentValueTextHandle;
@@ -148,6 +149,7 @@ void initTekkenHandle();
 void initTekkenWindowHandle();
 void initPointers();
 void initModuleAdresses();
+void initSteamworksAPI();
 void editTargetProcessLoop();
 bool didSomeoneCloseTekkenWindow();
 void restartProgram();
@@ -169,7 +171,7 @@ char* getNewCurrentLoadedOpponent(char* currentLoadedOpponentName);
 void displayOpponentInfoFromWeb(QWORD steamId);
 void displayOpponentNameFromWeb(std::string name);
 void displayOpponentProfilePictureFromWeb(std::string pictureLink);
-void updateOpponentNameTwo();
+void displayOpponentLocationFromWeb(QWORD steamId);
 void turnOffSilentMode();
 
 //guiInput.cpp
@@ -189,7 +191,7 @@ char* myStringCat(char* s1, char* s2);
 char* copyString(char* s);
 void openPlayerlist();
 bool doesFileExist(char* filePath);
-void createFile(char* filePath);
+bool createFile(char* filePath);
 char* saveNewOpponentInPlayerlist(char* currentLoadedOpponentName);
 void saveNewPlayerlistEntry(char* currentLoadedOpponentName);
 char* makePlayerlistEntry(char* playerName, char* characterName, QWORD steamId);
@@ -212,6 +214,7 @@ void getWindowSavedPosition(int* xOut, int* yOut);
 void createWindowPositionFile();
 void createWindowPositionFile();
 void saveWindowPositionInFile();
+void createSteamappidFile(char* steamAppId);
 
 //targetMemory.cpp
 HANDLE getProcessHandle(DWORD pid);
@@ -272,8 +275,8 @@ std::string wcharPtrToString(wchar_t* text);
 void closeAllWindows();
 void closeCommentWindow();
 void deleteFontObjects();
-void setOpponentNameOneInGui(char* opponentName);
-void setOpponentNameTwoInGui(char* opponentName);
+void setOpponentNameInGui(char* opponentName);
+void setOpponentLocationInGui(char* location);
 void setTextAndResizeToFitInWindow(char* text, HWND hwnd);
 bool isTextLargerThanWindow(char* text, HWND hwnd);
 void loadOpponentProfilePictureFromFileAndRedraw(LPCTSTR filePath);
@@ -304,6 +307,17 @@ std::string extractProfilePictureUrlFromSteamHtmlString(std::string htmlString);
 std::string getSteamPageHtml(QWORD steamId);
 std::string getOnlineNameUsingSteamId(QWORD steamId);
 std::string getOnlineProfilePictureUrlUsingSteamId(QWORD steamId);
+
+//steamworks.cpp
+bool initSteamworks(char* steamAppId);
+void shutdownSteamWorks();
+std::string getIpAddressOfSteamId(QWORD steamId);
+std::string ipAddressToString(u_long ip);
+
+//locatingIP.cpp
+std::string getIpLocation(std::wstring ipAddress);
+std::string extractLocationFromHtmlString(std::string htmlString);
+std::string findXmlTagValue(std::string xmlString, std::string tag);
 
 #endif
 

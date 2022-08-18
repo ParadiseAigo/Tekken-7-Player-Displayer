@@ -83,6 +83,7 @@ void loadTargetProcess() {
 	initTekkenHandle();
 	initTekkenWindowHandle();
 	initPointers();
+	initSteamworksAPI();
 	cleanAllProcessMessages();
 	myGuiTerminalPrint(std::string("Program ready!\r\n"));
 }
@@ -140,7 +141,17 @@ void initModuleAdresses() {
 		myGuiTerminalPrint(std::string("Error: failed to get the module base address of tekken.\r\n"));
 	}
 	if (tekkenModulePointer == 0 || steamModulePointer == 0) {
-		myGuiTerminalPrint(std::string("Impossible to continue....\r\n"));
+		myGuiTerminalPrint(std::string("Impossible to continue.... Restarting this program might fix this problem.\r\n"));
+		while (1) { // let the program sleep.... forever
+			Sleep(10000);
+		}
+	}
+}
+
+void initSteamworksAPI() {
+	if (!initSteamworks((char*) TEKKEN_STEAM_APP_ID)) {
+		myGuiTerminalPrint("Error: failed to initialize steam api.\r\n");
+		myGuiTerminalPrint("Impossible to continue.... Restarting this program might fix this problem.\r\n");
 		while (1) { // let the program sleep.... forever
 			Sleep(10000);
 		}
@@ -162,7 +173,6 @@ void editTargetProcessLoop() {
 	lastNameInPlayerlist = getLastNameInPlayerlist((char*)PLAYERLIST_PATH); //global variable  // set equal to NULL if player list is empty
 	while (true) {
 		Sleep(delayWhileSearching);
-		updateOpponentNameTwo();
 		if (isNewOpponentReceived()) {
 			cleanAllProcessMessages();
 			cleanAllGuiMessages();
@@ -199,4 +209,5 @@ void restartProgram() {
 
 void closeProgram() {
 	CloseHandle(tekkenHandle);
+	shutdownSteamWorks();
 }

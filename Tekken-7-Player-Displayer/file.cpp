@@ -129,15 +129,17 @@ bool doesFileExist(char* filePath) {
 	}
 }
 
-void createFile(char* filePath) {
+bool createFile(char* filePath) {
 	FILE* file;
 	errno_t errorCode;
 	if (0 != (errorCode = fopen_s(&file, filePath, "a"))) {
 		myGuiTerminalPrint(std::string("Error in createFile: Error creating the file ").append(std::string(filePath)).append(std::string("\r\n")));
+		return false;
 	}
 	else {
 		myGuiTerminalPrint(std::string("File \"").append(std::string(filePath)).append(std::string("\" created.\r\n")));
 		fclose(file);
+		return true;
 	}
 }
 
@@ -513,6 +515,13 @@ void saveWindowPositionInFile() {
 	fclose(file);
 	free(windowPositionFilePath);
 	free(appdataPath);
+}
+
+void createSteamappidFile(char* steamAppId) {
+	if (!doesFileExist((char*)STEAMAPPID_PATH)) {
+		createFile((char*)STEAMAPPID_PATH);
+		writeLineToFile((char*)STEAMAPPID_PATH, (char*) steamAppId);
+	}
 }
 
 

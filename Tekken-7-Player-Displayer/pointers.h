@@ -3,6 +3,7 @@
 
 #define TEKKEN_WINDOW_NAME "TEKKEN 7 "
 #define TEKKEN_EXE_NAME "TekkenGame-Win64-Shipping.exe"
+#define TEKKEN_STEAM_APP_ID "389730"
 
 #define ALL_CHARACTERS {"Paul", "Law", "King", "Yoshimitsu", "Hwoarang", "Xiaoyu", "Jin", "Bryan", "Heihachi", "Kazuya", "Steve", "Jack-7", "Asuka", "Devil Jin", "Feng", "Lili", "Dragunov", "Leo", "Lars", "Alisa", "Claudio", "Katarina", "Lucky Chloe", "Shaheen", "Josie", "Gigas", "Kazumi", "Devil Kazumi", "Nina", "Master Raven", "Lee", "Bob", "Akuma", "Kuma", "Panda", "Eddy", "Eliza", "Miguel", "Soldier", "Kid Kazuya", "Jack-#", "Young Heihachi", "Dummy A", "Geese", "Noctis", "Anna", "Lei", "Marduk", "Armor King", "Julia", "Negan", "Zafina", "Ganryu", "Leroy Smith", "Fahkumram", "Kunimitsu", "Lidia"}
 
@@ -18,22 +19,18 @@
 #define STEAM_ID_USER_STATIC_POINTER 0x2FF78  //to get the real static pointer: needs to be added to the module name, example: "steam_api64_o.dll"+2FC50
 #define STEAM_ID_USER_POINTER_OFFSETS {}
 
-// steam name of opponent (no longer needed: steam id is better and its address is more reliable)
-#define OPPONENT_NAME_STATIC_POINTER 0x34CD240  //to get the real static pointer: needs to be added to the module name
-#define OPPONENT_NAME_POINTER_OFFSETS {}
-
 // steam name of opponent after having accepted
-#define OPPONENT_STRUCT_NAME_STATIC_POINTER 0x34D24A0  //to get the real static pointer: needs to be added to the module name
+#define OPPONENT_STRUCT_NAME_STATIC_POINTER 0x34D2520  //to get the real static pointer: needs to be added to the module name
 #define OPPONENT_STRUCT_NAME_POINTER_OFFSETS {0, 0x8, 0x11C}
 
 // character of opponent after having accepted
-#define OPPONENT_STRUCT_CHARACTER_STATIC_POINTER 0x34D24A0  //to get the real static pointer: needs to be added to the module name
+#define OPPONENT_STRUCT_CHARACTER_STATIC_POINTER 0x34D2520  //to get the real static pointer: needs to be added to the module name
 #define OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS {0, 0x8, 0x10}
 
-#define SECONDS_REMAINING_MESSAGE_STATIC_POINTER 0x34CB8E0  //to get the real static pointer: needs to be added to the module name
+#define SECONDS_REMAINING_MESSAGE_STATIC_POINTER 0x34CB960  //to get the real static pointer: needs to be added to the module name
 #define SECONDS_REMAINING_MESSAGE_POINTER_OFFSETS {0x58, 0x330, 0x40, 0x30, 0x158, 0x750}
 
-#define SCREEN_MODE_STATIC_POINTER 0x347ADD8  //to get the real static pointer: needs to be added to the module name
+#define SCREEN_MODE_STATIC_POINTER 0x347ADF8  //to get the real static pointer: needs to be added to the module name
 #define SCREEN_MODE_POINTER_OFFSETS {}
 
 #define SCREEN_MODE_FULLSCREEN 0
@@ -41,6 +38,10 @@
 #define SCREEN_MODE_WINDOWED 2
 
 // old addresses:
+
+// steam name of opponent (no longer needed: steam id is better and its address is more reliable)
+//#define OPPONENT_NAME_STATIC_POINTER 0x34CD240  //to get the real static pointer: needs to be added to the module name
+//#define OPPONENT_NAME_POINTER_OFFSETS {}
 
 //#define FIGHT_THIS_PLAYER_MESSAGE_STATIC_POINTER 0x34CB8E0  //to get the real static pointer: needs to be added to the module name
 //#define FIGHT_THIS_PLAYER_MESSAGE_POINTER_OFFSETS {0x58, 0x330, 0x40, 0x30, 0x158, -0x14B609}
