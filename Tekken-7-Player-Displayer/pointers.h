@@ -20,17 +20,17 @@
 #define STEAM_ID_USER_POINTER_OFFSETS {}
 
 // steam name of opponent after having accepted
-#define OPPONENT_STRUCT_NAME_STATIC_POINTER 0x34D24A0  //to get the real static pointer: needs to be added to the module name
+#define OPPONENT_STRUCT_NAME_STATIC_POINTER 0x34D2520  //to get the real static pointer: needs to be added to the module name
 #define OPPONENT_STRUCT_NAME_POINTER_OFFSETS {0, 0x8, 0x11C}
 
 // character of opponent after having accepted
-#define OPPONENT_STRUCT_CHARACTER_STATIC_POINTER 0x34D24A0  //to get the real static pointer: needs to be added to the module name
+#define OPPONENT_STRUCT_CHARACTER_STATIC_POINTER 0x34D2520  //to get the real static pointer: needs to be added to the module name
 #define OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS {0, 0x8, 0x10}
 
-#define SECONDS_REMAINING_MESSAGE_STATIC_POINTER 0x34CB8E0  //to get the real static pointer: needs to be added to the module name
+#define SECONDS_REMAINING_MESSAGE_STATIC_POINTER 0x34CB960  //to get the real static pointer: needs to be added to the module name
 #define SECONDS_REMAINING_MESSAGE_POINTER_OFFSETS {0x58, 0x330, 0x40, 0x30, 0x158, 0x750}
 
-#define SCREEN_MODE_STATIC_POINTER 0x347ADD8  //to get the real static pointer: needs to be added to the module name
+#define SCREEN_MODE_STATIC_POINTER 0x347ADF8  //to get the real static pointer: needs to be added to the module name
 #define SCREEN_MODE_POINTER_OFFSETS {}
 
 #define SCREEN_MODE_FULLSCREEN 0
