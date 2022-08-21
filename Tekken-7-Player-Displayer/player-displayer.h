@@ -59,7 +59,8 @@
 #define ALT_O 4
 #define ALT_T 5
 #define ALT_S 6
-#define NR_OF_HOTKEYS 6
+#define ALT_L 7
+#define NR_OF_HOTKEYS 7
 
 #define KEY_W 0x57
 #define KEY_F 0x46
@@ -67,6 +68,7 @@
 #define KEY_O 0x4F
 #define KEY_T 0x54
 #define KEY_S 0x53
+#define KEY_L 0x4C
 
 typedef __int64 QWORD;
 
@@ -119,6 +121,7 @@ extern QWORD userSteamId;
 extern char* lastNameInPlayerlist;
 extern char* lastFoundName;
 extern bool silentMode;
+extern bool fullLocation;
 
 extern void* secondsRemainingMessagePointer;
 extern void* opponentNamePointer;

@@ -24,6 +24,9 @@ void handleHotkeyInput(WPARAM hotkey) {
     case ALT_S:
         turnOffSilentMode();
         break;
+    case ALT_L:
+        if (fullLocation) fullLocation = false; else fullLocation = true;
+        break;
     }
 }
 
@@ -34,6 +37,7 @@ void initHotkeys() {
     hotkeys[3] = new Hotkey(ALT_O, MOD_ALT, KEY_O);
     hotkeys[4] = new Hotkey(ALT_T, MOD_ALT, KEY_T);
     hotkeys[5] = new Hotkey(ALT_S, MOD_ALT, KEY_S);
+    hotkeys[6] = new Hotkey(ALT_L, MOD_ALT, KEY_L);
     registerHotKeys();
 }
 

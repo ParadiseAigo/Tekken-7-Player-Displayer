@@ -13,6 +13,7 @@ QWORD userSteamId;
 char* lastNameInPlayerlist;
 char* lastFoundName;
 bool silentMode;
+bool fullLocation;
 
 void* secondsRemainingMessagePointer;
 void* opponentNamePointer;
@@ -77,6 +78,7 @@ void initPlayerlist() {
 
 void initVariables() {
 	silentMode = true; // global variable
+	fullLocation = false; // global variable
 }
 
 void loadTargetProcess() {
