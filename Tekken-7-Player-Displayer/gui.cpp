@@ -91,7 +91,14 @@ void createMainWindow() {
     int WIDTH_OUTPUTTEXTBOX = 580;
 
     if (doesWindowPositionFileExist()) {
-        getWindowSavedPosition(&X_MAINWINDOW, &Y_MAINWINDOW);
+        int savedPositionX, savedPositionY;
+        getWindowSavedPosition(&savedPositionX, &savedPositionY);
+        bool isSavedPositionOffScreen = (savedPositionX < 0 && savedPositionY < 0)
+                                     || (savedPositionX > SCREEN_WIDTH && savedPositionY > SCREEN_HEIGHT);
+        if (!isSavedPositionOffScreen) {
+            X_MAINWINDOW = savedPositionX;
+            Y_MAINWINDOW = savedPositionY;
+        }
     }
 
     guiWindows.mainWindowHandle = createWindow(WS_EX_DLGMODALFRAME,
@@ -408,7 +415,7 @@ void closeAllWindows() {
     if (!doesWindowPositionFileExist()) {
 		createWindowPositionFile();
     }
-	saveWindowPositionInFile();
+    saveWindowPositionInFile();
     destroyWindow(guiWindows.mainWindowHandle);
     if (isWindow(guiWindows.commentWindowHandle)) {
         destroyWindow(guiWindows.commentWindowHandle);
