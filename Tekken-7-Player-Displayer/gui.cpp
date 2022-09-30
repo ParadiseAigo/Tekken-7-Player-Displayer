@@ -93,9 +93,7 @@ void createMainWindow() {
     if (doesWindowPositionFileExist()) {
         int savedPositionX, savedPositionY;
         getWindowSavedPosition(&savedPositionX, &savedPositionY);
-        bool isSavedPositionOffScreen = (savedPositionX < 0 && savedPositionY < 0)
-                                     || (savedPositionX > SCREEN_WIDTH && savedPositionY > SCREEN_HEIGHT);
-        if (!isSavedPositionOffScreen) {
+        if (!isWindowOffScreen(savedPositionX, savedPositionY, WIDTH_MAINWINDOW, HEIGHT_MAINWINDOW)) {
             X_MAINWINDOW = savedPositionX;
             Y_MAINWINDOW = savedPositionY;
         }

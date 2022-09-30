@@ -292,6 +292,7 @@ void cleanAllGuiMessages();
 HWND createWindow(DWORD extendedStyle, LPCWSTR className, LPCWSTR windowName, DWORD style,
     int x, int y, int width, int height, HWND parentWindowHandle = NULL);
 void registerWindowClass(WNDCLASS windowClass);
+bool isWindowOffScreen(int windowX, int windowY, int windowWidth, int windowHeight);
 void sendMessage(HWND windowHandle, UINT msg, WPARAM wparam, LPARAM lparam);
 void showWindow(HWND windowHandle, int showCommand);
 bool isWindow(HWND windowHandle);

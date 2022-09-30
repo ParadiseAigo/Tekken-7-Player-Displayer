@@ -13,6 +13,16 @@ void registerWindowClass(WNDCLASS windowClass) {
     }
 }
 
+bool isWindowOffScreen(int windowX, int windowY, int windowWidth, int windowHeight) {
+    RECT rect;
+    rect.left = windowX;
+    rect.top = windowY;
+    rect.right = windowX + windowWidth;
+    rect.bottom = windowY + windowHeight;
+    HMONITOR monitorHandle = MonitorFromRect(&rect, MONITOR_DEFAULTTONULL); // returns NULL if the rectangle does not intersect any display monitor
+    return monitorHandle == NULL;
+}
+
 void sendMessage(HWND windowHandle, UINT msg, WPARAM wparam, LPARAM lparam) {
     SendMessage(windowHandle, msg, wparam, lparam);
 }
