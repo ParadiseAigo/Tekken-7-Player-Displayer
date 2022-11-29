@@ -139,7 +139,7 @@ namespace Tekken_7_Player_Displayer
 
         public static string MakePlayerlistEntry(string playerName, string characterName, long steamId)
         {
-            return playerName + "\t\t\t" + characterName + "\t\t\t" + steamId + "\t\t\t" + "no comment yet";
+            return playerName + "\t\t\t" + characterName + "\t\t\t" + "(" + steamId + ")" + "\t\t\t" + "no comment yet";
         }
 
         public static string GetLastNameInPlayerlist(string filePath)
