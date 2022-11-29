@@ -14,10 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Steamworks.NET">
       <HintPath>lib\Steamworks.NET.dll</HintPath>
     </Reference>
@@ -28,9 +24,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="lib\steam_api64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="lib\steam_api64.dll" CopyToOutputDirectory="PreserveNewest" Link="%(Filename)%(Extension)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  
 </Project>

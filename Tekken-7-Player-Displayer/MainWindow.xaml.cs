@@ -1,20 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Tekken_7_Player_Displayer
 {
@@ -51,8 +40,24 @@ namespace Tekken_7_Player_Displayer
         private void InitMainWindow()
         {
             mainWindow = this;
+            SetWindowPosition();
             Closed += MainWindow_Closed;
             InitHotkeys();
+        }
+
+        private void SetWindowPosition()
+        {
+            if (Double.TryParse(Settings.Default.WindowPositionX, out double windowPositionX) && 
+                Double.TryParse(Settings.Default.WindowPositionY, out double windowPositionY))
+            {
+                this.Left = windowPositionX;
+                this.Top = windowPositionY;
+            }
+        }
+
+        private bool DoesWindowPositionFileExist()
+        {
+            throw new NotImplementedException();
         }
 
         private void InitHotkeys()
@@ -200,7 +205,7 @@ namespace Tekken_7_Player_Displayer
                 if (DidSomeoneCloseTekkenWindow())
                 {
                     Gui.PrintLineToGuiConsole("Tekken window closed. (Can't find it anymore.)");
-                    Gui.PrintCannotContinueAndSleepForever();
+                    Gui.PrintCannotContinueAndCloseProgram();
                 }
             }
         }
@@ -218,9 +223,17 @@ namespace Tekken_7_Player_Displayer
 
         void MainWindow_Closed(object sender, EventArgs e)
         {
+            SaveWindowPosition();
             Hotkeys.Disable();
             if (Gui.IsWindowInstantiated<CommentWindow>()) commentWindow.Close();
             SteamworksAPI.Shutdown();
+        }
+
+        private void SaveWindowPosition()
+        {
+            Settings.Default.WindowPositionX = this.Left.ToString();
+            Settings.Default.WindowPositionY = this.Top.ToString();
+            Settings.Default.Save();
         }
     }
 }

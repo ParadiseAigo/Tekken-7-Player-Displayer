@@ -25,7 +25,7 @@ namespace Tekken_7_Player_Displayer
         {
             InitializeComponent();
 
-            SetWindowLocationBottomRight();
+            SetWindowPositionBottomRight();
             if (MainWindow.lastNameInPlayerlist != null)
             {
                 SetOpponentNameInCommentWindowTitle();
@@ -38,7 +38,7 @@ namespace Tekken_7_Player_Displayer
             PreviewKeyDown += (s, e) => { if (e.Key == Key.Escape) Close(); };
         }
 
-        private void SetWindowLocationBottomRight()
+        private void SetWindowPositionBottomRight()
         {
             this.Top = SystemParameters.WorkArea.Height - this.Height;
             this.Left = SystemParameters.WorkArea.Width - this.Width;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -20,6 +21,7 @@ namespace Tekken_7_Player_Displayer
             MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
                 MainWindow.mainWindow.guiConsole.Text += text;
+                MainWindow.mainWindow.guiConsole.CaretIndex = MainWindow.mainWindow.guiConsole.Text.Length;
                 MainWindow.mainWindow.guiConsole.ScrollToEnd();
             }));
             Console.Write(text);
@@ -133,6 +135,15 @@ namespace Tekken_7_Player_Displayer
         {
             PrintLineToGuiConsole("Impossible to continue.... (Please restart the program.)");
             SleepForever();
+        }
+
+        public static void PrintCannotContinueAndCloseProgram()
+        {
+            PrintLineToGuiConsole("Impossible to continue.... (Closing the program.)");
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                Application.Current.Shutdown();
+            }));
         }
 
         public static void SleepForever()

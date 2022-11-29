@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
-using Newtonsoft.Json.Linq;
 using System.IO;
+using System.Text.Json;
 
 namespace Tekken_7_Player_Displayer
 {
@@ -26,18 +26,19 @@ namespace Tekken_7_Player_Displayer
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 using StreamReader reader = new StreamReader(response.GetResponseStream());
-                JObject data = JObject.Parse(reader.ReadToEnd());
-                if (data["status"].ToString() == "success")
+                using JsonDocument jsonDocument = JsonDocument.Parse(reader.ReadToEnd());
+                JsonElement data = jsonDocument.RootElement;
+                if (data.GetProperty("status").ToString() == "success")
                 {
-                    location = data["country"].ToString()
-                             + (data["regionName"].ToString() == "" ? ""
-                                : ", " + data["regionName"].ToString())
-                             + (data["city"].ToString() == "" ? ""
-                                : " (" + data["city"].ToString() + ")");
+                    location = data.GetProperty("country").ToString()
+                             + (data.GetProperty("regionName").ToString() == "" ? ""
+                                : ", " + data.GetProperty("regionName").ToString())
+                             + (data.GetProperty("city").ToString() == "" ? ""
+                                : " (" + data.GetProperty("city").ToString() + ")");
                 }
                 else
                 {
-                    Gui.PrintLineToGuiConsole($"Failed to get location: {data["message"]}");
+                    Gui.PrintLineToGuiConsole($"Failed to get location: {data.GetProperty("message")}");
                 }
             } 
             else
