@@ -10,12 +10,15 @@ namespace Tekken_7_Player_Displayer
         public static string GetLocation(string ip)
         {
             string location = "";
-            string query = "http://ip-api.com/json/" + ip;
+            string country = "";
+            string region = "";
+            string city = "";
+            string url = "http://ip-api.com/json/" + ip;
 
             HttpWebResponse response;
             try
             {
-                response = GetWebResponse(query);
+                response = GetWebResponse(url);
             }
             catch (WebException error)
             {
@@ -30,11 +33,12 @@ namespace Tekken_7_Player_Displayer
                 JsonElement data = jsonDocument.RootElement;
                 if (data.GetProperty("status").ToString() == "success")
                 {
-                    location = data.GetProperty("country").ToString()
-                             + (data.GetProperty("regionName").ToString() == "" ? ""
-                                : ", " + data.GetProperty("regionName").ToString())
-                             + (data.GetProperty("city").ToString() == "" ? ""
-                                : " (" + data.GetProperty("city").ToString() + ")");
+                    country = data.GetProperty("country").ToString();
+                    region = data.GetProperty("regionName").ToString();
+                    city = data.GetProperty("city").ToString();
+                    location = country
+                             + (region == "" ? "" : ", " + region)
+                             + (city == "" | !MainWindow.fullLocation ? "" : ", " + city);
                 }
                 else
                 {

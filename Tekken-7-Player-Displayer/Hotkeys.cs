@@ -52,6 +52,7 @@ namespace Tekken_7_Player_Displayer
         private const int KEY_C = 0x43;
         private const int KEY_O = 0x4F;
         private const int KEY_S = 0x53;
+        private const int KEY_L = 0x4C;
 
         private static IntPtr hHook;
         private static HookProc hookProc;
@@ -75,6 +76,7 @@ namespace Tekken_7_Player_Displayer
             AddHotkey(ALT, KEY_C, () => HandleKeysPressed_ALT_C());
             AddHotkey(ALT, KEY_O, () => HandleKeysPressed_ALT_O());
             AddHotkey(ALT, KEY_S, () => HandleKeysPressed_ALT_S());
+            AddHotkey(ALT, KEY_L, () => HandleKeysPressed_ALT_L());
         }
 
         public static bool Enable()
@@ -155,6 +157,11 @@ namespace Tekken_7_Player_Displayer
         public static void HandleKeysPressed_ALT_S()
         {
             Tekken.TurnOffSilentMode();
+        }
+
+        public static void HandleKeysPressed_ALT_L()
+        {
+            MainWindow.fullLocation = true;
         }
     }
 }

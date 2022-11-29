@@ -23,6 +23,7 @@ namespace Tekken_7_Player_Displayer
         public static string lastNameInPlayerlist;
         public static string lastFoundName;
         public static bool silentMode = true;
+        public static bool fullLocation = false;
 
         public static long steamModulePointer;
         public static long tekkenModulePointer;
