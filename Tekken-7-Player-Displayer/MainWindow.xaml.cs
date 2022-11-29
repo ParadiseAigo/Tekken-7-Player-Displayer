@@ -175,7 +175,7 @@ namespace Tekken_7_Player_Displayer
         {
             bool areMessagesClean;
             int delayWhileSearching = 1000 / 10; // in milliseconds, "10fps" (updates 10 times a sec)
-            int delayWhileFighting = 2000; // 2 seconds, unused variable :(
+            int delayWhileFighting = 2000; // 2 seconds, unused variable
             lastFoundSteamId = -1;  // global variable
             isSteamIdFound = false; // global variable
             lastFoundName = ""; // global variable
