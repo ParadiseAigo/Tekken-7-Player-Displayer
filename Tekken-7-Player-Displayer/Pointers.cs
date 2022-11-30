@@ -30,11 +30,11 @@ namespace Tekken_7_Player_Displayer
         public static readonly int[] STEAM_ID_USER_POINTER_OFFSETS = { };
 
         // steam name of opponent after having accepted
-        public static readonly long OPPONENT_STRUCT_NAME_STATIC_POINTER = 0x34D24A0;  //to get the real static pointer: needs to be added to the module name
+        public static readonly long OPPONENT_STRUCT_NAME_STATIC_POINTER = 0x34D2520;  //to get the real static pointer: needs to be added to the module name
         public static readonly int[] OPPONENT_STRUCT_NAME_POINTER_OFFSETS = { 0, 0x8, 0x11C };
 
         // character of opponent after having accepted
-        public static readonly long OPPONENT_STRUCT_CHARACTER_STATIC_POINTER = 0x34D24A0;  //to get the real static pointer: needs to be added to the module name
+        public static readonly long OPPONENT_STRUCT_CHARACTER_STATIC_POINTER = 0x34D2520;  //to get the real static pointer: needs to be added to the module name
         public static readonly int[] OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS = { 0, 0x8, 0x10 };
 
         public static readonly long SCREEN_MODE_STATIC_POINTER = 0x347ADF8;  //to get the real static pointer: needs to be added to the module name
