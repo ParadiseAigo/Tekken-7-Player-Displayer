@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tekken_7_Player_Displayer"
         mc:Ignorable="d"
-        Title="Tekken 7 - Player Displayer" Height="700" Width="1000">
+        Title="Tekken 7 - Player Displayer" Height="720" Width="1000">
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="/background.bmp"/>
@@ -47,10 +47,12 @@
             </Viewbox>
         </Border>
         <Label Grid.Column="1" Grid.Row="7" Background="#FFC6C6C6" VerticalAlignment="Bottom" HorizontalAlignment="Left" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" Content="Comment" FontStyle="Italic"/>
-        <Border Grid.Column="1" Grid.Row="8" Background="#FFC6C6C6" Margin="0,10,20,10" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5">
-            <Viewbox>
-                <TextBlock x:Name="guiComment" FontSize="24"/>
-            </Viewbox>
+        <Border x:Name="guiCommentBorder" Grid.Column="1" Grid.Row="8" Background="#FFC6C6C6" Margin="0,10,20,10" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <Viewbox>
+                    <TextBlock x:Name="guiComment" FontSize="18" TextWrapping="Wrap" Width="{Binding Path=ActualWidth, ElementName=guiCommentBorder}" Margin="5,0,0,0"/>
+                </Viewbox>
+            </ScrollViewer>
         </Border>
         <Border Grid.Column="1" Grid.Row="9" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" Width="100" Height="100" Margin="0,10,0,20">
             <Image x:Name="guiProfilePicture"/>

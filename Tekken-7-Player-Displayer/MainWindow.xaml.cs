@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Windows;
 
@@ -48,17 +46,12 @@ namespace Tekken_7_Player_Displayer
 
         private void SetWindowPosition()
         {
-            if (Double.TryParse(Settings.Default.WindowPositionX, out double windowPositionX) && 
+            if (Double.TryParse(Settings.Default.WindowPositionX, out double windowPositionX) &&
                 Double.TryParse(Settings.Default.WindowPositionY, out double windowPositionY))
             {
                 this.Left = windowPositionX;
                 this.Top = windowPositionY;
             }
-        }
-
-        private bool DoesWindowPositionFileExist()
-        {
-            throw new NotImplementedException();
         }
 
         private void InitHotkeys()
