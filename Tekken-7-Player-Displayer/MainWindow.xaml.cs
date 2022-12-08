@@ -46,11 +46,16 @@ namespace Tekken_7_Player_Displayer
 
         private void SetWindowPosition()
         {
-            if (Double.TryParse(Settings.Default.WindowPositionX, out double windowPositionX) &&
-                Double.TryParse(Settings.Default.WindowPositionY, out double windowPositionY))
+            if (Double.TryParse(Settings.Default.WindowPositionX, out double savedWindowPositionX) &&
+                Double.TryParse(Settings.Default.WindowPositionY, out double savedWindowPositionY))
             {
-                this.Left = windowPositionX;
-                this.Top = windowPositionY;
+                Rect savedPositionRect = new Rect(savedWindowPositionX, savedWindowPositionY, this.Width, this.Height);
+                Rect virtualScreenRect = new Rect(SystemParameters.VirtualScreenLeft, SystemParameters.VirtualScreenTop, SystemParameters.VirtualScreenWidth, SystemParameters.VirtualScreenHeight);
+                if (savedPositionRect.IntersectsWith(virtualScreenRect))
+                {
+                    this.Left = savedWindowPositionX;
+                    this.Top = savedWindowPositionY;
+                }
             }
         }
 
