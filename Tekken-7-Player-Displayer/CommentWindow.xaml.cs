@@ -55,6 +55,7 @@ namespace Tekken_7_Player_Displayer
             guiCommentText.FontStyle = FontStyles.Italic;
             guiCommentText.Text = "(Last fought player not found, maybe you didn't fight a player yet)";
             guiCommentText.IsReadOnly = true;
+            guiCommentText.IsEnabled = false;
             guiButton.Content = "  Close  ";
         }
 

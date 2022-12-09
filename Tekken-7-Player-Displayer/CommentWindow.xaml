@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tekken_7_Player_Displayer"
         mc:Ignorable="d"
-        Title="Comment" Height="140" Width="300">
+        Title="Comment" Height="200" Width="400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="23*"/>
             <RowDefinition Height="8*"/>
         </Grid.RowDefinitions>
-        <TextBox x:Name="guiCommentText" TextWrapping="Wrap" Margin="10,10,10,0"/>
+        <TextBox x:Name="guiCommentText" FontSize="16" TextWrapping="Wrap" Margin="10,10,10,0"/>
         <Button x:Name="guiButton" Content="  Save  " Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click" IsDefault="True"/>
     </Grid>
 </Window>
