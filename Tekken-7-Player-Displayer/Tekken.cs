@@ -92,7 +92,7 @@ namespace Tekken_7_Player_Displayer
             string characterName;
             string playerlistComment;
 
-            string line = File.ReadAllLines(Pointers.PLAYERLIST_PATH).Where(i => i.Contains(MainWindow.lastFoundSteamId.ToString())).ToList().FirstOrDefault();
+            string line = File.ReadAllLines(Pointers.PLAYERLIST_PATH).Reverse().Where(i => i.Contains(MainWindow.lastFoundSteamId.ToString())).ToList().FirstOrDefault();
             if (line != null)
             {  // steam id found in player list!
                 Gui.PrintLineToGuiConsole("Steam id found in player list!");
