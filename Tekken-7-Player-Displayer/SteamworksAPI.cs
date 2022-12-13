@@ -40,7 +40,7 @@ namespace Tekken_7_Player_Displayer
         {
             SteamAPI.RunCallbacks(); // needs to be called to dispatch call results to listeners
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 1376289, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual); // filter to get ranked lobbies
-            //SteamMatchmaking.AddRequestLobbyListDistanceFilter(Steamworks.ELobbyDistanceFilter.k_ELobbyDistanceFilterWorldwide);
+            SteamMatchmaking.AddRequestLobbyListDistanceFilter(Steamworks.ELobbyDistanceFilter.k_ELobbyDistanceFilterWorldwide);
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tksex_fighter.rank_id", playerRankId + maxRankDifference, Steamworks.ELobbyComparison.k_ELobbyComparisonLessThan);
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tksex_fighter.rank_id", playerRankId - maxRankDifference, Steamworks.ELobbyComparison.k_ELobbyComparisonGreaterThan);
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tksex_fighter.fighter_id", 22, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
