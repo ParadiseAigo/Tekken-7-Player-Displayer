@@ -31,17 +31,20 @@ namespace Tekken_7_Player_Displayer
         public static readonly int[] STEAM_ID_USER_POINTER_OFFSETS = { };
 
         // steam name of opponent after having accepted
-        public static readonly long OPPONENT_STRUCT_NAME_STATIC_POINTER = 0x34D2520;  //to get the real static pointer: needs to be added to the module name
+        public static readonly long OPPONENT_STRUCT_NAME_STATIC_POINTER = 0x34D55A0;  //to get the real static pointer: needs to be added to the module name
         public static readonly int[] OPPONENT_STRUCT_NAME_POINTER_OFFSETS = { 0, 0x8, 0x11C };
 
         // character of opponent after having accepted
-        public static readonly long OPPONENT_STRUCT_CHARACTER_STATIC_POINTER = 0x34D2520;  //to get the real static pointer: needs to be added to the module name
+        public static readonly long OPPONENT_STRUCT_CHARACTER_STATIC_POINTER = 0x34D55A0;  //to get the real static pointer: needs to be added to the module name
         public static readonly int[] OPPONENT_STRUCT_CHARACTER_POINTER_OFFSETS = { 0, 0x8, 0x10 };
 
-        public static readonly long SCREEN_MODE_STATIC_POINTER = 0x347ADF8;  //to get the real static pointer: needs to be added to the module name
+        public static readonly long SCREEN_MODE_STATIC_POINTER = 0x347DED8;  //to get the real static pointer: needs to be added to the module name
         public static readonly int[] SCREEN_MODE_POINTER_OFFSETS = { };
 
-        public static readonly long SECONDS_REMAINING_MESSAGE_STATIC_POINTER = 0x34CB960;  //to get the real static pointer: needs to be added to the module name
-        public static readonly int[] SECONDS_REMAINING_MESSAGE_POINTER_OFFSETS = { 0x58, 0x330, 0x40, 0x30, 0x158, 0x750 };
+        public static readonly long SECONDS_REMAINING_MESSAGE_STATIC_POINTER = 0x34CE9E0;  //to get the real static pointer: needs to be added to the module name
+        public static readonly int[] SECONDS_REMAINING_MESSAGE_POINTER_OFFSETS = { 0x58, 0x330, 0xC8, 0x30, 0x30, 0xF18 };
     }
 }
+
+
+
