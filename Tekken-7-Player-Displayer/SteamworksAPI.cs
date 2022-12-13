@@ -28,7 +28,7 @@ namespace Tekken_7_Player_Displayer
             string ip = "";
             CSteamID id = new CSteamID((ulong)steamId);
             P2PSessionState_t sessionState = new P2PSessionState_t();
-            if (SteamNetworking.GetP2PSessionState(id, out sessionState))
+            if (SteamNetworking.GetP2PSessionState(id, out sessionState)) // returns false if there is no open session with the specified user
             {
                 byte[] ipBytes = BitConverter.GetBytes(sessionState.m_nRemoteIP).Reverse().ToArray();
                 ip = new IPAddress(ipBytes).ToString();
