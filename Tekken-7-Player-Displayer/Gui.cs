@@ -27,6 +27,27 @@ namespace Tekken_7_Player_Displayer
             Console.Write(text);
         }
 
+        public static void PrintToGuiPlayerList(String text)
+        {
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                MainWindow.mainWindow.guiPlayerList.Text = "============ Found searching players: \r\n" + text;
+                MainWindow.mainWindow.guiPlayerList.CaretIndex = MainWindow.mainWindow.guiPlayerList.Text.Length;
+            }));
+            Console.Write(text);
+        }
+
+        public static void PrintToGuiNextOpponent(String text)
+        {
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                MainWindow.mainWindow.guiNextOpponent.Text = "============ Next opponent:\r\n" + text;
+                MainWindow.mainWindow.guiNextOpponent.CaretIndex = MainWindow.mainWindow.guiNextOpponent.Text.Length;
+            }));
+            Console.Write(text);
+
+        }
+
         public static void UpdateAllGuiMessages(string newOpponentName, string characterName, string playerlistComment)
         {
             MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>

@@ -1,7 +1,11 @@
-﻿using System;
+﻿using Steamworks;
+using System;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Windows;
+using System.Collections.Generic;
 
 namespace Tekken_7_Player_Displayer
 {
@@ -27,6 +31,9 @@ namespace Tekken_7_Player_Displayer
         public static long tekkenModulePointer;
         public static long screenModePointer;
         public static long secondsRemainingMessagePointer;
+
+        public static CallResult<LobbyMatchList_t> m_CallResultLobbyMatchList;
+        public static List<PlayerLobbyInfo> ListOfPlayerLobbies;
 
         public MainWindow()
         {
@@ -180,6 +187,23 @@ namespace Tekken_7_Player_Displayer
             lastFoundName = ""; // global variable
             areMessagesClean = true;
             lastNameInPlayerlist = PlayerList.GetLastNameInPlayerlist(Pointers.PLAYERLIST_PATH); //global variable  // set equal to NULL if player list is empty
+            m_CallResultLobbyMatchList = CallResult<LobbyMatchList_t>.Create(SteamworksAPI.MyCallbackLobbyInfo);
+            ListOfPlayerLobbies = new List<PlayerLobbyInfo>();
+
+            Gui.PrintToGuiPlayerList("");
+            Gui.PrintToGuiNextOpponent("");
+            Thread lobbyInfoThread = new Thread(() =>
+            {
+                while (true) {
+                    SteamworksAPI.SavePlayerLobbies(m_CallResultLobbyMatchList, userSteamId);
+                    Thread.Sleep(5000);
+                    PlayerLobbyInfo.PrintList(MainWindow.ListOfPlayerLobbies);
+                }
+            }
+            );
+            lobbyInfoThread.IsBackground = true; // this makes sure the thread will be stopped after the gui is closed
+            lobbyInfoThread.Start();
+
             while (true)
             {
                 Thread.Sleep(delayWhileSearching);
@@ -189,6 +213,8 @@ namespace Tekken_7_Player_Displayer
                     Gui.CleanAllGuiMessages();
                     Tekken.HandleNewReceivedOpponent();
                     Tekken.DisplayOpponentInfoFromWeb(lastFoundSteamId);
+                    //PlayerLobbyInfo.PrintPlayerCharacter(ListOfPlayerLobbies, lastFoundSteamId);
+                    //PlayerLobbyInfo.PrintPlayerRank(ListOfPlayerLobbies, lastFoundSteamId);
                     areMessagesClean = false;
                 }
                 else if ((!areMessagesClean) && (!isSteamIdFound))
@@ -236,4 +262,3 @@ namespace Tekken_7_Player_Displayer
         }
     }
 }
-
