@@ -17,8 +17,6 @@ Download the latest release [here](https://github.com/ParadiseAigo/Tekken-7-Play
 ## Usage
 Simply run the executable before or after (doesn't matter) opening Tekken 7.
 
-If you restart Tekken 7 you must also restart Player-Displayer first (or at least close it). (If you don't, Steam might not let you start Tekken again because it thinks Tekken is still running, which happens because Steam thinks Player-Displayer is Tekken 7) 
-
 ## Commands
 * ALT+W  puts the game in windowed mode (so you don't have to worry about crashing the game by alt-tabbing)
 * ALT+F  puts the game in full-screen mode
