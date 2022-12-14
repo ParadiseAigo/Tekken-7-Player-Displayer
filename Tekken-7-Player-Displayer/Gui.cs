@@ -41,7 +41,7 @@ namespace Tekken_7_Player_Displayer
         {
             MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
-                MainWindow.mainWindow.guiNextOpponent.Text = "============ Your next opponent was found using:\r\n" + text;
+                MainWindow.mainWindow.guiNextOpponent.Text = "============ Your next opponent was using:\r\n" + text;
                 MainWindow.mainWindow.guiNextOpponent.CaretIndex = MainWindow.mainWindow.guiNextOpponent.Text.Length;
             }));
             Console.Write(text);
