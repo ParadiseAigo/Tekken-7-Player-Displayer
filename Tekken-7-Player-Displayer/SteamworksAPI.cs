@@ -132,7 +132,14 @@ namespace Tekken_7_Player_Displayer
                     if (key == "tkstma_ID") { steamId = long.Parse(value); }
                     if (key == "tksex_owner_player_name") { name = value; }
                     if (key == "tksex_fighter.fighter_id") { character = Pointers.ALL_CHARACTERS[int.Parse(value)]; }
-                    if (key == "tks4s_rank_id") { rank = Pointers.ALL_RANKS[int.Parse(value)]; }
+                    if (key == "tks4s_rank_id") {
+                        int index = int.Parse(value);
+                        if (index < Pointers.ALL_RANKS.Length)
+                        {
+                            rank = Pointers.ALL_RANKS[index];
+                        }
+                        else rank = index.ToString();
+                    }
                     PlayerLobbyInfo.AddToList(MainWindow.ListOfPlayerLobbies,
                         new PlayerLobbyInfo(name, steamId, character, rank));
                 }
