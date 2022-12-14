@@ -207,13 +207,13 @@ namespace Tekken_7_Player_Displayer
             while (true)
             {
                 Thread.Sleep(delayWhileSearching);
+                Gui.UpdateGuiNextOpponent();
                 if (Tekken.IsNewOpponentReceived())
                 {
                     Tekken.CleanAllProcessMessages();
                     Gui.CleanAllGuiMessages();
                     Tekken.HandleNewReceivedOpponent();
                     Tekken.DisplayOpponentInfoFromWeb(lastFoundSteamId);
-                    Gui.UpdateGuiNextOpponent();
                     areMessagesClean = false;
                 }
                 else if ((!areMessagesClean) && (!isSteamIdFound))
