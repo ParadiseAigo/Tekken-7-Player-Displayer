@@ -196,7 +196,7 @@ namespace Tekken_7_Player_Displayer
             {
                 while (true) {
                     SteamworksAPI.SavePlayerLobbies(m_CallResultLobbyMatchList, userSteamId);
-                    Thread.Sleep(5000);
+                    Thread.Sleep(3000);
                     PlayerLobbyInfo.PrintList(MainWindow.ListOfPlayerLobbies);
                 }
             }
@@ -213,8 +213,7 @@ namespace Tekken_7_Player_Displayer
                     Gui.CleanAllGuiMessages();
                     Tekken.HandleNewReceivedOpponent();
                     Tekken.DisplayOpponentInfoFromWeb(lastFoundSteamId);
-                    //PlayerLobbyInfo.PrintPlayerCharacter(ListOfPlayerLobbies, lastFoundSteamId);
-                    //PlayerLobbyInfo.PrintPlayerRank(ListOfPlayerLobbies, lastFoundSteamId);
+                    Gui.UpdateGuiNextOpponent();
                     areMessagesClean = false;
                 }
                 else if ((!areMessagesClean) && (!isSteamIdFound))

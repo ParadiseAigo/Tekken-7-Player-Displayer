@@ -185,13 +185,9 @@ namespace Tekken_7_Player_Displayer
         static public void PrintList(List<PlayerLobbyInfo> theList)
         {
             String toBePrinted = "";
-            String currentFoundPlayer = "";
             int charactersPadding = 1 + Pointers.ALL_CHARACTERS.OrderByDescending(s => s.Length).First().Length;
             int rankPadding = 1 + Pointers.ALL_RANKS.OrderByDescending(s => s.Length).First().Length;
-            theList.Sort(delegate(PlayerLobbyInfo x, PlayerLobbyInfo y)
-            {
-                return x.Name.CompareTo(y.Name);
-            });
+            theList = theList.OrderByDescending(x => Array.FindIndex(Pointers.ALL_RANKS, rank => rank == x.Rank)).ThenBy(x => x.Name).ToList();
             foreach (PlayerLobbyInfo player in theList)
             {
                 String steamId = player.SteamId.ToString() + " ";
@@ -200,12 +196,7 @@ namespace Tekken_7_Player_Displayer
                 String name = player.Name;
                 String line = (steamId + character.PadRight(charactersPadding) + rank.PadRight(rankPadding) + name + "\r\n");
                 toBePrinted += line;
-                if (player.SteamId == MainWindow.lastFoundSteamId)
-                {
-                    currentFoundPlayer = line;
-                }
             }
-            Gui.PrintToGuiNextOpponent(currentFoundPlayer);
             Gui.PrintToGuiPlayerList(toBePrinted);
         }
 

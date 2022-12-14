@@ -41,11 +41,30 @@ namespace Tekken_7_Player_Displayer
         {
             MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
-                MainWindow.mainWindow.guiNextOpponent.Text = "============ Next opponent:\r\n" + text;
+                MainWindow.mainWindow.guiNextOpponent.Text = "============ Your next opponent was found using:\r\n" + text;
                 MainWindow.mainWindow.guiNextOpponent.CaretIndex = MainWindow.mainWindow.guiNextOpponent.Text.Length;
             }));
             Console.Write(text);
 
+        }
+
+        public static void UpdateGuiNextOpponent()
+        {
+            String newText = "";
+            int charactersPadding = 1 + Pointers.ALL_CHARACTERS.OrderByDescending(s => s.Length).First().Length;
+            int rankPadding = 1 + Pointers.ALL_RANKS.OrderByDescending(s => s.Length).First().Length;
+            foreach (PlayerLobbyInfo player in MainWindow.ListOfPlayerLobbies)
+            {
+                if (player.SteamId == MainWindow.lastFoundSteamId)
+                {
+                    String steamId = player.SteamId.ToString() + " ";
+                    String character = player.Character;
+                    String rank = player.Rank;
+                    String name = player.Name;
+                    newText = (steamId + character.PadRight(charactersPadding) + rank.PadRight(rankPadding) + name + "\r\n");
+                }
+            }
+            PrintToGuiNextOpponent(newText);
         }
 
         public static void UpdateAllGuiMessages(string newOpponentName, string characterName, string playerlistComment)
