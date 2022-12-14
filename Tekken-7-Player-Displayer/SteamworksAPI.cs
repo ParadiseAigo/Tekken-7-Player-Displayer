@@ -129,10 +129,10 @@ namespace Tekken_7_Player_Displayer
                 {
                     SteamMatchmaking.GetLobbyDataByIndex(lobbySteamId, k, out string key, Steamworks.Constants.k_nMaxLobbyKeyLength, out string value, Steamworks.Constants.k_nMaxLobbyKeyLength);
                     //Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");
-                    if (key == "tkstma_ID") { steamId = long.Parse(value); }
+                    if (key == "tksex_owner_online_id") { steamId = long.Parse(value, System.Globalization.NumberStyles.HexNumber); }
                     if (key == "tksex_owner_player_name") { name = value; }
                     if (key == "tksex_fighter.fighter_id") { character = Pointers.ALL_CHARACTERS[int.Parse(value)]; }
-                    if (key == "tks4s_rank_id") {
+                    if (key == "tksex_fighter.rank_id") {
                         int index = int.Parse(value);
                         if (index < Pointers.ALL_RANKS.Length)
                         {
@@ -140,8 +140,7 @@ namespace Tekken_7_Player_Displayer
                         }
                         else rank = index.ToString();
                     }
-                    PlayerLobbyInfo.AddToList(MainWindow.ListOfPlayerLobbies,
-                        new PlayerLobbyInfo(name, steamId, character, rank));
+                    PlayerLobbyInfo.AddToList(MainWindow.ListOfPlayerLobbies, new PlayerLobbyInfo(name, steamId, character, rank));
                 }
                 //string ip = SteamworksAPI.GetIPAddressForSteamId(steamId); // this does not return the correct ip, need to debug to see if steamId is correct or if long.Parse is not working well
                 //string location = IPLocation.GetLocation(ip);
