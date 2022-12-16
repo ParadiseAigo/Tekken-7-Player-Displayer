@@ -140,8 +140,8 @@ namespace Tekken_7_Player_Displayer
                         }
                         else rank = index.ToString();
                     }
-                    PlayerLobbyInfo.AddToList(MainWindow.ListOfPlayerLobbies, new PlayerLobbyInfo(name, steamId, character, rank));
                 }
+                PlayerLobbyInfo.AddToList(MainWindow.ListOfPlayerLobbies, new PlayerLobbyInfo(lobbySteamId, name, steamId, character, rank));
                 //string ip = SteamworksAPI.GetIPAddressForSteamId(steamId); // this does not return the correct ip, need to debug to see if steamId is correct or if long.Parse is not working well
                 //string location = IPLocation.GetLocation(ip);
             }
@@ -150,13 +150,15 @@ namespace Tekken_7_Player_Displayer
 
     public class PlayerLobbyInfo
     {
+        public CSteamID LobbyId;
         public String Name;
         public long SteamId;
         public String Character;
         public String Rank;
 
-        public PlayerLobbyInfo(String name, long steamId, String character, String rank)
+        public PlayerLobbyInfo(CSteamID lobbyId, String name, long steamId, String character, String rank)
         {
+            LobbyId = lobbyId;
             Name = name;
             SteamId = steamId;
             Character = character;
@@ -173,6 +175,7 @@ namespace Tekken_7_Player_Displayer
                     player.Name = newPlayer.Name;
                     player.Character = newPlayer.Character;
                     player.Rank = newPlayer.Rank;
+                    player.LobbyId = newPlayer.LobbyId;
                     return;
                 }
             }

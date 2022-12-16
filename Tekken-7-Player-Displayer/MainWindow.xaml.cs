@@ -197,7 +197,7 @@ namespace Tekken_7_Player_Displayer
                 while (true) {
                     SteamworksAPI.SavePlayerLobbies(MainWindow.CallResultLobbyMatchList);
                     Gui.PrintPlayerLobbyInfoList(MainWindow.ListOfPlayerLobbies);
-                    Thread.Sleep(5000);
+                    Thread.Sleep(1000);
                 }
             }
             );
