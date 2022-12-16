@@ -36,7 +36,7 @@ namespace Tekken_7_Player_Displayer
             return ip;
         }
 
-        public static void SavePlayerLobbies(CallResult<LobbyMatchList_t> callResult, long userSteamId)
+        public static void SavePlayerLobbies(CallResult<LobbyMatchList_t> callResult)
         {
             SteamAPI.RunCallbacks(); // needs to be called to dispatch call results to listeners
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 1376289, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual); // filter to get ranked lobbies
@@ -100,9 +100,9 @@ namespace Tekken_7_Player_Displayer
             callResult.Set(hSteamAPICall);
         }
 
-        static public void MyCallbackLobbyInfo(LobbyMatchList_t pCallback, bool bIOFailure)
+        static public void MyCallbackLobbyMatchList(LobbyMatchList_t lobbyMatchList, bool bIOFailure)
         {
-            uint nrOfLobbies = pCallback.m_nLobbiesMatching;
+            uint nrOfLobbies = lobbyMatchList.m_nLobbiesMatching;
             //Gui.PrintLineToGuiConsole($"LobbyMatchList: lobbies count = {nrOfLobbies}");
             for (int i = 0; i < nrOfLobbies; i++)
             {
@@ -188,24 +188,6 @@ namespace Tekken_7_Player_Displayer
             return false;
         }
 
-        static public void PrintList(List<PlayerLobbyInfo> theList)
-        {
-            String toBePrinted = "";
-            int charactersPadding = 1 + Pointers.ALL_CHARACTERS.OrderByDescending(s => s.Length).First().Length;
-            int rankPadding = 1 + Pointers.ALL_RANKS.OrderByDescending(s => s.Length).First().Length;
-            theList = theList.OrderByDescending(x => Array.FindIndex(Pointers.ALL_RANKS, rank => rank == x.Rank)).ThenBy(x => x.Name).ToList();
-            foreach (PlayerLobbyInfo player in theList)
-            {
-                String steamId = player.SteamId.ToString() + " ";
-                String character = player.Character;
-                String rank = player.Rank;
-                String name = player.Name;
-                String line = (steamId + character.PadRight(charactersPadding) + rank.PadRight(rankPadding) + name + "\r\n");
-                toBePrinted += line;
-            }
-            Gui.PrintToGuiPlayerList(toBePrinted);
-        }
-
         static public String GetPlayerRank(List<PlayerLobbyInfo> theList, long steamId)
         {
             foreach (PlayerLobbyInfo player in theList)
@@ -224,6 +206,7 @@ namespace Tekken_7_Player_Displayer
             return "";
         }
 
+        /*
         static public void PrintPlayerRank(List<PlayerLobbyInfo> theList, long steamId)
         {
             String rank = GetPlayerRank(theList, steamId);
@@ -237,5 +220,6 @@ namespace Tekken_7_Player_Displayer
             if (character == "") character = "?";
             Gui.PrintLineToGuiConsole("Character: " + character);
         }
+        */
     }
 }

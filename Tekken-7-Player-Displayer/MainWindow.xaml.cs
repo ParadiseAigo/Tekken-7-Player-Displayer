@@ -32,7 +32,7 @@ namespace Tekken_7_Player_Displayer
         public static long screenModePointer;
         public static long secondsRemainingMessagePointer;
 
-        public static CallResult<LobbyMatchList_t> m_CallResultLobbyMatchList;
+        public static CallResult<LobbyMatchList_t> CallResultLobbyMatchList;
         public static List<PlayerLobbyInfo> ListOfPlayerLobbies;
 
         public MainWindow()
@@ -187,7 +187,7 @@ namespace Tekken_7_Player_Displayer
             lastFoundName = ""; // global variable
             areMessagesClean = true;
             lastNameInPlayerlist = PlayerList.GetLastNameInPlayerlist(Pointers.PLAYERLIST_PATH); //global variable  // set equal to NULL if player list is empty
-            m_CallResultLobbyMatchList = CallResult<LobbyMatchList_t>.Create(SteamworksAPI.MyCallbackLobbyInfo);
+            CallResultLobbyMatchList = CallResult<LobbyMatchList_t>.Create(SteamworksAPI.MyCallbackLobbyMatchList);
             ListOfPlayerLobbies = new List<PlayerLobbyInfo>();
 
             Gui.PrintToGuiPlayerList("");
@@ -195,8 +195,8 @@ namespace Tekken_7_Player_Displayer
             Thread lobbyInfoThread = new Thread(() =>
             {
                 while (true) {
-                    SteamworksAPI.SavePlayerLobbies(m_CallResultLobbyMatchList, userSteamId);
-                    PlayerLobbyInfo.PrintList(MainWindow.ListOfPlayerLobbies);
+                    SteamworksAPI.SavePlayerLobbies(MainWindow.CallResultLobbyMatchList);
+                    Gui.PrintPlayerLobbyInfoList(MainWindow.ListOfPlayerLobbies);
                     Thread.Sleep(5000);
                 }
             }

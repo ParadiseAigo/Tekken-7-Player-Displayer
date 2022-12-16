@@ -67,6 +67,24 @@ namespace Tekken_7_Player_Displayer
             PrintToGuiNextOpponent(newText);
         }
 
+        static public void PrintPlayerLobbyInfoList(List<PlayerLobbyInfo> theList)
+        {
+            String toBePrinted = "";
+            int charactersPadding = 1 + Pointers.ALL_CHARACTERS.OrderByDescending(s => s.Length).First().Length;
+            int rankPadding = 1 + Pointers.ALL_RANKS.OrderByDescending(s => s.Length).First().Length;
+            theList = theList.OrderByDescending(x => Array.FindIndex(Pointers.ALL_RANKS, rank => rank == x.Rank)).ThenBy(x => x.Name).ToList();
+            foreach (PlayerLobbyInfo player in theList)
+            {
+                String steamId = player.SteamId.ToString() + " ";
+                String character = player.Character;
+                String rank = player.Rank;
+                String name = player.Name;
+                String line = (steamId + character.PadRight(charactersPadding) + rank.PadRight(rankPadding) + name + "\r\n");
+                toBePrinted += line;
+            }
+            Gui.PrintToGuiPlayerList(toBePrinted);
+        }
+
         public static void UpdateAllGuiMessages(string newOpponentName, string characterName, string playerlistComment)
         {
             MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
