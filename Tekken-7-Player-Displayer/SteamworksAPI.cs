@@ -48,6 +48,7 @@ namespace Tekken_7_Player_Displayer
             callResult.Set(hSteamAPICall);
         }
 
+        /*
         public static void DisplayPlayerList(CallResult<LobbyMatchList_t> callResult, long userSteamId)
         {
             // the following lines get the lobby data of the player to get the rank of the player and the max rank difference selected
@@ -99,6 +100,7 @@ namespace Tekken_7_Player_Displayer
             SteamAPICall_t hSteamAPICall = SteamMatchmaking.RequestLobbyList();
             callResult.Set(hSteamAPICall);
         }
+        */
 
         static public void MyCallbackLobbyMatchList(LobbyMatchList_t lobbyMatchList, bool bIOFailure)
         {

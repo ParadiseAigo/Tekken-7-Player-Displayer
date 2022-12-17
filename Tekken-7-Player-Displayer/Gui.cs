@@ -85,6 +85,26 @@ namespace Tekken_7_Player_Displayer
             Gui.PrintToGuiPlayerList(toBePrinted);
         }
 
+        /*
+        public static void RefreshPlayerLobbyInfoDropDownMenu()
+        {
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action (() =>
+            {
+                MainWindow.mainWindow.listOfLobbies.Items.Clear();
+                foreach (PlayerLobbyInfo player in MainWindow.ListOfPlayerLobbies)
+                {
+                    Gui.AddPlayerLobbyInfoToDropDownMenu(player);
+                }
+            }));
+        }
+
+        public static void AddPlayerLobbyInfoToDropDownMenu(PlayerLobbyInfo player)
+        {
+            //MainWindow.mainWindow.listOfLobbies.Items.Add(player.Name + " (" + player.SteamId.ToString() + ")");
+            MainWindow.mainWindow.listOfLobbies.Items.Add(new KeyValuePair<String, PlayerLobbyInfo>(player.Name, player));
+        }
+        */
+
         public static void UpdateAllGuiMessages(string newOpponentName, string characterName, string playerlistComment)
         {
             MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
