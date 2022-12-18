@@ -15,6 +15,8 @@ namespace Tekken_7_Player_Displayer
             string city = "";
             string url = "http://ip-api.com/json/" + ip;
 
+            if (ip == "") return "";
+
             HttpWebResponse response;
             try
             {
@@ -23,32 +25,30 @@ namespace Tekken_7_Player_Displayer
             catch (WebException error)
             {
                 Gui.PrintLineToGuiConsole($"Failed to get location: {error.Message}");
-                return location;
+                return "";
             }
 
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                using StreamReader reader = new StreamReader(response.GetResponseStream());
-                using JsonDocument jsonDocument = JsonDocument.Parse(reader.ReadToEnd());
-                JsonElement data = jsonDocument.RootElement;
-                if (data.GetProperty("status").ToString() == "success")
-                {
-                    country = data.GetProperty("country").ToString();
-                    region = data.GetProperty("regionName").ToString();
-                    city = data.GetProperty("city").ToString();
-                    location = country
-                             + (region == "" ? "" : ", " + region)
-                             + (city == "" | !MainWindow.fullLocation ? "" : ", " + city);
-                }
-                else
-                {
-                    Gui.PrintLineToGuiConsole($"Failed to get location: {data.GetProperty("message")}");
-                }
-            } 
-            else
+            if (response.StatusCode != HttpStatusCode.OK)
             {
                 Gui.PrintLineToGuiConsole($"Failed to get location: Http error {response.StatusCode}: {response.StatusDescription}");
+                return "";
             }
+
+            using StreamReader reader = new StreamReader(response.GetResponseStream());
+            using JsonDocument jsonDocument = JsonDocument.Parse(reader.ReadToEnd());
+            JsonElement data = jsonDocument.RootElement;
+            if (data.GetProperty("status").ToString() != "success")
+            {
+                Gui.PrintLineToGuiConsole($"Failed to get location: {data.GetProperty("message")}");
+                return ""; 
+            }
+
+            country = data.GetProperty("country").ToString();
+            region = data.GetProperty("regionName").ToString();
+            city = data.GetProperty("city").ToString();
+            location = country
+                     + (region == "" ? "" : ", " + region)
+                     + (city == "" | !MainWindow.fullLocation ? "" : ", " + city);
             return location;
         }
 
