@@ -56,8 +56,10 @@
                 </Viewbox>
             </ScrollViewer>
         </Border>
-        <Border Grid.Column="1" Grid.Row="9" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" Width="100" Height="100" Margin="0,10,0,20" HorizontalAlignment="Center">
+        <Border Grid.Column="1" Grid.Row="9" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" Width="100" Height="100" Margin="0,10,20,20" HorizontalAlignment="Right">
             <Image x:Name="guiProfilePicture"/>
         </Border>
+        <Label Content="Get info on players in:" Grid.Column="1" Grid.Row="9" Width="140" VerticalAlignment="Center"  HorizontalAlignment="Left" Foreground="White" />
+        <ComboBox x:Name="onlineModeComboBox"  Grid.Column="1" Grid.Row="9" Width="140" VerticalAlignment="Bottom"  HorizontalAlignment="Left" Margin="0,20,20,20" SelectionChanged="onlineModeComboBox_SelectionChanged" DisplayMemberPath="Key" SelectedValuePath="Value"/>
     </Grid>
 </Window>

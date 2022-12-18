@@ -9,7 +9,25 @@ using System.Threading;
 
 namespace Tekken_7_Player_Displayer
 {
-    class SteamworksAPI
+    static public class LobbyListKeys
+    {
+        static public string Mode = "tks4s_searchable_int_atter";
+        static public string Rank = "tksex_fighter.rank_id";
+        static public string Character = "tksex_fighter.fighter_id";
+        static public string SteamId = "tksex_owner_online_id";
+        static public string Name = "tksex_owner_player_name";
+    }
+
+    static public class LobbyListFilters
+    {
+        static public int RankedOld = 1376289;
+        static public int Ranked = 393249;
+        static public int QuickMatch = 393250;
+        static public int PlayerSessions = 393252;
+        static public int None = 0;
+    }
+
+    public class SteamworksAPI
     {
         public static bool Init(string steamAppId)
         {
@@ -39,10 +57,12 @@ namespace Tekken_7_Player_Displayer
         public static void SavePlayerLobbies(CallResult<LobbyMatchList_t> callResult)
         {
             SteamAPI.RunCallbacks(); // needs to be called to dispatch call results to listeners
-            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 1376289, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual); // filter to get ranked lobbies 1
-            SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 393249, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual); // filter to get ranked lobbies 2
-            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 393250, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual); // filter to get player quick match lobbies
-            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 393252, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual); // filter to get player sessions lobbies
+            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 1376289, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
+            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 393249, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
+            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 393250, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
+            SteamMatchmaking.AddRequestLobbyListNumericalFilter(LobbyListKeys.Mode, MainWindow.OnlineModeFilter, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
+            //Gui.PrintLineToGuiConsole("mode: " + LobbyListKeys.Mode);
+            //Gui.PrintLineToGuiConsole("filter: " + MainWindow.OnlineModeFilter.ToString());
             SteamMatchmaking.AddRequestLobbyListDistanceFilter(Steamworks.ELobbyDistanceFilter.k_ELobbyDistanceFilterWorldwide);
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tksex_fighter.rank_id", playerRankId + maxRankDifference, Steamworks.ELobbyComparison.k_ELobbyComparisonLessThan);
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tksex_fighter.rank_id", playerRankId - maxRankDifference, Steamworks.ELobbyComparison.k_ELobbyComparisonGreaterThan);
@@ -133,8 +153,12 @@ namespace Tekken_7_Player_Displayer
                 for (int k = 0; k < lobbyDataCount; k++)
                 {
                     SteamMatchmaking.GetLobbyDataByIndex(lobbySteamId, k, out string key, Steamworks.Constants.k_nMaxLobbyKeyLength, out string value, Steamworks.Constants.k_nMaxLobbyKeyLength);
+                    //Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");
                     /*
-                    Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");
+                    if (key == "tksex_owner_player_name")
+                    {
+                        Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");
+                    }
                     if (key == "tks4s_searchable_int_atter")
                     {
                         Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");

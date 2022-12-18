@@ -35,6 +35,7 @@ namespace Tekken_7_Player_Displayer
         public static CallResult<LobbyMatchList_t> CallResultLobbyMatchList;
         public static List<PlayerLobbyInfo> ListOfPlayerLobbies;
         //public static PlayerLobbyInfo SelectedPlayer;
+        public static int OnlineModeFilter;
 
         public MainWindow()
         {
@@ -191,6 +192,8 @@ namespace Tekken_7_Player_Displayer
             CallResultLobbyMatchList = CallResult<LobbyMatchList_t>.Create(SteamworksAPI.MyCallbackLobbyMatchList);
             ListOfPlayerLobbies = new List<PlayerLobbyInfo>();
             //SelectedPlayer = null;
+            OnlineModeFilter = LobbyListFilters.Ranked;
+            Gui.InitOnlineModeComboBox();
 
             Gui.PrintToGuiPlayerList("");
             Gui.PrintToGuiNextOpponent("");
@@ -200,7 +203,7 @@ namespace Tekken_7_Player_Displayer
                     SteamworksAPI.SavePlayerLobbies(MainWindow.CallResultLobbyMatchList);
                     Gui.PrintPlayerLobbyInfoList(MainWindow.ListOfPlayerLobbies);
                     //Gui.RefreshPlayerLobbyInfoDropDownMenu();
-                    Thread.Sleep(5000);
+                    Thread.Sleep(3000);
                 }
             }
             );
@@ -261,6 +264,18 @@ namespace Tekken_7_Player_Displayer
             Settings.Default.WindowPositionX = this.Left.ToString();
             Settings.Default.WindowPositionY = this.Top.ToString();
             Settings.Default.Save();
+        }
+
+        private void onlineModeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (MainWindow.mainWindow == null) return;
+            int newFilter = ((KeyValuePair<String, int>) MainWindow.mainWindow.onlineModeComboBox.SelectedItem).Value;
+            MainWindow.OnlineModeFilter = newFilter;
+            MainWindow.ListOfPlayerLobbies.Clear();
+            Gui.PrintLineToGuiConsole("Showing players in "
+                + ((KeyValuePair<String, int>) MainWindow.mainWindow.onlineModeComboBox.SelectedItem).Key
+                + "." );
+            Gui.PrintPlayerLobbyInfoList(MainWindow.ListOfPlayerLobbies);
         }
 
         /*
