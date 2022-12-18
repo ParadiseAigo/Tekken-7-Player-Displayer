@@ -11,7 +11,8 @@ namespace Tekken_7_Player_Displayer
 {
     static public class LobbyListKeys
     {
-        static public string Mode = "tks4s_searchable_int_atter";
+        //static public string Mode = "tks4s_searchable_int_atter";
+        static public string Mode = "tksex_match_type";
         static public string Rank = "tksex_fighter.rank_id";
         static public string Character = "tksex_fighter.fighter_id";
         static public string SteamId = "tksex_owner_online_id";
@@ -20,11 +21,16 @@ namespace Tekken_7_Player_Displayer
 
     static public class LobbyListFilters
     {
-        static public int RankedOld = 1376289;
-        static public int Ranked = 393249;
-        static public int QuickMatch = 393250;
-        static public int PlayerSessions = 393252;
-        static public int None = 0;
+        //static public int Ranked = 1376289;
+        /*
+        public const int Ranked = 393249;
+        public const int QuickMatch = 393250;
+        public const int PlayerSessions = 393252;
+        */
+        public const int Ranked = 0;
+        public const int QuickMatch = 1;
+        public const int PlayerSessions = 2;
+        public const int None = -1;
     }
 
     public class SteamworksAPI
@@ -60,7 +66,10 @@ namespace Tekken_7_Player_Displayer
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 1376289, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 393249, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 393250, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
-            SteamMatchmaking.AddRequestLobbyListNumericalFilter(LobbyListKeys.Mode, MainWindow.OnlineModeFilter, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
+            if (MainWindow.OnlineModeFilter != LobbyListFilters.None)
+            {
+                SteamMatchmaking.AddRequestLobbyListNumericalFilter(LobbyListKeys.Mode, MainWindow.OnlineModeFilter, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
+            }
             //Gui.PrintLineToGuiConsole("mode: " + LobbyListKeys.Mode);
             //Gui.PrintLineToGuiConsole("filter: " + MainWindow.OnlineModeFilter.ToString());
             SteamMatchmaking.AddRequestLobbyListDistanceFilter(Steamworks.ELobbyDistanceFilter.k_ELobbyDistanceFilterWorldwide);
@@ -149,6 +158,7 @@ namespace Tekken_7_Player_Displayer
                 string name = "";
                 string character = "";
                 string rank = "";
+                int onlineModeOfPlayer = -1;
                 int lobbyDataCount = SteamMatchmaking.GetLobbyDataCount(lobbySteamId);
                 for (int k = 0; k < lobbyDataCount; k++)
                 {
@@ -159,15 +169,16 @@ namespace Tekken_7_Player_Displayer
                     {
                         Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");
                     }
-                    if (key == "tks4s_searchable_int_atter")
+                    if (key == LobbyListKeys.Mode)
                     {
                         Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");
                     }
                     */
-                    if (key == "tksex_owner_online_id") { steamId = long.Parse(value, System.Globalization.NumberStyles.HexNumber); }
-                    if (key == "tksex_owner_player_name") { name = value; }
-                    if (key == "tksex_fighter.fighter_id") { character = Pointers.ALL_CHARACTERS[int.Parse(value)]; }
-                    if (key == "tksex_fighter.rank_id") {
+                    if (key == LobbyListKeys.Mode) { onlineModeOfPlayer = int.Parse(value); }
+                    if (key == LobbyListKeys.SteamId) { steamId = long.Parse(value, System.Globalization.NumberStyles.HexNumber); }
+                    if (key == LobbyListKeys.Name) { name = value; }
+                    if (key == LobbyListKeys.Character) { character = Pointers.ALL_CHARACTERS[int.Parse(value)]; }
+                    if (key == LobbyListKeys.Rank) {
                         int index = int.Parse(value);
                         if (index < Pointers.ALL_RANKS.Length)
                         {
@@ -176,7 +187,11 @@ namespace Tekken_7_Player_Displayer
                         else rank = index.ToString();
                     }
                 }
-                PlayerLobbyInfo.AddToList(MainWindow.ListOfPlayerLobbies, new PlayerLobbyInfo(lobbySteamId, name, steamId, character, rank));
+                //Thread.Sleep(2000);
+                if (onlineModeOfPlayer == MainWindow.OnlineModeFilter)
+                {
+                    PlayerLobbyInfo.AddToList(MainWindow.ListOfPlayerLobbies, new PlayerLobbyInfo(lobbySteamId, name, steamId, character, rank));
+                }
                 //string ip = SteamworksAPI.GetIPAddressForSteamId(steamId); // this does not return the correct ip, need to debug to see if steamId is correct or if long.Parse is not working well
                 //string location = IPLocation.GetLocation(ip);
             }
