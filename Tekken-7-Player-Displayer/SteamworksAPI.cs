@@ -39,7 +39,10 @@ namespace Tekken_7_Player_Displayer
         public static void SavePlayerLobbies(CallResult<LobbyMatchList_t> callResult)
         {
             SteamAPI.RunCallbacks(); // needs to be called to dispatch call results to listeners
-            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 1376289, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual); // filter to get ranked lobbies
+            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 1376289, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual); // filter to get ranked lobbies 1
+            SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 393249, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual); // filter to get ranked lobbies 2
+            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 393250, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual); // filter to get player quick match lobbies
+            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 393252, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual); // filter to get player sessions lobbies
             SteamMatchmaking.AddRequestLobbyListDistanceFilter(Steamworks.ELobbyDistanceFilter.k_ELobbyDistanceFilterWorldwide);
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tksex_fighter.rank_id", playerRankId + maxRankDifference, Steamworks.ELobbyComparison.k_ELobbyComparisonLessThan);
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tksex_fighter.rank_id", playerRankId - maxRankDifference, Steamworks.ELobbyComparison.k_ELobbyComparisonGreaterThan);
@@ -130,7 +133,13 @@ namespace Tekken_7_Player_Displayer
                 for (int k = 0; k < lobbyDataCount; k++)
                 {
                     SteamMatchmaking.GetLobbyDataByIndex(lobbySteamId, k, out string key, Steamworks.Constants.k_nMaxLobbyKeyLength, out string value, Steamworks.Constants.k_nMaxLobbyKeyLength);
-                    //Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");
+                    /*
+                    Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");
+                    if (key == "tks4s_searchable_int_atter")
+                    {
+                        Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");
+                    }
+                    */
                     if (key == "tksex_owner_online_id") { steamId = long.Parse(value, System.Globalization.NumberStyles.HexNumber); }
                     if (key == "tksex_owner_player_name") { name = value; }
                     if (key == "tksex_fighter.fighter_id") { character = Pointers.ALL_CHARACTERS[int.Parse(value)]; }
