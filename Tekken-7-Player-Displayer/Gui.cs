@@ -73,6 +73,7 @@ namespace Tekken_7_Player_Displayer
             int charactersPadding = 1 + Pointers.ALL_CHARACTERS.OrderByDescending(s => s.Length).First().Length;
             int rankPadding = 1 + Pointers.ALL_RANKS.OrderByDescending(s => s.Length).First().Length;
             theList = theList.OrderByDescending(x => Array.FindIndex(Pointers.ALL_RANKS, rank => rank == x.Rank)).ThenBy(x => x.Name).ToList();
+            MainWindow.ListOfPlayerLobbies = theList;
             foreach (PlayerLobbyInfo player in theList)
             {
                 String steamId = player.SteamId.ToString() + " ";
@@ -96,6 +97,7 @@ namespace Tekken_7_Player_Displayer
             }));
         }
 
+        // JoinLobby()
         /*
         public static void RefreshPlayerLobbyInfoDropDownMenu()
         {
@@ -111,7 +113,6 @@ namespace Tekken_7_Player_Displayer
 
         public static void AddPlayerLobbyInfoToDropDownMenu(PlayerLobbyInfo player)
         {
-            //MainWindow.mainWindow.listOfLobbies.Items.Add(player.Name + " (" + player.SteamId.ToString() + ")");
             MainWindow.mainWindow.listOfLobbies.Items.Add(new KeyValuePair<String, PlayerLobbyInfo>(player.Name, player));
         }
         */

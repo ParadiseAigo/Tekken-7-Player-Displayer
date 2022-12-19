@@ -34,7 +34,7 @@ namespace Tekken_7_Player_Displayer
 
         public static CallResult<LobbyMatchList_t> CallResultLobbyMatchList;
         public static List<PlayerLobbyInfo> ListOfPlayerLobbies;
-        //public static PlayerLobbyInfo SelectedPlayer;
+        //public static PlayerLobbyInfo SelectedPlayer; //JoinLobby()
         public static int OnlineModeFilter;
 
         public MainWindow()
@@ -112,7 +112,7 @@ namespace Tekken_7_Player_Displayer
             MainWindow.lastNameInPlayerlist = PlayerList.GetLastNameInPlayerlist(Pointers.PLAYERLIST_PATH); //global variable  // set equal to NULL if player list is empty
             MainWindow.CallResultLobbyMatchList = CallResult<LobbyMatchList_t>.Create(SteamworksAPI.MyCallbackLobbyMatchList);
             MainWindow.ListOfPlayerLobbies = new List<PlayerLobbyInfo>();
-            //MainWindow.SelectedPlayer = null;
+            //MainWindow.SelectedPlayer = null; // JoinLobby()
             MainWindow.OnlineModeFilter = LobbyListFilters.Ranked;
         }
 
@@ -203,7 +203,7 @@ namespace Tekken_7_Player_Displayer
                 while (true) {
                     SteamworksAPI.SavePlayerLobbies(MainWindow.CallResultLobbyMatchList);
                     Gui.PrintPlayerLobbyInfoList(MainWindow.ListOfPlayerLobbies);
-                    //Gui.RefreshPlayerLobbyInfoDropDownMenu();
+                    //Gui.RefreshPlayerLobbyInfoDropDownMenu(); // JoinLobby()
                     Thread.Sleep(3000);
                 }
             }
@@ -284,26 +284,18 @@ namespace Tekken_7_Player_Displayer
                 + ((KeyValuePair<String, int>) MainWindow.mainWindow.onlineModeComboBox.SelectedItem).Key
                 + "." );
             Gui.PrintPlayerLobbyInfoList(MainWindow.ListOfPlayerLobbies);
+            //Gui.RefreshPlayerLobbyInfoDropDownMenu(); //JoinLobby()
         }
 
+        // JoinLobby()
         /*
-        private void inviteButton_Click(object sender, RoutedEventArgs e)
-        {
-            Gui.PrintLineToGuiConsole("Inviting: " + MainWindow.SelectedPlayer.Name);
-            if (SteamFriends.GetFriendGamePlayed(new CSteamID((ulong)userSteamId), out FriendGameInfo_t playerGameInfo)
-                && playerGameInfo.m_steamIDLobby.IsValid())
-            {
-                CSteamID lobbySteamId = playerGameInfo.m_steamIDLobby;
-                SteamMatchmaking.InviteUserToLobby(lobbySteamId, new CSteamID((ulong)MainWindow.SelectedPlayer.SteamId));
-            }
-            else
-            {
-                Gui.PrintLineToGuiConsole("Inviting is no longer possible.");
-            }
-        }
-
         private void joinButton_Click(object sender, RoutedEventArgs e)
         {
+            if (MainWindow.SelectedPlayer == null)
+            {
+                Gui.PrintLineToGuiConsole("Can't join. No player selected.");
+                return;
+            }
             Gui.PrintLineToGuiConsole("Joining: " + MainWindow.SelectedPlayer.Name);
             if (false == SteamMatchmaking.RequestLobbyData(MainWindow.SelectedPlayer.LobbyId))
             {
@@ -323,11 +315,11 @@ namespace Tekken_7_Player_Displayer
         }
         */
 
-        // xaml controls used by the above functions
+
+        // JoinLobby() xaml
         /*
-        <ComboBox x:Name="listOfLobbies" Grid.Column="1" Grid.Row="9" Width="200" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,0" SelectionChanged="listOfLobbies_SelectionChanged" DisplayMemberPath="Key" SelectedValuePath="Value"></ComboBox>
-        <Button x:Name="inviteButton" Grid.Column="1" Grid.Row="9" Width="100" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0" Click="inviteButton_Click">Invite</Button>
-        <Button x:Name="joinButton" Grid.Column="1" Grid.Row="9" Width="100" Height="20" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,20" Click="joinButton_Click">Join</Button>
+        <ComboBox x:Name="listOfLobbies" Grid.Column="1" Grid.Row="9" Width="150" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,0" SelectionChanged="listOfLobbies_SelectionChanged" DisplayMemberPath="Key" SelectedValuePath="Value"></ComboBox>
+        <Button x:Name="joinButton" Grid.Column="1" Grid.Row="9" Width="100" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,40,0" Click="joinButton_Click">Join</Button>
         */
     }
 }
