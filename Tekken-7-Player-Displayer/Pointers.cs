@@ -20,6 +20,7 @@ namespace Tekken_7_Player_Displayer
         public const int SCREEN_MODE_WINDOWED = 2;
 
         public static readonly string[] ALL_CHARACTERS = { "Paul", "Law", "King", "Yoshimitsu", "Hwoarang", "Xiaoyu", "Jin", "Bryan", "Heihachi", "Kazuya", "Steve", "Jack-7", "Asuka", "Devil Jin", "Feng", "Lili", "Dragunov", "Leo", "Lars", "Alisa", "Claudio", "Katarina", "Lucky Chloe", "Shaheen", "Josie", "Gigas", "Kazumi", "Devil Kazumi", "Nina", "Master Raven", "Lee", "Bob", "Akuma", "Kuma", "Panda", "Eddy", "Eliza", "Miguel", "Soldier", "Kid Kazuya", "Jack-#", "Young Heihachi", "Dummy A", "Geese", "Noctis", "Anna", "Lei", "Marduk", "Armor King", "Julia", "Negan", "Zafina", "Ganryu", "Leroy Smith", "Fahkumram", "Kunimitsu", "Lidia" };
+        public static readonly string[] ALL_RANKS = { "Beginner", "1st Kyu", "2nd Kyu", "3rd Kyu", "4th Kyu", "5th Kyu", "6th Kyu", "7th Kyu", "8th Kyu", "9th Kyu", "1st Dan", "2nd Dan", "3rd Dan", "Initiate", "Mentor", "Expert", "Grand master", "Brawler", "Marauder", "Fighter", "Vanguard", "Warrior", "Vindicator", "Juggernaut", "Usurper", "Vanquisher", "Destroyer", "Savior", "Overlord", "Genbu", "Byakko", "Seiryu", "Suzaku", "Mighty Ruler", "Revered Ruler", "Divine Ruler", "Eternal Ruler", "Fujin", "Raijin", "Yaksa", "Ryujin", "Emperor", "Tekken King", "Tekken God", "TTG", "TGP", "TGO" };
 
         // steam id of the opponent
         public static readonly long STEAM_ID_BETTER_STATIC_POINTER = 0x2FC50;  //to get the real static pointer: needs to be added to the module name, example: "steam_api64_o.dll"+2FC50
@@ -44,3 +45,6 @@ namespace Tekken_7_Player_Displayer
         public static readonly int[] SECONDS_REMAINING_MESSAGE_POINTER_OFFSETS = { 0x58, 0x330, 0xC8, 0x30, 0x30, 0xF18 };
     }
 }
+
+
+

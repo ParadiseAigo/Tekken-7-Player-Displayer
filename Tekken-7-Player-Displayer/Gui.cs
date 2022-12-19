@@ -27,6 +27,96 @@ namespace Tekken_7_Player_Displayer
             Console.Write(text);
         }
 
+        public static void PrintToGuiPlayerList(String text)
+        {
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                MainWindow.mainWindow.guiPlayerList.Text = "============ Found searching players: \r\n" + text;
+                MainWindow.mainWindow.guiPlayerList.CaretIndex = MainWindow.mainWindow.guiPlayerList.Text.Length;
+            }));
+            Console.Write(text);
+        }
+
+        public static void PrintToGuiNextOpponent(String text)
+        {
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                MainWindow.mainWindow.guiNextOpponent.Text = "============ Your next opponent was using:\r\n" + text;
+                MainWindow.mainWindow.guiNextOpponent.CaretIndex = MainWindow.mainWindow.guiNextOpponent.Text.Length;
+            }));
+            Console.Write(text);
+
+        }
+
+        public static void UpdateGuiNextOpponent()
+        {
+            String newText = "";
+            int charactersPadding = 1 + Pointers.ALL_CHARACTERS.OrderByDescending(s => s.Length).First().Length;
+            int rankPadding = 1 + Pointers.ALL_RANKS.OrderByDescending(s => s.Length).First().Length;
+            foreach (PlayerLobbyInfo player in MainWindow.ListOfPlayerLobbies)
+            {
+                if (player.SteamId == MainWindow.lastFoundSteamId)
+                {
+                    String steamId = player.SteamId.ToString() + " ";
+                    String character = player.Character;
+                    String rank = player.Rank;
+                    String name = player.Name;
+                    newText = (steamId + character.PadRight(charactersPadding) + rank.PadRight(rankPadding) + name + "\r\n");
+                }
+            }
+            PrintToGuiNextOpponent(newText);
+        }
+
+        static public void PrintPlayerLobbyInfoList(List<PlayerLobbyInfo> theList)
+        {
+            String toBePrinted = "";
+            int charactersPadding = 1 + Pointers.ALL_CHARACTERS.OrderByDescending(s => s.Length).First().Length;
+            int rankPadding = 1 + Pointers.ALL_RANKS.OrderByDescending(s => s.Length).First().Length;
+            theList = theList.OrderByDescending(x => Array.FindIndex(Pointers.ALL_RANKS, rank => rank == x.Rank)).ThenBy(x => x.Name).ToList();
+            MainWindow.ListOfPlayerLobbies = theList;
+            foreach (PlayerLobbyInfo player in theList)
+            {
+                String steamId = player.SteamId.ToString() + " ";
+                String character = player.Character;
+                String rank = player.Rank;
+                String name = player.Name;
+                String line = (steamId + character.PadRight(charactersPadding) + rank.PadRight(rankPadding) + name + "\r\n");
+                toBePrinted += line;
+            }
+            Gui.PrintToGuiPlayerList(toBePrinted);
+        }
+
+        public static void InitOnlineModeComboBox()
+        {
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                MainWindow.mainWindow.onlineModeComboBox.SelectedIndex = 0;
+                MainWindow.mainWindow.onlineModeComboBox.Items.Add(new KeyValuePair<String, int>("Ranked", LobbyListFilters.Ranked));
+                MainWindow.mainWindow.onlineModeComboBox.Items.Add(new KeyValuePair<String, int>("Quick Match", LobbyListFilters.QuickMatch));
+                MainWindow.mainWindow.onlineModeComboBox.Items.Add(new KeyValuePair<String, int>("Any", LobbyListFilters.None));
+            }));
+        }
+
+        // JoinLobby()
+        /*
+        public static void RefreshPlayerLobbyInfoDropDownMenu()
+        {
+            MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action (() =>
+            {
+                MainWindow.mainWindow.listOfLobbies.Items.Clear();
+                foreach (PlayerLobbyInfo player in MainWindow.ListOfPlayerLobbies)
+                {
+                    Gui.AddPlayerLobbyInfoToDropDownMenu(player);
+                }
+            }));
+        }
+
+        public static void AddPlayerLobbyInfoToDropDownMenu(PlayerLobbyInfo player)
+        {
+            MainWindow.mainWindow.listOfLobbies.Items.Add(new KeyValuePair<String, PlayerLobbyInfo>(player.Name, player));
+        }
+        */
+
         public static void UpdateAllGuiMessages(string newOpponentName, string characterName, string playerlistComment)
         {
             MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
