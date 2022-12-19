@@ -84,7 +84,9 @@ namespace Tekken_7_Player_Displayer
         private void RunMainThread()
         {
             InitPlayerlist();
+            InitGlobalVariables();
             LoadTargetProcess();
+            StartLobbyInfoThread();
             EditTargetProcessLoop();
         }
 
@@ -100,6 +102,18 @@ namespace Tekken_7_Player_Displayer
             {
                 Gui.PrintLineToGuiConsole("Good  \"Tekken Player List.txt\"  is OK.");
             }
+        }
+
+        private void InitGlobalVariables()
+        {
+            MainWindow.lastFoundSteamId = -1;
+            MainWindow.isSteamIdFound = false;
+            MainWindow.lastFoundName = "";
+            MainWindow.lastNameInPlayerlist = PlayerList.GetLastNameInPlayerlist(Pointers.PLAYERLIST_PATH); //global variable  // set equal to NULL if player list is empty
+            MainWindow.CallResultLobbyMatchList = CallResult<LobbyMatchList_t>.Create(SteamworksAPI.MyCallbackLobbyMatchList);
+            MainWindow.ListOfPlayerLobbies = new List<PlayerLobbyInfo>();
+            //MainWindow.SelectedPlayer = null;
+            MainWindow.OnlineModeFilter = LobbyListFilters.Ranked;
         }
 
         private void LoadTargetProcess()
@@ -179,22 +193,9 @@ namespace Tekken_7_Player_Displayer
             }
         }
 
-        private void EditTargetProcessLoop()
+        private void StartLobbyInfoThread()
         {
-            bool areMessagesClean;
-            int delayWhileSearching = 1000 / 10; // in milliseconds, "10fps" (updates 10 times a sec)
-            int delayWhileFighting = 2000; // 2 seconds, unused variable
-            lastFoundSteamId = -1;  // global variable
-            isSteamIdFound = false; // global variable
-            lastFoundName = ""; // global variable
-            areMessagesClean = true;
-            lastNameInPlayerlist = PlayerList.GetLastNameInPlayerlist(Pointers.PLAYERLIST_PATH); //global variable  // set equal to NULL if player list is empty
-            CallResultLobbyMatchList = CallResult<LobbyMatchList_t>.Create(SteamworksAPI.MyCallbackLobbyMatchList);
-            ListOfPlayerLobbies = new List<PlayerLobbyInfo>();
-            //SelectedPlayer = null;
-            OnlineModeFilter = LobbyListFilters.Ranked;
             Gui.InitOnlineModeComboBox();
-
             Gui.PrintToGuiPlayerList("");
             Gui.PrintToGuiNextOpponent("");
             Thread lobbyInfoThread = new Thread(() =>
@@ -209,6 +210,13 @@ namespace Tekken_7_Player_Displayer
             );
             lobbyInfoThread.IsBackground = true; // this makes sure the thread will be stopped after the gui is closed
             lobbyInfoThread.Start();
+        }
+
+        private void EditTargetProcessLoop()
+        {
+            bool areMessagesClean = true;
+            int delayWhileSearching = 1000 / 10; // in milliseconds, "10fps" (updates 10 times a sec)
+            int delayWhileFighting = 2000; // 2 seconds, unused variable
 
             while (true)
             {

@@ -23,14 +23,16 @@ namespace Tekken_7_Player_Displayer
     {
         //public const int Ranked = 1376289;
         /*
+        // these numbers work with "tks4s_searchable_int_atter"
         public const int Ranked = 393249;
         public const int QuickMatch = 393250;
         public const int PlayerSessions = 393252;
         */
+        // these numbers work with "tksex_match_type"
         public const int Ranked = 0;
         public const int QuickMatch = 1;
         public const int PlayerSessions = 2;
-        public const int None = -1;
+        public const int None = -1; // this one is not in the game, i made it up
     }
 
     public class SteamworksAPI
@@ -63,97 +65,29 @@ namespace Tekken_7_Player_Displayer
         public static void SavePlayerLobbies(CallResult<LobbyMatchList_t> callResult)
         {
             SteamAPI.RunCallbacks(); // needs to be called to dispatch call results to listeners
-            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 1376289, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
-            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 393249, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
-            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 393250, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
             if (MainWindow.OnlineModeFilter != LobbyListFilters.None)
             {
                 SteamMatchmaking.AddRequestLobbyListNumericalFilter(LobbyListKeys.Mode, MainWindow.OnlineModeFilter, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
             }
+            //debugging
             //Gui.PrintLineToGuiConsole("mode: " + LobbyListKeys.Mode);
             //Gui.PrintLineToGuiConsole("filter: " + MainWindow.OnlineModeFilter.ToString());
             SteamMatchmaking.AddRequestLobbyListDistanceFilter(Steamworks.ELobbyDistanceFilter.k_ELobbyDistanceFilterWorldwide);
+            // unused filter by rank
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tksex_fighter.rank_id", playerRankId + maxRankDifference, Steamworks.ELobbyComparison.k_ELobbyComparisonLessThan);
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tksex_fighter.rank_id", playerRankId - maxRankDifference, Steamworks.ELobbyComparison.k_ELobbyComparisonGreaterThan);
+            // unused filter by character
             //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tksex_fighter.fighter_id", 22, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
             SteamAPICall_t hSteamAPICall = SteamMatchmaking.RequestLobbyList();
             callResult.Set(hSteamAPICall);
         }
-
-        /*
-        public static void DisplayPlayerList(CallResult<LobbyMatchList_t> callResult, long userSteamId)
-        {
-            // the following lines get the lobby data of the player to get the rank of the player and the max rank difference selected
-            int playerRankId = -1;
-            int playerLobbyMaxRankId = -1;
-
-            if (SteamFriends.GetFriendGamePlayed(new CSteamID((ulong)userSteamId), out FriendGameInfo_t playerGameInfo)
-                && playerGameInfo.m_steamIDLobby.IsValid())
-            {
-                CSteamID lobbySteamId = playerGameInfo.m_steamIDLobby;
-
-                // the following lines get the lobby game server - unused code (returns nothing)
-                SteamMatchmaking.GetLobbyGameServer(lobbySteamId, out uint punGameServerIP, out ushort punGameServerPort, out CSteamID psteamIDGameServer);
-                byte[] ipBytes = BitConverter.GetBytes(punGameServerIP).Reverse().ToArray();
-                string serverIp = new IPAddress(ipBytes).ToString();
-                Gui.PrintLineToGuiConsole($"Lobby game server: steamID = {psteamIDGameServer} , address = {serverIp}:{punGameServerPort}");
-
-                // the following lines get the lobby members - unused code
-                int numLobbyMembers = SteamMatchmaking.GetNumLobbyMembers(lobbySteamId);
-                Gui.PrintLineToGuiConsole($"Lobby: steamId = {lobbySteamId} , members count: {numLobbyMembers}");
-                for (int i = 0; i < numLobbyMembers; i++)
-                {
-                    CSteamID lobbyMemberSteamId = SteamMatchmaking.GetLobbyMemberByIndex(lobbySteamId, i);
-                    string lobbyMemberName = SteamFriends.GetFriendPersonaName(lobbyMemberSteamId);
-                    Gui.PrintLineToGuiConsole($"Lobby member {i}: {lobbyMemberName}");
-                }
-
-                // the following lines get the lobby data
-                int lobbyDataCount = SteamMatchmaking.GetLobbyDataCount(lobbySteamId);
-                for (int i = 0; i < lobbyDataCount; i++)
-                {
-                    SteamMatchmaking.GetLobbyDataByIndex(lobbySteamId, i, out string key, 256, out string value, 256);
-                    Gui.PrintLineToGuiConsole($"Lobby data {i}: Key = {key} , Value = {value}");
-                    if (key == "tks4s_rank_id") { playerRankId = int.Parse(value); }
-                    if (key == "tksex_max_rank_fighter.rank_id") { playerLobbyMaxRankId = int.Parse(value); }
-                }
-            }
-            int maxRankDifference = 5;// playerLobbyMaxRankId != -1 && playerRankId != -1 ? playerLobbyMaxRankId - playerRankId : 3;
-            playerRankId = 13; //playerRankId == -1 ? 0 : playerRankId;
-            //----------------------------------------------------------------------------------------------------------------------------
-
-            // the following lines request a list of filtered lobbies, the results will be returned asynchronously to the method OnLobbyMatchList
-            SteamAPI.RunCallbacks(); // needs to be called to dispatch call results to listeners
-            SteamMatchmaking.AddRequestLobbyListNumericalFilter("tks4s_searchable_int_atter", 1376289, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual); // filter to get ranked lobbies
-            //SteamMatchmaking.AddRequestLobbyListDistanceFilter(Steamworks.ELobbyDistanceFilter.k_ELobbyDistanceFilterWorldwide);
-            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tksex_fighter.rank_id", playerRankId + maxRankDifference, Steamworks.ELobbyComparison.k_ELobbyComparisonLessThan);
-            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tksex_fighter.rank_id", playerRankId - maxRankDifference, Steamworks.ELobbyComparison.k_ELobbyComparisonGreaterThan);
-            //SteamMatchmaking.AddRequestLobbyListNumericalFilter("tksex_fighter.fighter_id", 22, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
-            SteamAPICall_t hSteamAPICall = SteamMatchmaking.RequestLobbyList();
-            callResult.Set(hSteamAPICall);
-        }
-        */
 
         static public void MyCallbackLobbyMatchList(LobbyMatchList_t lobbyMatchList, bool bIOFailure)
         {
             uint nrOfLobbies = lobbyMatchList.m_nLobbiesMatching;
-            //Gui.PrintLineToGuiConsole($"LobbyMatchList: lobbies count = {nrOfLobbies}");
             for (int i = 0; i < nrOfLobbies; i++)
             {
                 CSteamID lobbySteamId = SteamMatchmaking.GetLobbyByIndex(i);
-                
-                /*
-                // the following lines print the lobby member names (the names returned here are empty) 
-                int numLobbyMembers = SteamMatchmaking.GetNumLobbyMembers(lobbySteamId);
-                Gui.PrintLineToGuiConsole($"Lobby {i}: steamId = {lobbySteamId.m_SteamID} , members count: {numLobbyMembers}");
-                for (int j = 0; j < numLobbyMembers; j++)
-                {
-                    CSteamID lobbyMemberSteamId = SteamMatchmaking.GetLobbyMemberByIndex(lobbySteamId, j);
-                    string lobbyMemberName = SteamFriends.GetFriendPersonaName(lobbyMemberSteamId);
-                    Gui.PrintLineToGuiConsole($"Lobby member {j}: steamId = {lobbyMemberSteamId.m_SteamID} , name = {lobbyMemberName} , location = {IPLocation.GetLocation(SteamworksAPI.GetIPAddressForSteamId((long) lobbyMemberSteamId.m_SteamID))}");
-                }*/
-
-                // the following lines print the lobby data
                 long steamId = 0;
                 string name = "";
                 string character = "";
@@ -163,16 +97,11 @@ namespace Tekken_7_Player_Displayer
                 for (int k = 0; k < lobbyDataCount; k++)
                 {
                     SteamMatchmaking.GetLobbyDataByIndex(lobbySteamId, k, out string key, Steamworks.Constants.k_nMaxLobbyKeyLength, out string value, Steamworks.Constants.k_nMaxLobbyKeyLength);
+                    // debugging
                     //Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");
                     /*
-                    if (key == "tksex_owner_player_name")
-                    {
-                        Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");
-                    }
-                    if (key == LobbyListKeys.Mode)
-                    {
-                        Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");
-                    }
+                    if (key == LobbyListKeys.Name) Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");
+                    if (key == LobbyListKeys.Mode) Gui.PrintLineToGuiConsole($"Lobby data {k}: Key = {key} , Value = {value}");
                     */
                     if (key == LobbyListKeys.Mode) { onlineModeOfPlayer = int.Parse(value); }
                     if (key == LobbyListKeys.SteamId) { steamId = long.Parse(value, System.Globalization.NumberStyles.HexNumber); }
@@ -187,14 +116,12 @@ namespace Tekken_7_Player_Displayer
                         else rank = index.ToString();
                     }
                 }
-                //Thread.Sleep(2000);
+                //Thread.Sleep(2000); // helps with debugging
                 if (MainWindow.OnlineModeFilter == onlineModeOfPlayer ||
                     MainWindow.OnlineModeFilter == LobbyListFilters.None)
                 {
                     PlayerLobbyInfo.AddToList(MainWindow.ListOfPlayerLobbies, new PlayerLobbyInfo(lobbySteamId, name, steamId, character, rank));
                 }
-                //string ip = SteamworksAPI.GetIPAddressForSteamId(steamId); // this does not return the correct ip, need to debug to see if steamId is correct or if long.Parse is not working well
-                //string location = IPLocation.GetLocation(ip);
             }
         }
     }
@@ -259,21 +186,5 @@ namespace Tekken_7_Player_Displayer
             }
             return "";
         }
-
-        /*
-        static public void PrintPlayerRank(List<PlayerLobbyInfo> theList, long steamId)
-        {
-            String rank = GetPlayerRank(theList, steamId);
-            if (rank == "") rank = "?";
-            Gui.PrintLineToGuiConsole("Rank:      " + rank);
-        }
-
-        static public void PrintPlayerCharacter(List<PlayerLobbyInfo> theList, long steamId)
-        {
-            String character = GetPlayerCharacter(theList, steamId);
-            if (character == "") character = "?";
-            Gui.PrintLineToGuiConsole("Character: " + character);
-        }
-        */
     }
 }
