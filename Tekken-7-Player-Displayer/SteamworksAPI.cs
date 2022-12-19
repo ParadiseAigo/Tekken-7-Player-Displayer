@@ -11,17 +11,17 @@ namespace Tekken_7_Player_Displayer
 {
     static public class LobbyListKeys
     {
-        //static public string Mode = "tks4s_searchable_int_atter";
-        static public string Mode = "tksex_match_type";
-        static public string Rank = "tksex_fighter.rank_id";
-        static public string Character = "tksex_fighter.fighter_id";
-        static public string SteamId = "tksex_owner_online_id";
-        static public string Name = "tksex_owner_player_name";
+        //public const string Mode = "tks4s_searchable_int_atter";
+        public const string Mode = "tksex_match_type";
+        public const string Rank = "tksex_fighter.rank_id";
+        public const string Character = "tksex_fighter.fighter_id";
+        public const string SteamId = "tksex_owner_online_id";
+        public const string Name = "tksex_owner_player_name";
     }
 
     static public class LobbyListFilters
     {
-        //static public int Ranked = 1376289;
+        //public const int Ranked = 1376289;
         /*
         public const int Ranked = 393249;
         public const int QuickMatch = 393250;
@@ -188,7 +188,8 @@ namespace Tekken_7_Player_Displayer
                     }
                 }
                 //Thread.Sleep(2000);
-                if (onlineModeOfPlayer == MainWindow.OnlineModeFilter)
+                if (MainWindow.OnlineModeFilter == onlineModeOfPlayer ||
+                    MainWindow.OnlineModeFilter == LobbyListFilters.None)
                 {
                     PlayerLobbyInfo.AddToList(MainWindow.ListOfPlayerLobbies, new PlayerLobbyInfo(lobbySteamId, name, steamId, character, rank));
                 }

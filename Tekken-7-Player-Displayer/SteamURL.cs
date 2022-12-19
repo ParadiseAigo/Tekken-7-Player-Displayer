@@ -24,12 +24,20 @@ namespace Tekken_7_Player_Displayer
         {
             string prefix = "<title>Steam Community :: ";
             string postfix = "</title>";
+            string result = "";
             int nameIndex, nameSize, prefixIndex, postfixIndex; // locations in the html string
-            prefixIndex = htmlString.IndexOf(prefix);
-            postfixIndex = htmlString.IndexOf(postfix, prefixIndex);
-            nameIndex = prefixIndex + prefix.Length;
-            nameSize = postfixIndex - nameIndex;
-            string result = htmlString.Substring(nameIndex, nameSize);
+            try
+            {
+                prefixIndex = htmlString.IndexOf(prefix);
+                postfixIndex = htmlString.IndexOf(postfix, prefixIndex);
+                nameIndex = prefixIndex + prefix.Length;
+                nameSize = postfixIndex - nameIndex;
+                result = htmlString.Substring(nameIndex, nameSize);
+            }
+            catch (Exception ex)
+            {
+                Gui.PrintLineToGuiConsole($"Error in ExtractNameFromSteamHtmlString: {ex.Message}");
+            }
             return result;
         }
 
