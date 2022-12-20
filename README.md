@@ -1,7 +1,7 @@
 # Tekken-7-Player-Displayer
-> See your opponents name before accepting the match and more...
+> See your opponent's name before accepting the match and more...
 
-Displays your opponents name, their location, the character they last used against you and a comment that you can write about them.
+Displays your opponent's name, their location, the character they last used against you and a comment that you can write about them.
 
 ![](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/blob/csharp-version/readme-images/7git.png)
 
