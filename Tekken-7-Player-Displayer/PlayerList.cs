@@ -248,11 +248,10 @@ namespace Tekken_7_Player_Displayer
             }
             result.Sort(delegate(String x, String y)
             {
-                if (int.Parse(x.Substring(0, x.IndexOf(" "))) >
+                if (int.Parse(x.Substring(0, x.IndexOf(" "))) <
                    (int.Parse(y.Substring(0, y.IndexOf(" "))))) return 1;
                 else return -1;
             });
-            result.Reverse();
             result.ForEach(x => Gui.PrintLineToGuiConsole(x));
         }
     }
