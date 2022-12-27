@@ -236,5 +236,24 @@ namespace Tekken_7_Player_Displayer
             string lastCharacterInPlayerlist = ExtractCharacterFromPlayerlistLine(lastLineInPlayerlist);
             return lastCharacterInPlayerlist;
         }
+
+        public static void PrintCharacterUsageFromPlayerlist()
+        {
+            List <String> result = new List<String>();
+            foreach (String character in Pointers.ALL_CHARACTERS)
+            {
+                int numberOfOccurrences = File.ReadAllLines(Pointers.PLAYERLIST_PATH).Where(i => i.Contains("\t\t\t" + character + "\t\t\t")).ToList().Count;
+                if (numberOfOccurrences == 0) continue;
+                result.Add(numberOfOccurrences.ToString() + " " + character);
+            }
+            result.Sort(delegate(String x, String y)
+            {
+                if (int.Parse(x.Substring(0, x.IndexOf(" "))) >
+                   (int.Parse(y.Substring(0, y.IndexOf(" "))))) return 1;
+                else return -1;
+            });
+            result.Reverse();
+            result.ForEach(x => Gui.PrintLineToGuiConsole(x));
+        }
     }
 }

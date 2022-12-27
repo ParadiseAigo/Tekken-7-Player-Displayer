@@ -53,6 +53,7 @@ namespace Tekken_7_Player_Displayer
         private const int KEY_O = 0x4F;
         private const int KEY_S = 0x53;
         private const int KEY_L = 0x4C;
+        private const int KEY_U = 0x55;
 
         private static IntPtr hHook;
         private static HookProc hookProc;
@@ -77,6 +78,7 @@ namespace Tekken_7_Player_Displayer
             AddHotkey(ALT, KEY_O, () => HandleKeysPressed_ALT_O());
             AddHotkey(ALT, KEY_S, () => HandleKeysPressed_ALT_S());
             AddHotkey(ALT, KEY_L, () => HandleKeysPressed_ALT_L());
+            AddHotkey(ALT, KEY_U, () => HandleKeysPressed_ALT_U());
         }
 
         public static bool Enable()
@@ -162,6 +164,11 @@ namespace Tekken_7_Player_Displayer
         public static void HandleKeysPressed_ALT_L()
         {
             MainWindow.fullLocation = true;
+        }
+
+        public static void HandleKeysPressed_ALT_U()
+        {
+            PlayerList.PrintCharacterUsageFromPlayerlist();
         }
     }
 }
