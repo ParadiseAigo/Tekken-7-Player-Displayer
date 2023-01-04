@@ -132,8 +132,10 @@ namespace Tekken_7_Player_Displayer
             {
                 Gui.PrintLineToGuiConsole($"Character name:   {Pointers.ALL_CHARACTERS[newOpponentStructCharacter]}");
                 string newPlayerlistLine = PlayerList.MakePlayerlistEntry(currentLoadedOpponentName, Pointers.ALL_CHARACTERS[newOpponentStructCharacter], steamId);
+                string previousLine = File.ReadAllLines(Pointers.PLAYERLIST_PATH).Reverse().Where(i => i.Contains(MainWindow.lastFoundSteamId.ToString())).ToList().FirstOrDefault();;
                 Gui.PrintLineToGuiConsole($"Playerlist entry: {newPlayerlistLine}");
                 PlayerList.WriteLineToFile(Pointers.PLAYERLIST_PATH, newPlayerlistLine);
+                if (previousLine != null) ReplaceCommentInLastLineInFile(Pointers.PLAYERLIST_PATH, PlayerList.ExtractCommentFromPlayerlistLine(previousLine));
             }
         }
 
