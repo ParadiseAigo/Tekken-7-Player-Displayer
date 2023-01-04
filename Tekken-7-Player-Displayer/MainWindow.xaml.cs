@@ -201,13 +201,11 @@ namespace Tekken_7_Player_Displayer
             Thread lobbyInfoThread = new Thread(() =>
             {
                 while (true) {
-                    if (MainWindow.OnlineModeFilter != LobbyListFilters.Off)
-                    {
-                        SteamworksAPI.SavePlayerLobbies(MainWindow.CallResultLobbyMatchList);
-                        Gui.PrintPlayerLobbyInfoList(MainWindow.ListOfPlayerLobbies);
-                        //Gui.RefreshPlayerLobbyInfoDropDownMenu(); // JoinLobby()
-                    }
                     Thread.Sleep(3000);
+                    if (MainWindow.OnlineModeFilter == LobbyListFilters.Off) continue;
+                    SteamworksAPI.SavePlayerLobbies(MainWindow.CallResultLobbyMatchList);
+                    Gui.PrintPlayerLobbyInfoList(MainWindow.ListOfPlayerLobbies);
+                    //Gui.RefreshPlayerLobbyInfoDropDownMenu(); // JoinLobby()
                 }
             }
             );
