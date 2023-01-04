@@ -201,9 +201,12 @@ namespace Tekken_7_Player_Displayer
             Thread lobbyInfoThread = new Thread(() =>
             {
                 while (true) {
-                    SteamworksAPI.SavePlayerLobbies(MainWindow.CallResultLobbyMatchList);
-                    Gui.PrintPlayerLobbyInfoList(MainWindow.ListOfPlayerLobbies);
-                    //Gui.RefreshPlayerLobbyInfoDropDownMenu(); // JoinLobby()
+                    if (MainWindow.OnlineModeFilter != LobbyListFilters.Off)
+                    {
+                        SteamworksAPI.SavePlayerLobbies(MainWindow.CallResultLobbyMatchList);
+                        Gui.PrintPlayerLobbyInfoList(MainWindow.ListOfPlayerLobbies);
+                        //Gui.RefreshPlayerLobbyInfoDropDownMenu(); // JoinLobby()
+                    }
                     Thread.Sleep(3000);
                 }
             }
@@ -280,9 +283,12 @@ namespace Tekken_7_Player_Displayer
             int newFilter = ((KeyValuePair<String, int>) MainWindow.mainWindow.onlineModeComboBox.SelectedItem).Value;
             MainWindow.OnlineModeFilter = newFilter;
             MainWindow.ListOfPlayerLobbies.Clear();
-            Gui.PrintLineToGuiConsole("Showing players in "
-                + ((KeyValuePair<String, int>) MainWindow.mainWindow.onlineModeComboBox.SelectedItem).Key
-                + "." );
+            if (MainWindow.OnlineModeFilter != LobbyListFilters.Off)
+            {
+                Gui.PrintLineToGuiConsole("Showing players in "
+                    + ((KeyValuePair<String, int>) MainWindow.mainWindow.onlineModeComboBox.SelectedItem).Key
+                    + "." );
+            }
             Gui.PrintPlayerLobbyInfoList(MainWindow.ListOfPlayerLobbies);
             //Gui.RefreshPlayerLobbyInfoDropDownMenu(); //JoinLobby()
         }

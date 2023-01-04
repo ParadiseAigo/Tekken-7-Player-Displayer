@@ -97,6 +97,7 @@ namespace Tekken_7_Player_Displayer
             MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
                 MainWindow.mainWindow.onlineModeComboBox.SelectedIndex = 0;
+                MainWindow.mainWindow.onlineModeComboBox.Items.Add(new KeyValuePair<String, int>("None", LobbyListFilters.Off));
                 MainWindow.mainWindow.onlineModeComboBox.Items.Add(new KeyValuePair<String, int>("Ranked", LobbyListFilters.Ranked));
                 MainWindow.mainWindow.onlineModeComboBox.Items.Add(new KeyValuePair<String, int>("Quick Match", LobbyListFilters.QuickMatch));
                 MainWindow.mainWindow.onlineModeComboBox.Items.Add(new KeyValuePair<String, int>("Any", LobbyListFilters.None));

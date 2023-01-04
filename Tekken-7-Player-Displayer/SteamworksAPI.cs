@@ -33,6 +33,7 @@ namespace Tekken_7_Player_Displayer
         public const int QuickMatch = 1;
         public const int PlayerSessions = 2;
         public const int None = -1; // this one is not in the game, i made it up
+        public const int Off = -2; // another one i made up
     }
 
     public class SteamworksAPI
