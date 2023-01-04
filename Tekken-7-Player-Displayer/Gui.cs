@@ -31,10 +31,16 @@ namespace Tekken_7_Player_Displayer
         {
             MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
+                Gui.FocusOnMainConsole();
                 MainWindow.mainWindow.guiPlayerList.Text = "============ Found searching players: \r\n" + text;
                 MainWindow.mainWindow.guiPlayerList.CaretIndex = MainWindow.mainWindow.guiPlayerList.Text.Length;
             }));
             Console.Write(text);
+        }
+
+        public static void FocusOnMainConsole()
+        {
+            MainWindow.mainWindow.guiConsole.Focus();
         }
 
         public static void PrintToGuiNextOpponent(String text)
