@@ -242,11 +242,20 @@ namespace Tekken_7_Player_Displayer
         public static void PrintCharacterUsageFromPlayerlist()
         {
             List <String> result = new List<String>();
+            int totalNumberOfLines = 0;
             foreach (String character in Pointers.ALL_CHARACTERS)
             {
                 int numberOfOccurrences = File.ReadAllLines(Pointers.PLAYERLIST_PATH).Where(i => i.Contains("\t\t\t" + character + "\t\t\t")).ToList().Count;
                 if (numberOfOccurrences == 0) continue;
+                totalNumberOfLines += numberOfOccurrences;
                 result.Add(numberOfOccurrences.ToString() + " " + character);
+            }
+            for (int i = 0; i < result.Count; i++)
+            {
+                int numberOfOccurrences = int.Parse(result[i].Substring(0, result[i].IndexOf(" ")));
+                decimal percentage = ((decimal)numberOfOccurrences / (decimal)totalNumberOfLines) * 100;
+                decimal roundedPercentage = Math.Floor(percentage * 100) / 100;
+                result[i] = result[i].PadRight(17) + " (" + roundedPercentage.ToString() + "%)";
             }
             result.Sort(delegate(String x, String y)
             {
@@ -254,6 +263,15 @@ namespace Tekken_7_Player_Displayer
                    (int.Parse(y.Substring(0, y.IndexOf(" "))))) return 1;
                 else return -1;
             });
+            decimal cumulativePercentage = 0;
+            for (int i = 0; i < result.Count; i++)
+            {
+                string percentageString = result[i].Substring(result[i].IndexOf("(") + 1, result[i].IndexOf("%") - result[i].IndexOf("(") - 1);
+                decimal percentage = decimal.Parse(percentageString);
+                cumulativePercentage += percentage;
+                result[i] = result[i].PadRight(28) + " (cumulative top " + cumulativePercentage + "%)";
+
+            }
             result.ForEach(x => Gui.PrintLineToGuiConsole(x));
         }
     }
