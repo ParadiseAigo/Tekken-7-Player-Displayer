@@ -24,6 +24,9 @@ Simply run the executable before or after (doesn't matter) opening Tekken 7.
 * ALT+O  opens the list of all the players you played against
 * ALT+S  turn off silent mode, or in other words: turn on in-game feedback (program is in silent mode by default)
 
+## C++ Version
+This program was originally written in C++. If you want to check out the C++ version it's [here](https://github.com/ParadiseAigo/Tekken-7-Player-Displayer/tree/cplusplus-version). Also keep in mind that some of the Tekken 7 addresses might be outdated.
+
 ## Issues
 * The program is sometimes unable to get the name of the opponent. You can just decline those match requests.
 * It is also possible that the program gets the name wrong. But from my (limited) experience this tends to be rare.
