@@ -60,7 +60,9 @@
         <Border Grid.Column="2" Grid.Row="9" BorderBrush="Gray" BorderThickness="0.5,0.5,0.5,0.5" Width="100" Height="100" Margin="0,10,20,20" HorizontalAlignment="Right">
             <Image x:Name="guiProfilePicture"/>
         </Border>
-        <Label Content="Get info on players in:" Grid.Column="1" Grid.Row="9" Width="140" VerticalAlignment="Center"  HorizontalAlignment="Left" Margin="0,40,0,20" Foreground="White" Padding="0,5,5,5" />
-        <ComboBox x:Name="onlineModeComboBox"  Grid.Column="1" Grid.Row="9" Width="130" VerticalAlignment="Bottom"  HorizontalAlignment="Left" Margin="0,0,40,20" SelectionChanged="onlineModeComboBox_SelectionChanged" DisplayMemberPath="Key" SelectedValuePath="Value"/>
+        <StackPanel Grid.Column="1" Grid.Row="9" Margin="0,0,40,20" VerticalAlignment="Bottom">
+            <TextBlock Text="WARNING: this feature is optional and may cause you to not get any matches. Get extra info on players in:" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="200" Foreground="White" Padding="0,5,5,5" TextWrapping="WrapWithOverflow" />
+            <ComboBox x:Name="onlineModeComboBox" Width="180" VerticalAlignment="Bottom"  HorizontalAlignment="Left" SelectionChanged="onlineModeComboBox_SelectionChanged" DisplayMemberPath="Key" SelectedValuePath="Value"/>
+        </StackPanel>
     </Grid>
 </Window>
