@@ -292,7 +292,7 @@ namespace Tekken_7_Player_Displayer
 
         private void onlineModeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-           if (MainWindow.mainWindow == null) return;
+            if (MainWindow.mainWindow == null) return;
             int newFilter = ((KeyValuePair<String, int>) MainWindow.mainWindow.onlineModeComboBox.SelectedItem).Value;
             MainWindow.OnlineModeFilter = newFilter;
             MainWindow.ListOfPlayerLobbies.Clear();
