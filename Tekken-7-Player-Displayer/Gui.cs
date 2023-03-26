@@ -92,7 +92,7 @@ namespace Tekken_7_Player_Displayer
             Gui.PrintToGuiPlayerList(toBePrinted);
         }
 
-        public static void InitOnlineModeComboBox()
+        /*public static void InitOnlineModeComboBox()
         {
             MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -102,8 +102,8 @@ namespace Tekken_7_Player_Displayer
                 MainWindow.mainWindow.onlineModeComboBox.Items.Add(new KeyValuePair<String, int>("Quick Match", LobbyListFilters.QuickMatch));
                 MainWindow.mainWindow.onlineModeComboBox.Items.Add(new KeyValuePair<String, int>("Any", LobbyListFilters.None));
             }));
-        }
-
+        }*/
+        
         // JoinLobby()
         /*
         public static void RefreshPlayerLobbyInfoDropDownMenu()

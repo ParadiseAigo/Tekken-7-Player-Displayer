@@ -209,7 +209,8 @@ namespace Tekken_7_Player_Displayer
 
         private void StartLobbyInfoThread()
         {
-            Gui.InitOnlineModeComboBox();
+            //Gui.InitOnlineModeComboBox();
+            MainWindow.OnlineModeFilter = LobbyListFilters.Off;
             Gui.PrintToGuiPlayerList("");
             Gui.PrintToGuiNextOpponent("");
             Thread lobbyInfoThread = new Thread(() =>
@@ -289,7 +290,7 @@ namespace Tekken_7_Player_Displayer
             Settings.Default.Save();
         }
 
-        private void onlineModeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        /*private void onlineModeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (MainWindow.mainWindow == null) return;
             int newFilter = ((KeyValuePair<String, int>) MainWindow.mainWindow.onlineModeComboBox.SelectedItem).Value;
@@ -303,7 +304,7 @@ namespace Tekken_7_Player_Displayer
             }
             Gui.PrintPlayerLobbyInfoList(MainWindow.ListOfPlayerLobbies);
             //Gui.RefreshPlayerLobbyInfoDropDownMenu(); //JoinLobby()
-        }
+        }*/
 
         // JoinLobby()
         /*
