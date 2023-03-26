@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tekken_7_Player_Displayer"
         mc:Ignorable="d"
-        Title="Tekken 7 - Player Displayer  |  v1.4.5" Height="720" Width="1100">
+        Height="720" Width="1100">
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="/background.bmp"/>
