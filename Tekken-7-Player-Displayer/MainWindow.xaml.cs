@@ -60,8 +60,7 @@ namespace Tekken_7_Player_Displayer
         static void MyUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
             Exception e = (Exception)args.ExceptionObject;
-            string errorMessage = "An unhandled exception occurred: " + e.Message + "\n"
-                                + e.StackTrace + "\n"
+            string errorMessage = "An unhandled exception occurred.\n\nDetails: " + e.ToString() + "\n"
                                 + "Runtime terminating: " + args.IsTerminating;
             string title = "Exception - " + mainWindowTitle;
             MessageBox.Show(errorMessage, title, MessageBoxButton.OK, MessageBoxImage.Error);
