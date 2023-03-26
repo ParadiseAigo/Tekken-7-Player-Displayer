@@ -17,7 +17,15 @@ namespace Tekken_7_Player_Displayer
         public static string UrlToString(string url)
         {
             using WebClient web = new WebClient();
-            return web.DownloadString(url);
+            try
+            {
+                return web.DownloadString(url);
+            } 
+            catch (Exception ex)
+            {
+                Gui.PrintLineToGuiConsole($"Error in UrlToString: {ex.Message}");
+            }
+            return "";
         }
 
         public static string ExtractNameFromSteamHtmlString(string htmlString)
