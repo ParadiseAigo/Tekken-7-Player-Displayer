@@ -14,6 +14,7 @@ namespace Tekken_7_Player_Displayer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const string mainWindowTitle = "Tekken 7 - Player Displayer  |  v1.4.6";
         public static MainWindow mainWindow;
         public static CommentWindow commentWindow;
         private static Thread mainThread;
@@ -47,10 +48,23 @@ namespace Tekken_7_Player_Displayer
 
         private void InitMainWindow()
         {
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyUnhandledExceptionHandler);
             mainWindow = this;
+            mainWindow.Title = mainWindowTitle;
             SetWindowPosition();
             Closed += MainWindow_Closed;
             InitHotkeys();
+        }
+
+        static void MyUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
+        {
+            Exception e = (Exception)args.ExceptionObject;
+            string errorMessage = "An unhandled exception occurred.\n\nDetails: " + e.ToString() + "\n"
+                                + "Runtime terminating: " + args.IsTerminating;
+            string title = "Exception - " + mainWindowTitle;
+            MessageBox.Show(errorMessage, title, MessageBoxButton.OK, MessageBoxImage.Error);
+            Console.WriteLine(errorMessage);
         }
 
         private void SetWindowPosition()
@@ -195,7 +209,8 @@ namespace Tekken_7_Player_Displayer
 
         private void StartLobbyInfoThread()
         {
-            Gui.InitOnlineModeComboBox();
+            //Gui.InitOnlineModeComboBox();
+            MainWindow.OnlineModeFilter = LobbyListFilters.Off;
             Gui.PrintToGuiPlayerList("");
             Gui.PrintToGuiNextOpponent("");
             Thread lobbyInfoThread = new Thread(() =>
@@ -275,7 +290,7 @@ namespace Tekken_7_Player_Displayer
             Settings.Default.Save();
         }
 
-        private void onlineModeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        /*private void onlineModeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (MainWindow.mainWindow == null) return;
             int newFilter = ((KeyValuePair<String, int>) MainWindow.mainWindow.onlineModeComboBox.SelectedItem).Value;
@@ -289,7 +304,7 @@ namespace Tekken_7_Player_Displayer
             }
             Gui.PrintPlayerLobbyInfoList(MainWindow.ListOfPlayerLobbies);
             //Gui.RefreshPlayerLobbyInfoDropDownMenu(); //JoinLobby()
-        }
+        }*/
 
         // JoinLobby()
         /*
